@@ -1,0 +1,97 @@
+package EverGrowth.com.EverGrowthserver.entity;
+
+import java.util.List;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PositiveOrZero;
+import jakarta.validation.constraints.Size;
+
+@Entity
+@Table(name = "producto")
+public class ProductoEntity {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @NotNull
+    @NotBlank
+    @Size(min = 3, max = 255)
+    String nombre;
+
+    @NotNull
+    @PositiveOrZero
+    Float precio;
+
+    @NotNull
+    String imagen;
+
+    @NotNull
+    @PositiveOrZero
+
+    int stock;
+
+    @ManyToOne
+    @JoinColumn(name = "id_categoria")
+    private CategoriaEntity categoria;
+
+    @OneToMany(mappedBy = "carrito", fetch = jakarta.persistence.FetchType.LAZY)
+    private List<CarritoEntity> carritos;
+
+    public ProductoEntity() {
+    }
+
+    public ProductoEntity(String nombre, Float precio, int stock, String imagen) {
+        this.nombre = nombre;
+        this.precio = precio;
+        this.stock = stock;
+        this.imagen = imagen;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getnombre() {
+        return nombre;
+    }
+
+    public void setnombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public Float getprecio() {
+        return precio;
+    }
+
+    public void setprecio(Float precio) {
+        this.precio = precio;
+    }
+
+    public int getStock() {
+        return stock;
+    }
+
+    public void setStock(int stock) {
+        this.stock = stock;
+    }
+
+    public int getCarritos() {
+        return carritos.size();
+    }
+
+
+}
