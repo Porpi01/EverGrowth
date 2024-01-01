@@ -34,7 +34,7 @@ public class PedidoEntity {
     @JoinColumn(name = "id_usuario")
     private UsuarioEntity user;
 
-    @OneToMany(mappedBy = "detalle pedido", fetch = jakarta.persistence.FetchType.LAZY)
+    @OneToMany(mappedBy = "pedidos", fetch = jakarta.persistence.FetchType.LAZY)
     private List<DetallePedidoEntity> detallepedidos;
 
     public PedidoEntity() {

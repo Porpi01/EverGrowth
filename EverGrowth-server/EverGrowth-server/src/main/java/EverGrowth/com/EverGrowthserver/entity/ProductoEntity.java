@@ -44,7 +44,7 @@ public class ProductoEntity {
     @JoinColumn(name = "id_categoria")
     private CategoriaEntity categoria;
 
-    @OneToMany(mappedBy = "carrito", fetch = jakarta.persistence.FetchType.LAZY)
+    @OneToMany(mappedBy = "producto", fetch = jakarta.persistence.FetchType.LAZY)
     private List<CarritoEntity> carritos;
 
     public ProductoEntity() {
