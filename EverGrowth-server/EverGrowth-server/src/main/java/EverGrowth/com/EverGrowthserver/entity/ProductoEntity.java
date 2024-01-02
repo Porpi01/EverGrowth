@@ -37,7 +37,6 @@ public class ProductoEntity {
 
     @NotNull
     @PositiveOrZero
-
     int stock;
 
     @ManyToOne

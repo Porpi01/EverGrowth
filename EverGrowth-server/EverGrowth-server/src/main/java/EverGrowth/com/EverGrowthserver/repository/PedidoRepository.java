@@ -1,5 +1,9 @@
 package EverGrowth.com.EverGrowthserver.repository;
 
-public class PedidoRepository {
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import EverGrowth.com.EverGrowthserver.entity.PedidoEntity;
+
+public interface PedidoRepository extends JpaRepository<PedidoEntity, Long> {
     
 }

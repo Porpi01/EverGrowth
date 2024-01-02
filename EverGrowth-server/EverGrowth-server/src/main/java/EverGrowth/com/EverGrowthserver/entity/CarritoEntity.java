@@ -14,11 +14,10 @@ public class CarritoEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+
     private Long id;
 
     private int cantidad;
-
-    private String mensaje;
 
     @ManyToOne
     @JoinColumn(name = "id_usuario")
@@ -28,15 +27,19 @@ public class CarritoEntity {
     @JoinColumn(name = "id_producto")
     private ProductoEntity producto;
 
-    public CarritoEntity(Long id, int cantidad, String mensaje) {
+    public CarritoEntity(Long id, int cantidad) {
         this.id = id;
         this.cantidad = cantidad;
-        this.mensaje = mensaje;
+
     }
 
-      public CarritoEntity( int cantidad, String mensaje) {
+    public CarritoEntity(int cantidad) {
         this.cantidad = cantidad;
-        this.mensaje = mensaje;
+
+    }
+
+    public CarritoEntity() {
+
     }
 
     public int getCantidad() {
@@ -55,11 +58,19 @@ public class CarritoEntity {
         this.id = id;
     }
 
-    public String getMensaje() {
-        return mensaje;
+    public UsuarioEntity getUser() {
+        return user;
     }
 
-    public void setMensaje(String mensaje) {
-        this.mensaje = mensaje;
+    public void setUser(UsuarioEntity user) {
+        this.user = user;
+    }
+
+    public ProductoEntity getProducto() {
+        return producto;
+    }
+
+    public void setProducto(ProductoEntity producto) {
+        this.producto = producto;
     }
 }
