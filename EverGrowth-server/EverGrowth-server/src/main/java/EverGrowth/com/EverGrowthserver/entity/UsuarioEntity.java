@@ -38,9 +38,11 @@ public class UsuarioEntity {
     @Size(max = 255)
     private String apellido2;
 
+    @NotNull
     @Email
     private String email;
 
+    @NotNull
     @Size(min = 5, max = 255)
     private String direccion;
 
@@ -63,6 +65,7 @@ public class UsuarioEntity {
 
     public UsuarioEntity() {
         pedidos = new ArrayList<>();
+        valoracion = new ArrayList<>();
     }
 
     @OneToMany(mappedBy = "user", fetch = jakarta.persistence.FetchType.LAZY)
@@ -177,7 +180,7 @@ public class UsuarioEntity {
         return pedidos.size();
     }
 
-      public int getValoracion() {
+    public int getValoracion() {
         return valoracion.size();
     }
 

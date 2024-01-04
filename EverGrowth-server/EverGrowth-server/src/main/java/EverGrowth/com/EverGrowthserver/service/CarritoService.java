@@ -37,15 +37,11 @@ public class CarritoService {
     }
 
     public CarritoEntity update(CarritoEntity carritoEntityToSet) {
-        Long carritoId = carritoEntityToSet.getId(); 
-        CarritoEntity carritoExistente = carritoRepository.findById(carritoId)
-            .orElseThrow(() -> new ResourceNotFoundException("Carrito item not found with id: " + carritoId));
-     
-        carritoExistente.setCantidad(carritoEntityToSet.getCantidad()); 
 
-        return carritoRepository.save(carritoExistente); 
-    
+        return carritoRepository.save(carritoEntityToSet);
+
     }
+
     public Long delete(Long id) {
         carritoRepository.deleteById(id);
         return id;

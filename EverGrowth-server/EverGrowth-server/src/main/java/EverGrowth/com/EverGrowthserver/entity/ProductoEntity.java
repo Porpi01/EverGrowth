@@ -1,5 +1,6 @@
 package EverGrowth.com.EverGrowthserver.entity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.Entity;
@@ -47,6 +48,8 @@ public class ProductoEntity {
     private List<CarritoEntity> carritos;
 
     public ProductoEntity() {
+        carritos = new ArrayList<>();
+
     }
 
     public ProductoEntity(String nombre, Float precio, int stock, String imagen) {
@@ -92,5 +95,20 @@ public class ProductoEntity {
         return carritos.size();
     }
 
+    public CategoriaEntity getCategoria() {
+        return categoria;
+    }
+
+    public void setCategoria(CategoriaEntity categoria) {
+        this.categoria = categoria;
+    }
+
+    public String getImagen() {
+        return imagen;
+    }
+
+    public void setImagen(String imagen) {
+        this.imagen = imagen;
+    }
 
 }

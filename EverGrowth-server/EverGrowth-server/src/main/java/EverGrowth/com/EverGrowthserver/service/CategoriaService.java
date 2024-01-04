@@ -10,13 +10,11 @@ import EverGrowth.com.EverGrowthserver.entity.CategoriaEntity;
 import EverGrowth.com.EverGrowthserver.exception.ResourceNotFoundException;
 import EverGrowth.com.EverGrowthserver.repository.CategoriaRepository;
 
-
 @Service
 public class CategoriaService {
 
     @Autowired
     CategoriaRepository categoriaRepository;
-
 
     public CategoriaEntity get(Long id) {
         return categoriaRepository.findById(id)
@@ -29,14 +27,7 @@ public class CategoriaService {
     }
 
     public CategoriaEntity update(CategoriaEntity categoriaEntityToSet) {
-        Long categoriaId = categoriaEntityToSet.getId();
-        CategoriaEntity categoriaExistente = categoriaRepository.findById(categoriaId)
-                .orElseThrow(() -> new ResourceNotFoundException("Categoria item not found with id: " + categoriaId));
-
-        categoriaExistente.setNombre(categoriaEntityToSet.getNombre());
-
-        return categoriaRepository.save(categoriaExistente);
-
+        return categoriaRepository.save(categoriaEntityToSet);
     }
 
     public Long delete(Long id) {

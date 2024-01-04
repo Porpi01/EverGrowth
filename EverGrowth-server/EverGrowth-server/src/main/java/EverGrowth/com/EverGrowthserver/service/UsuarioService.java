@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import EverGrowth.com.EverGrowthserver.entity.UsuarioEntity;
 import EverGrowth.com.EverGrowthserver.exception.ResourceNotFoundException;
+import EverGrowth.com.EverGrowthserver.helper.DataGenerationHelper;
 import EverGrowth.com.EverGrowthserver.repository.UsuarioRepository;
 
 @Service
@@ -16,11 +17,10 @@ public class UsuarioService {
     UsuarioRepository usuarioRepository;
 
     private final String tiendaOnlinePassword = "e2cac5c5f7e52ab03441bb70e89726ddbd1f6e5b683dde05fb65e0720290179e";
-    
-   public UsuarioEntity get(Long id) {
+
+    public UsuarioEntity get(Long id) {
         return usuarioRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("User not found"));
     }
-
 
     public Long create(UsuarioEntity oUsuarioEntity) {
         oUsuarioEntity.setId(null);
@@ -29,13 +29,9 @@ public class UsuarioService {
     }
 
     public UsuarioEntity update(UsuarioEntity oUsuarioEntityToSet) {
-        UsuarioEntity oUsuarioEntityFromDatabase = this.get(oUsuarioEntityToSet.getId());
 
-                oUsuarioEntityToSet.setId(oUsuarioEntityFromDatabase.getId());
-                oUsuarioEntityToSet.setrol(oUsuarioEntityFromDatabase.getrol());
-                oUsuarioEntityToSet.setPassword(tiendaOnlinePassword);
-                return usuarioRepository.save(oUsuarioEntityToSet);
-            
+        return usuarioRepository.save(oUsuarioEntityToSet);
+
     }
 
     public Long delete(Long id) {
@@ -48,17 +44,25 @@ public class UsuarioService {
     }
 
     public Long populate(Integer amount) {
+
         for (int i = 0; i < amount; i++) {
-            usuarioRepository.save(new UsuarioEntity("name" + i, "surname" + i, "lastname" + i,
-                    "email" + i + "@ausiasmarch.net", "address" + i, "username" + i,
-                    "e2cac5c5f7e52ab03441bb70e89726ddbd1f6e5b683dde05fb65e0720290179e", true));
-        }
-        return usuarioRepository.count();
+            String nombre = DataGenerationHelper.getRandomName();
+            String apellido1 = DataGenerationHelper.getRandomSurname();
+            String apellido2 = DataGenerationHelper.getRandomSurname();
+            String email = (nombre.substring(0, 3) + apellido1.substring(0, 3) + apellido1.substring(0, 2) + i).toLowerCase()
+                    + "@ausiasmarch.net";
+            String direccion = DataGenerationHelper.generateRandomAddress();
+            String username = DataGenerationHelper
+                    .doNormalizeString(
+                            nombre.substring(0, 3) + apellido1.substring(1, 3) + apellido2.substring(1, 2) + i)
+                    .toLowerCase();
+                    UsuarioEntity usuario = new UsuarioEntity(nombre, apellido1, apellido2, email, direccion, username,
+                    "e2cac5c5f7e52ab03441bb70e89726ddbd1f6e5b683dde05fb65e0720290179e", false);
+            
+            usuarioRepository.save(usuario);
+       
+        }     return usuarioRepository.count();
+      
     }
-
-
-
-
-
 
 }
