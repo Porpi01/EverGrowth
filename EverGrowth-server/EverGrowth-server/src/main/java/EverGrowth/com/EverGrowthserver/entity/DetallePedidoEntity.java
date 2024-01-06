@@ -1,6 +1,7 @@
 package EverGrowth.com.EverGrowthserver.entity;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -22,13 +23,17 @@ public class DetallePedidoEntity {
 
     @ManyToOne
     @JoinColumn(name = "id_producto")
-    private ProductoEntity productos;
+    private ProductoEntity producto;
 
     @ManyToOne
     @JoinColumn(name = "id_pedido")
     private PedidoEntity pedidos;
 
-    public DetallePedidoEntity ( int cantidad, float precio_unitario){
+    public DetallePedidoEntity() {
+
+    }
+
+    public DetallePedidoEntity(int cantidad, float precio_unitario) {
         this.cantidad = cantidad;
         this.precio_unitario = precio_unitario;
     }
@@ -55,5 +60,21 @@ public class DetallePedidoEntity {
 
     public void setPrecio_unitario(Float precio_unitario) {
         this.precio_unitario = precio_unitario;
+    }
+
+    public PedidoEntity getPedidos() {
+        return pedidos;
+    }
+
+    public void setPedidos(PedidoEntity pedidos) {
+        this.pedidos = pedidos;
+    }
+
+    public ProductoEntity getProductos() {
+        return producto;
+    }
+
+    public void setProductos(ProductoEntity producto) {
+        this.producto = producto;
     }
 }

@@ -107,7 +107,7 @@ public class DataGenerationHelper {
   }
 
   private static final String[] nombresProducto = {
-      "Aceite de Oliva", "Agua mineral", "Coca cola", "Fanta de naranja", "Aquarius", "Tónica", "Nestea",
+      "Agua mineral", "Coca cola", "Fanta de naranja", "Aquarius", "Tónica", "Nestea",
       "Aceitunas rellenas de anchoa",
       "Aceitunas picadedos", "Arroz redondo", "Arroz basmati aromático", "Arroz integral redondo", "Garbanzo cocido",
       "Fideo Cabello de Ángel",
@@ -116,9 +116,9 @@ public class DataGenerationHelper {
   };
 
   private static final String[] categoriaProducto = {
-      "Aceite,vinagre y sal", "Agua", "Refrescos", "Refrescos", "Refrescos", "Refrescos", "Refrescos", "Encurtidos",
-      "Encurtidos", "Arroz",
-      "Arroz", "Arroz", "Legumbres", "Pasta", "Pasta", "Pasta", "Pasta", "Chocolate", "Chocolate"
+      "Agua", "Bebidas", "Bebidas", "Bebidas", "Bebidas", "Bebidas", "Conservas",
+      "Conservas", "Arroz",
+      "Arroz", "Arroz", "Legumbres", "Pasta", "Pasta", "Pasta", "Pasta", "Repostería", "Repostería"
   };
 
   private static String getCategoria(String producto) {
@@ -136,7 +136,7 @@ public class DataGenerationHelper {
     return nombresProducto[index];
   }
 
-  public static String generateCategoria() {
+  public static String asociarCategoria() {
     String randomProducto = getRandomProducto();
     return getCategoria(randomProducto);
   }
@@ -149,5 +149,15 @@ public class DataGenerationHelper {
 
   public static float generateRandomPrecio() {
     return 5 + random.nextFloat() * (100 - 5);
+  }
+
+  private static final String[] nombresCategoria = {
+      "Carnes", "Lácteos", "Frutas y Verduras", "Bebidas", "Congelados", "Enlatados", "Cereales", "Pescado y Marisco",
+      "Panadería", "Repostería",
+      "Arroz", "Legumbres", "Pasta", "Conservas"
+  };
+
+  public static String getRandomCategoria() {
+    return nombresCategoria[(int) (Math.random() * nombresCategoria.length)];
   }
 }

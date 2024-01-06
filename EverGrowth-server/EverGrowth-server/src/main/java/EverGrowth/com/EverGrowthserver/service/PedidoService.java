@@ -39,8 +39,12 @@ public class PedidoService {
     }
 
     public Long delete(Long id) {
-        pedidoRepository.deleteById(id);
-        return id;
+        if (pedidoRepository.findById(id).isPresent()) {
+            pedidoRepository.deleteById(id);
+            return id;
+        } else {
+            throw new ResourceNotFoundException("El pedido con el ID " + id + " no existe");
+        }
     }
 
     public Page<PedidoEntity> getPage(Pageable oPageable) {

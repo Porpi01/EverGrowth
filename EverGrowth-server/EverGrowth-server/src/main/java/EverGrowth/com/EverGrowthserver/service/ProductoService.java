@@ -6,15 +6,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import EverGrowth.com.EverGrowthserver.entity.CategoriaEntity;
-import EverGrowth.com.EverGrowthserver.entity.PedidoEntity;
 import EverGrowth.com.EverGrowthserver.entity.ProductoEntity;
-import EverGrowth.com.EverGrowthserver.entity.UsuarioEntity;
 import EverGrowth.com.EverGrowthserver.exception.ResourceNotFoundException;
 import EverGrowth.com.EverGrowthserver.helper.DataGenerationHelper;
 import EverGrowth.com.EverGrowthserver.repository.CategoriaRepository;
-import EverGrowth.com.EverGrowthserver.repository.PedidoRepository;
 import EverGrowth.com.EverGrowthserver.repository.ProductoRepository;
-import jakarta.servlet.http.HttpServletRequest;
 
 @Service
 public class ProductoService {
@@ -30,8 +26,18 @@ public class ProductoService {
     }
 
     public Long create(ProductoEntity oProductoEntity) {
-        oProductoEntity.setId(null);
-        return productoRepository.save(oProductoEntity).getId();
+        Long categoriaId = oProductoEntity.getCategoria().getId();
+        String categoriaNombre = oProductoEntity.getCategoria().getNombre();
+
+        CategoriaEntity categoriaById = categoriaRepository.findById(categoriaId).orElse(null);
+        CategoriaEntity categoriaByNombre = categoriaRepository.findByNombre(categoriaNombre);
+
+        if (categoriaById != null && categoriaByNombre != null && categoriaById.equals(categoriaByNombre)) {
+            oProductoEntity.setId(null);
+            return productoRepository.save(oProductoEntity).getId();
+        } else {
+            throw new RuntimeException("La categoría no existe en la base de datos");
+        }
     }
 
     public ProductoEntity update(ProductoEntity oProductoEntityToSet) {
@@ -39,8 +45,12 @@ public class ProductoService {
     }
 
     public Long delete(Long id) {
-        productoRepository.deleteById(id);
-        return id;
+        if (productoRepository.findById(id).isPresent()) {
+            productoRepository.deleteById(id);
+            return id;
+        } else {
+            throw new ResourceNotFoundException("El producto con el ID " + id + " no existe");
+        }
     }
 
     public Page<ProductoEntity> getPage(Pageable oPageable) {
@@ -48,18 +58,27 @@ public class ProductoService {
     }
 
     public Long populate(Integer amount) {
-        CategoriaEntity categoria = categoriaRepository.findById(1L)
-                .orElseThrow(() -> new IllegalArgumentException("No se encontró una categoria por defecto con ID 1"));
+        Long productosCreados = 0L;
+
         for (int i = 0; i < amount; i++) {
-            ProductoEntity producto = new ProductoEntity();
-            producto.setCategoria(categoria);
-            producto.setStock(DataGenerationHelper.generateRandomStock());
-            producto.setnombre(DataGenerationHelper.getRandomProducto());
-            producto.setprecio(DataGenerationHelper.generateRandomPrecio());
-            producto.setImagen("aaaa");
-            productoRepository.save(producto);
+            String randomProducto = DataGenerationHelper.getRandomProducto();
+            String categoriaProducto = DataGenerationHelper.asociarCategoria();
+
+            CategoriaEntity categoria = categoriaRepository.findByNombre(categoriaProducto);
+            if (categoria != null) {
+                ProductoEntity producto = new ProductoEntity();
+                producto.setCategoria(categoria);
+                producto.setStock(DataGenerationHelper.generateRandomStock());
+                producto.setnombre(randomProducto);
+                producto.setprecio(DataGenerationHelper.generateRandomPrecio());
+                producto.setImagen("aaaa");
+                productoRepository.save(producto);
+                productosCreados++;
+            } else {
+                throw new RuntimeException("La categoría no existe en la base de datos: " + categoriaProducto);
+            }
         }
-        return amount.longValue();
+        return productosCreados;
     }
 
 }

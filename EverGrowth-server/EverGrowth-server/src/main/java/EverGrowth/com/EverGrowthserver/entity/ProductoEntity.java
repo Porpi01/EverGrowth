@@ -47,9 +47,16 @@ public class ProductoEntity {
     @OneToMany(mappedBy = "producto", fetch = jakarta.persistence.FetchType.LAZY)
     private List<CarritoEntity> carritos;
 
+    @OneToMany(mappedBy = "producto", fetch = jakarta.persistence.FetchType.LAZY)
+    private List<ValoracionEntity> valoracion;
+
+    @OneToMany(mappedBy = "producto", fetch = jakarta.persistence.FetchType.LAZY)
+    private List<DetallePedidoEntity> detallePedido;
+
     public ProductoEntity() {
         carritos = new ArrayList<>();
-
+        valoracion = new ArrayList<>();
+        detallePedido = new ArrayList<>();
     }
 
     public ProductoEntity(String nombre, Float precio, int stock, String imagen) {
@@ -93,6 +100,10 @@ public class ProductoEntity {
 
     public int getCarritos() {
         return carritos.size();
+    }
+
+    public int getValoracion() {
+        return valoracion.size();
     }
 
     public CategoriaEntity getCategoria() {

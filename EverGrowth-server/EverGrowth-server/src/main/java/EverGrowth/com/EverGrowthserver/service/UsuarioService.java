@@ -29,16 +29,18 @@ public class UsuarioService {
     }
 
     public UsuarioEntity update(UsuarioEntity oUsuarioEntityToSet) {
-
         return usuarioRepository.save(oUsuarioEntityToSet);
 
     }
 
     public Long delete(Long id) {
-        usuarioRepository.deleteById(id);
-        return id;
+        if (usuarioRepository.findById(id).isPresent()) {
+            usuarioRepository.deleteById(id);
+            return id;
+        } else {
+            throw new ResourceNotFoundException("El usuario con el ID " + id + " no existe");
+        }
     }
-
     public Page<UsuarioEntity> getPage(Pageable oPageable) {
         return usuarioRepository.findAll(oPageable);
     }
@@ -49,20 +51,22 @@ public class UsuarioService {
             String nombre = DataGenerationHelper.getRandomName();
             String apellido1 = DataGenerationHelper.getRandomSurname();
             String apellido2 = DataGenerationHelper.getRandomSurname();
-            String email = (nombre.substring(0, 3) + apellido1.substring(0, 3) + apellido1.substring(0, 2) + i).toLowerCase()
-                    + "@ausiasmarch.net";
+            String email = (nombre.substring(0, 3) + apellido1.substring(0, 3) + apellido1.substring(0, 2) + i)
+                    .toLowerCase()
+                    + "@gmail.com";
             String direccion = DataGenerationHelper.generateRandomAddress();
             String username = DataGenerationHelper
                     .doNormalizeString(
                             nombre.substring(0, 3) + apellido1.substring(1, 3) + apellido2.substring(1, 2) + i)
                     .toLowerCase();
-                    UsuarioEntity usuario = new UsuarioEntity(nombre, apellido1, apellido2, email, direccion, username,
+            UsuarioEntity usuario = new UsuarioEntity(nombre, apellido1, apellido2, email, direccion, username,
                     "e2cac5c5f7e52ab03441bb70e89726ddbd1f6e5b683dde05fb65e0720290179e", false);
-            
+
             usuarioRepository.save(usuario);
-       
-        }     return usuarioRepository.count();
-      
+
+        }
+        return usuarioRepository.count();
+
     }
 
 }

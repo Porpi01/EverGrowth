@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import EverGrowth.com.EverGrowthserver.entity.CategoriaEntity;
 
 import EverGrowth.com.EverGrowthserver.exception.ResourceNotFoundException;
+import EverGrowth.com.EverGrowthserver.helper.DataGenerationHelper;
 import EverGrowth.com.EverGrowthserver.repository.CategoriaRepository;
 
 @Service
@@ -31,20 +32,27 @@ public class CategoriaService {
     }
 
     public Long delete(Long id) {
-        categoriaRepository.deleteById(id);
-        return id;
+        if (categoriaRepository.findById(id).isPresent()) {
+            categoriaRepository.deleteById(id);
+            return id;
+        } else {
+            throw new ResourceNotFoundException("La categoría con el ID " + id + " no existe");
+        }
     }
-
     public Page<CategoriaEntity> getPage(Pageable oPageable) {
         return categoriaRepository.findAll(oPageable);
     }
 
     public Long populate(Integer amount) {
-
         for (int i = 0; i < amount; i++) {
-            categoriaRepository.save(new CategoriaEntity("name" + i));
+            String nombre = DataGenerationHelper.getRandomCategoria();
+    
+            CategoriaEntity existingCategory = categoriaRepository.findByNombre(nombre);
+            if (existingCategory == null) {
+                CategoriaEntity categoria = new CategoriaEntity(nombre);
+                categoriaRepository.save(categoria);
+            }
         }
         return categoriaRepository.count();
     }
-
 }

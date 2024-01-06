@@ -27,10 +27,10 @@ public class CategoriaEntity {
     private String nombre;
 
     @OneToMany(mappedBy = "categoria", fetch = jakarta.persistence.FetchType.LAZY)
-    private List<ProductoEntity> productos;
+    private List<ProductoEntity> producto;
 
     public CategoriaEntity() {
-        productos = new ArrayList<>();
+        producto = new ArrayList<>();
     }
 
     public CategoriaEntity(String nombre) {
@@ -54,6 +54,6 @@ public class CategoriaEntity {
     }
 
     public int getProductos(){
-        return productos.size();
+        return producto.size();
     }
 }
