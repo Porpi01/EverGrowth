@@ -116,7 +116,7 @@ public class DataGenerationHelper {
   };
 
   private static final String[] categoriaProducto = {
-      "Agua", "Bebidas", "Bebidas", "Bebidas", "Bebidas", "Bebidas", "Conservas",
+      "Bebidas", "Bebidas", "Bebidas", "Bebidas", "Bebidas", "Bebidas", "Conservas",
       "Conservas", "Arroz",
       "Arroz", "Arroz", "Legumbres", "Pasta", "Pasta", "Pasta", "Pasta", "Repostería", "Repostería"
   };
@@ -130,17 +130,21 @@ public class DataGenerationHelper {
     return "No existe la categoría";
   }
 
+  private static String productoActual = null; 
+
   public static String getRandomProducto() {
-    Random rand = new Random();
-    int index = rand.nextInt(nombresProducto.length);
-    return nombresProducto[index];
+      Random rand = new Random();
+      int index = rand.nextInt(nombresProducto.length);
+      productoActual = nombresProducto[index]; 
+      return productoActual;
   }
-
-  public static String asociarCategoria() {
-    String randomProducto = getRandomProducto();
-    return getCategoria(randomProducto);
+  
+  public static String asociarCategoria(String randomProducto) {
+      if (productoActual == null) {
+          getRandomProducto(); 
+      }
+      return getCategoria(productoActual);
   }
-
   private static final Random random = new Random();
 
   public static int generateRandomStock() {

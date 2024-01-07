@@ -59,11 +59,11 @@ public class ProductoService {
 
     public Long populate(Integer amount) {
         Long productosCreados = 0L;
-
+    
         for (int i = 0; i < amount; i++) {
             String randomProducto = DataGenerationHelper.getRandomProducto();
-            String categoriaProducto = DataGenerationHelper.asociarCategoria();
-
+            String categoriaProducto = DataGenerationHelper.asociarCategoria(randomProducto); 
+    
             CategoriaEntity categoria = categoriaRepository.findByNombre(categoriaProducto);
             if (categoria != null) {
                 ProductoEntity producto = new ProductoEntity();
