@@ -56,7 +56,7 @@ public class DetallePedidoService {
 
         PedidoEntity pedidoporDefecto = pedidoRepository.findById(1L)
                 .orElseThrow(() -> new IllegalArgumentException("No se encontró un pedido por defecto con ID 1"));
-        ProductoEntity productoporDefecto = productoRepository.findById(1L)
+        ProductoEntity productoporDefecto = productoRepository.findById(9L)
                 .orElseThrow(() -> new IllegalArgumentException("No se encontró un producto por defecto con ID 1"));
 
         for (int i = 0; i < amount; i++) {

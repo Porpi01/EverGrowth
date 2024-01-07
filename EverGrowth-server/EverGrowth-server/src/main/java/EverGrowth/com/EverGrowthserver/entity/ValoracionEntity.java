@@ -60,4 +60,20 @@ public class ValoracionEntity {
         this.mensaje = mensaje;
     }
 
+    public ProductoEntity getProducto() {
+        return producto;
+    }
+
+    public void setProducto(ProductoEntity producto) {
+        this.producto = producto;
+    }
+
+    public UsuarioEntity getUser() {
+        return user;
+    }
+
+    public void setUser(UsuarioEntity user) {
+        this.user = user;
+    }
+
 }

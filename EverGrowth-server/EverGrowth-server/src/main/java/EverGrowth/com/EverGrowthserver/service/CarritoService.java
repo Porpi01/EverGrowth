@@ -1,7 +1,5 @@
 package EverGrowth.com.EverGrowthserver.service;
 
-import java.time.LocalDateTime;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -55,7 +53,7 @@ public class CarritoService {
         UsuarioEntity clientePorDefecto = usuarioRepository.findById(1L)
                 .orElseThrow(() -> new IllegalArgumentException("No se encontró un usuario por defecto con ID 1"));
 
-        ProductoEntity productoPorDefecto = productoRepository.findById(1L)
+        ProductoEntity productoPorDefecto = productoRepository.findById(9L)
                 .orElseThrow(() -> new IllegalArgumentException("No se encontró un producto por defecto con ID 1"));
 
         for (int i = 0; i < amount; i++) {
@@ -63,6 +61,7 @@ public class CarritoService {
             carrito.setUser(clientePorDefecto);
             carrito.setCantidad(0);
             carrito.setProducto(productoPorDefecto);
+            carritoRepository.save(carrito);
         }
 
         return amount.longValue();
