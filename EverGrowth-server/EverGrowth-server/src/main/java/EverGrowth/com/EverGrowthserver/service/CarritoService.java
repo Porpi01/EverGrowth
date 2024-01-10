@@ -28,6 +28,10 @@ public class CarritoService {
     public CarritoEntity get(Long id) {
         return carritoRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Carrito no encontrado"));
     }
+ 
+    public Long count(UsuarioEntity user) {
+        return carritoRepository.countByUser(user);
+    }
 
     public Long create(CarritoEntity carritoEntity) {
         carritoEntity.setId(null);
