@@ -55,6 +55,10 @@ public class UsuarioAPI {
     public ResponseEntity<Long> populate(@PathVariable("amount") Integer amount) {
         return ResponseEntity.ok(oUsuarioService.populate(amount));
     }
+    @DeleteMapping("/empty")
+    public ResponseEntity<Long> empty() {
+        return ResponseEntity.ok(oUsuarioService.empty());
+    }
 
 
 

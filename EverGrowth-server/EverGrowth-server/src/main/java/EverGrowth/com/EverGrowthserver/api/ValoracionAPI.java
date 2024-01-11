@@ -56,4 +56,9 @@ public class ValoracionAPI {
         return ResponseEntity.ok(valoracionService.populate(amount));
     }
 
+    @DeleteMapping("/empty")
+    public ResponseEntity<Long> empty() {
+        return ResponseEntity.ok(valoracionService.empty());
+    }
+
 }

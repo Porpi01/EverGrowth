@@ -54,5 +54,9 @@ public class DetallePedidoAPI {
     public ResponseEntity<Long> populate(@PathVariable("amount") Integer amount) {
         return ResponseEntity.ok(detallePedidoService.populate(amount));
     }
+    @DeleteMapping("/empty")
+    public ResponseEntity<Long> empty() {
+        return ResponseEntity.ok(detallePedidoService.empty());
+    }
 
 }

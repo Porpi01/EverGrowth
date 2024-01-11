@@ -17,6 +17,7 @@ public class CarritoEntity {
 
     private Long id;
 
+    
     private int cantidad;
 
     @ManyToOne

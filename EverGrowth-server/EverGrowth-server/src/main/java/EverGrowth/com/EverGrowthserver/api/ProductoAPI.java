@@ -57,4 +57,10 @@ public class ProductoAPI {
         return ResponseEntity.ok(oProductoService.populate(amount));
     }
 
+    @DeleteMapping("/empty")
+    public ResponseEntity<Long> empty() {
+        return ResponseEntity.ok(oProductoService.empty());
+    }
+
+
 }

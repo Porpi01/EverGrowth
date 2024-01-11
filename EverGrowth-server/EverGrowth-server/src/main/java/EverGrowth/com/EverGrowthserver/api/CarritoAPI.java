@@ -75,4 +75,10 @@ public class CarritoAPI {
         return ResponseEntity.ok(carritoService.populate(amount));
     }
 
+    @DeleteMapping("/empty")
+    public ResponseEntity<Long> empty() {
+        return ResponseEntity.ok(carritoService.empty());
+    }
+
+
 }

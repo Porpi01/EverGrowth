@@ -15,6 +15,7 @@ import EverGrowth.com.EverGrowthserver.helper.DataGenerationHelper;
 import EverGrowth.com.EverGrowthserver.repository.ProductoRepository;
 import EverGrowth.com.EverGrowthserver.repository.UsuarioRepository;
 import EverGrowth.com.EverGrowthserver.repository.ValoracionRepository;
+import jakarta.transaction.Transactional;
 
 @Service
 public class ValoracionService {
@@ -73,5 +74,15 @@ public class ValoracionService {
         }
         return amount.longValue();
     }
+
+    @Transactional
+    public Long empty() {
+      
+        valoracionRepository.deleteAll();
+        valoracionRepository.resetAutoIncrement();
+        valoracionRepository.flush();
+        return valoracionRepository.count();
+    }
+
 
 }

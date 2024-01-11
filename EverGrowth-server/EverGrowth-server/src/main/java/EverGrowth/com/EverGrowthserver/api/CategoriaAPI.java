@@ -59,4 +59,10 @@ public class CategoriaAPI {
         return ResponseEntity.ok(oCategoriaService.populate(amount));
     }
 
+    @DeleteMapping("/empty")
+    public ResponseEntity<Long> empty() {
+        return ResponseEntity.ok(oCategoriaService.empty());
+    }
+
+
 }

@@ -12,6 +12,7 @@ import EverGrowth.com.EverGrowthserver.exception.ResourceNotFoundException;
 import EverGrowth.com.EverGrowthserver.repository.DetallePedidoRepository;
 import EverGrowth.com.EverGrowthserver.repository.PedidoRepository;
 import EverGrowth.com.EverGrowthserver.repository.ProductoRepository;
+import jakarta.transaction.Transactional;
 
 @Service
 public class DetallePedidoService {
@@ -69,6 +70,15 @@ public class DetallePedidoService {
             detallePedidoRepository.save(detallePedido);
         }
         return amount.longValue();
+    }
+
+      @Transactional
+    public Long empty() {
+
+        detallePedidoRepository.deleteAll();
+        detallePedidoRepository.resetAutoIncrement();
+        detallePedidoRepository.flush();
+        return detallePedidoRepository.count();
     }
 
 }

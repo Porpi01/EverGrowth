@@ -57,4 +57,10 @@ public class PedidoAPI {
         return ResponseEntity.ok(oPedidoService.populate(amount));
     }
 
+    @DeleteMapping("/empty")
+    public ResponseEntity<Long> empty() {
+        return ResponseEntity.ok(oPedidoService.empty());
+    }
+
+
 }
