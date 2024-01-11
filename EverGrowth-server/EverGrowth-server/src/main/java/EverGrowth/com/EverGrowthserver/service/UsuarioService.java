@@ -24,6 +24,12 @@ public class UsuarioService {
         return usuarioRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("User not found"));
     }
 
+    public UsuarioEntity getByUsername(String username) {
+        return usuarioRepository.findByUsername(username)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found by username"));
+    }
+
+
     public Long create(UsuarioEntity oUsuarioEntity) {
         oUsuarioEntity.setId(null);
         oUsuarioEntity.setPassword(tiendaOnlinePassword);
@@ -77,7 +83,7 @@ public class UsuarioService {
             usuarioRepository.save(usuario);
 
         }
-        return usuarioRepository.count();
+        return usuarioRepository.count();// Devuelve el número de usuarios que hay en la base de datos
 
     }
 

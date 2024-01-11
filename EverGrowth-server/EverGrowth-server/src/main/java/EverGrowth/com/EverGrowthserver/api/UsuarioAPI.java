@@ -24,8 +24,7 @@ import EverGrowth.com.EverGrowthserver.service.UsuarioService;
 @RestController
 @RequestMapping("/user")
 public class UsuarioAPI {
-    
-    
+
     @Autowired
     UsuarioService oUsuarioService;
 
@@ -33,7 +32,12 @@ public class UsuarioAPI {
     public ResponseEntity<UsuarioEntity> get(@PathVariable("id") Long id) {
         return ResponseEntity.ok(oUsuarioService.get(id));
     }
-    
+
+    @GetMapping("/byUsername/{username}")
+    public ResponseEntity<UsuarioEntity> get(@PathVariable("username") String username) {
+        return ResponseEntity.ok(oUsuarioService.getByUsername(username));
+    }
+
     @PostMapping("")
     public ResponseEntity<Long> create(@RequestBody UsuarioEntity oUsuarioEntity) {
         return ResponseEntity.ok(oUsuarioService.create(oUsuarioEntity));
@@ -49,7 +53,7 @@ public class UsuarioAPI {
         return ResponseEntity.ok(oUsuarioService.delete(id));
     }
 
-  @GetMapping("")
+    @GetMapping("")
     public ResponseEntity<Page<UsuarioEntity>> getPage(
             Pageable oPageable,
             @RequestParam(name = "filter", required = false) String strFilter) {
@@ -60,12 +64,10 @@ public class UsuarioAPI {
     public ResponseEntity<Long> populate(@PathVariable("amount") Integer amount) {
         return ResponseEntity.ok(oUsuarioService.populate(amount));
     }
+
     @DeleteMapping("/empty")
     public ResponseEntity<Long> empty() {
         return ResponseEntity.ok(oUsuarioService.empty());
     }
-
-
-
 
 }
