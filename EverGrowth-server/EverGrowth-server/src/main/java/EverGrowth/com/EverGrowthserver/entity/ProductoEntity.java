@@ -1,5 +1,6 @@
 package EverGrowth.com.EverGrowthserver.entity;
 
+import java.sql.Blob;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,8 +34,8 @@ public class ProductoEntity {
     @PositiveOrZero
     Float precio;
 
-    @NotNull
-    String imagen;
+   
+    Blob imagen;
 
     @NotNull
     @PositiveOrZero
@@ -59,7 +60,7 @@ public class ProductoEntity {
         detallePedido = new ArrayList<>();
     }
 
-    public ProductoEntity(String nombre, Float precio, int stock, String imagen) {
+    public ProductoEntity(String nombre, Float precio, int stock, Blob imagen) {
         this.nombre = nombre;
         this.precio = precio;
         this.stock = stock;
@@ -114,11 +115,11 @@ public class ProductoEntity {
         this.categoria = categoria;
     }
 
-    public String getImagen() {
+    public Blob getImagen() {
         return imagen;
     }
 
-    public void setImagen(String imagen) {
+    public void setImagen(Blob imagen) {
         this.imagen = imagen;
     }
 

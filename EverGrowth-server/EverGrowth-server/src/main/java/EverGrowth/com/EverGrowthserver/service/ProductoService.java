@@ -1,5 +1,7 @@
 package EverGrowth.com.EverGrowthserver.service;
 
+import java.sql.Blob;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -82,7 +84,7 @@ public class ProductoService {
                 producto.setStock(DataGenerationHelper.generateRandomStock());
                 producto.setnombre(randomProducto);
                 producto.setprecio(DataGenerationHelper.generateRandomPrecio());
-                producto.setImagen("aaaa");
+                producto.setImagen(null);
                 productoRepository.save(producto);
                 productosCreados++;
             } else {
