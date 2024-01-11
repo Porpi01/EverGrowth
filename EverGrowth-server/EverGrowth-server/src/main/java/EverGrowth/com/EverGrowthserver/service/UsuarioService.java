@@ -6,9 +6,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import EverGrowth.com.EverGrowthserver.entity.UsuarioEntity;
+import EverGrowth.com.EverGrowthserver.entity.ValoracionEntity;
 import EverGrowth.com.EverGrowthserver.exception.ResourceNotFoundException;
 import EverGrowth.com.EverGrowthserver.helper.DataGenerationHelper;
 import EverGrowth.com.EverGrowthserver.repository.UsuarioRepository;
+import jakarta.transaction.Transactional;
 
 @Service
 public class UsuarioService {
@@ -41,8 +43,18 @@ public class UsuarioService {
             throw new ResourceNotFoundException("El usuario con el ID " + id + " no existe");
         }
     }
-    public Page<UsuarioEntity> getPage(Pageable oPageable) {
-        return usuarioRepository.findAll(oPageable);
+
+    public Page<UsuarioEntity> getPage(Pageable oPageable, String filter) {
+
+        Page<UsuarioEntity> page;
+
+        if (filter == null || filter.isEmpty() || filter.trim().isEmpty()) {
+            page = usuarioRepository.findAll(oPageable);
+        } else {
+            page = usuarioRepository.findByUserByNameOrSurnameOrLastnameContainingIgnoreCase(
+                    filter, filter, filter, filter, oPageable);
+        }
+        return page;
     }
 
     public Long populate(Integer amount) {
@@ -67,6 +79,15 @@ public class UsuarioService {
         }
         return usuarioRepository.count();
 
+    }
+
+    @Transactional
+    public Long empty() {
+
+        usuarioRepository.deleteAll();
+        usuarioRepository.resetAutoIncrement();
+        usuarioRepository.flush();
+        return usuarioRepository.count();
     }
 
 }

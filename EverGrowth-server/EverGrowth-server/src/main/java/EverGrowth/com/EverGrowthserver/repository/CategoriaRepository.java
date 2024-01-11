@@ -14,7 +14,7 @@ public interface CategoriaRepository extends JpaRepository<CategoriaEntity, Long
 
     Optional<CategoriaEntity> findById(Long id);
 
-     @Modifying
+    @Modifying
     @Query(value = "ALTER TABLE categoria AUTO_INCREMENT = 1", nativeQuery = true)
     void resetAutoIncrement();
 }

@@ -7,10 +7,12 @@ import org.springframework.stereotype.Service;
 
 import EverGrowth.com.EverGrowthserver.entity.CategoriaEntity;
 import EverGrowth.com.EverGrowthserver.entity.ProductoEntity;
+import EverGrowth.com.EverGrowthserver.entity.ValoracionEntity;
 import EverGrowth.com.EverGrowthserver.exception.ResourceNotFoundException;
 import EverGrowth.com.EverGrowthserver.helper.DataGenerationHelper;
 import EverGrowth.com.EverGrowthserver.repository.CategoriaRepository;
 import EverGrowth.com.EverGrowthserver.repository.ProductoRepository;
+import jakarta.transaction.Transactional;
 
 @Service
 public class ProductoService {
@@ -53,8 +55,17 @@ public class ProductoService {
         }
     }
 
-    public Page<ProductoEntity> getPage(Pageable oPageable) {
-        return productoRepository.findAll(oPageable);
+    public Page<ProductoEntity> getPage(Pageable oPageable, String filter) {
+
+        Page<ProductoEntity> page;
+
+        if (filter == null || filter.isEmpty() || filter.trim().isEmpty()) {
+            page = productoRepository.findAll(oPageable);
+        } else {
+            page = productoRepository.findByName(
+                    filter, oPageable);
+        }
+        return page;
     }
 
     public Long populate(Integer amount) {
@@ -80,5 +91,15 @@ public class ProductoService {
         }
         return productosCreados;
     }
+
+  @Transactional
+    public Long empty() {
+
+        productoRepository.deleteAll();
+        productoRepository.resetAutoIncrement();
+        productoRepository.flush();
+        return productoRepository.count();
+    }
+
 
 }

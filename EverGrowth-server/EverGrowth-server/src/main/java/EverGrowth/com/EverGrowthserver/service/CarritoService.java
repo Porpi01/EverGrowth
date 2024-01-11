@@ -12,6 +12,7 @@ import EverGrowth.com.EverGrowthserver.exception.ResourceNotFoundException;
 import EverGrowth.com.EverGrowthserver.repository.CarritoRepository;
 import EverGrowth.com.EverGrowthserver.repository.ProductoRepository;
 import EverGrowth.com.EverGrowthserver.repository.UsuarioRepository;
+import jakarta.transaction.Transactional;
 
 @Service
 public class CarritoService {
@@ -28,7 +29,7 @@ public class CarritoService {
     public CarritoEntity get(Long id) {
         return carritoRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Carrito no encontrado"));
     }
- 
+
     public Long count(UsuarioEntity user) {
         return carritoRepository.countByUser(user);
     }
@@ -71,4 +72,12 @@ public class CarritoService {
         return amount.longValue();
     }
 
+    @Transactional
+    public Long empty() {
+
+        carritoRepository.deleteAll();
+        carritoRepository.resetAutoIncrement();
+        carritoRepository.flush();
+        return carritoRepository.count();
+    }
 }

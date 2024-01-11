@@ -1,5 +1,6 @@
 package EverGrowth.com.EverGrowthserver.service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,8 +53,17 @@ public class ValoracionService {
         }
     }
 
-    public Page<ValoracionEntity> getPage(Pageable oPageable) {
-        return valoracionRepository.findAll(oPageable);
+    public Page<ValoracionEntity> getPage(Pageable oPageable, String filter) {
+
+        Page<ValoracionEntity> page;
+
+        if (filter == null || filter.isEmpty() || filter.trim().isEmpty()) {
+            page = valoracionRepository.findAll(oPageable);
+        } else {
+            page = valoracionRepository.findByMensaje(
+                    filter, oPageable);
+        }
+        return page;
     }
 
     public Long populate(Integer amount) {
@@ -77,12 +87,11 @@ public class ValoracionService {
 
     @Transactional
     public Long empty() {
-      
+
         valoracionRepository.deleteAll();
         valoracionRepository.resetAutoIncrement();
         valoracionRepository.flush();
         return valoracionRepository.count();
     }
-
 
 }

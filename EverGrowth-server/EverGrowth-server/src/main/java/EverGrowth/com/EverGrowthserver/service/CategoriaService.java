@@ -10,6 +10,7 @@ import EverGrowth.com.EverGrowthserver.entity.CategoriaEntity;
 import EverGrowth.com.EverGrowthserver.exception.ResourceNotFoundException;
 import EverGrowth.com.EverGrowthserver.helper.DataGenerationHelper;
 import EverGrowth.com.EverGrowthserver.repository.CategoriaRepository;
+import jakarta.transaction.Transactional;
 
 @Service
 public class CategoriaService {
@@ -53,6 +54,15 @@ public class CategoriaService {
                 categoriaRepository.save(categoria);
             }
         }
+        return categoriaRepository.count();
+    }
+
+      @Transactional
+    public Long empty() {
+
+        categoriaRepository.deleteAll();
+        categoriaRepository.resetAutoIncrement();
+        categoriaRepository.flush();
         return categoriaRepository.count();
     }
 }

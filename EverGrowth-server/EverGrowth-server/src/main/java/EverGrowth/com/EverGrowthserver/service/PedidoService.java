@@ -13,7 +13,7 @@ import EverGrowth.com.EverGrowthserver.entity.UsuarioEntity;
 import EverGrowth.com.EverGrowthserver.exception.ResourceNotFoundException;
 import EverGrowth.com.EverGrowthserver.helper.DataGenerationHelper;
 import EverGrowth.com.EverGrowthserver.repository.UsuarioRepository;
-
+import jakarta.transaction.Transactional;
 import EverGrowth.com.EverGrowthserver.repository.PedidoRepository;
 
 @Service
@@ -65,5 +65,14 @@ public class PedidoService {
         }
         return amount.longValue();
     }
+  @Transactional
+    public Long empty() {
+
+        pedidoRepository.deleteAll();
+        pedidoRepository.resetAutoIncrement();
+        pedidoRepository.flush();
+        return pedidoRepository.count();
+    }
+
 
 }
