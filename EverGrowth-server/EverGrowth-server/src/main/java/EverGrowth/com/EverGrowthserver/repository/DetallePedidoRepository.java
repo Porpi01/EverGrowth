@@ -9,7 +9,7 @@ import EverGrowth.com.EverGrowthserver.entity.DetallePedidoEntity;
 public interface DetallePedidoRepository extends JpaRepository<DetallePedidoEntity, Long> {
 
      @Modifying
-    @Query(value = "ALTER TABLE detalle pedido AUTO_INCREMENT = 1", nativeQuery = true)
+    @Query(value = "ALTER TABLE detalle_pedido AUTO_INCREMENT = 1", nativeQuery = true)
     void resetAutoIncrement();
     
 }
