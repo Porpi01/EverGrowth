@@ -72,12 +72,13 @@ public class UsuarioService {
             String email = (nombre.substring(0, 3) + apellido1.substring(0, 3) + apellido1.substring(0, 2) + i)
                     .toLowerCase()
                     + "@gmail.com";
+            String telefono = DataGenerationHelper.generateRandomPhone();
             String direccion = DataGenerationHelper.generateRandomAddress();
             String username = DataGenerationHelper
                     .doNormalizeString(
                             nombre.substring(0, 3) + apellido1.substring(1, 3) + apellido2.substring(1, 2) + i)
                     .toLowerCase();
-            UsuarioEntity usuario = new UsuarioEntity(nombre, apellido1, apellido2, email, direccion, username,
+            UsuarioEntity usuario = new UsuarioEntity(nombre, apellido1, apellido2, email, telefono, direccion, username,
                     "e2cac5c5f7e52ab03441bb70e89726ddbd1f6e5b683dde05fb65e0720290179e", false);
 
             usuarioRepository.save(usuario);

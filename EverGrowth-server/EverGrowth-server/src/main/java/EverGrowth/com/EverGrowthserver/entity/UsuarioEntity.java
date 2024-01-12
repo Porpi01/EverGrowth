@@ -43,6 +43,10 @@ public class UsuarioEntity {
     private String email;
 
     @NotNull
+    @Pattern(regexp = "\\d{9}", message = "El número de teléfono debe tener 9 dígitos")
+    private String telefono;
+
+    @NotNull
     @Size(min = 5, max = 255)
     private String direccion;
 
@@ -85,14 +89,13 @@ public class UsuarioEntity {
         this.rol = rol;
     }
 
-    public UsuarioEntity(String nombre, String apellido1, String apellido2, String email, String direccion,
-            String username,
-            String password,
-            Boolean rol) {
+    public UsuarioEntity(String nombre, String apellido1, String apellido2, String email, String telefono, String direccion,
+            String username,String password, Boolean rol) {
         this.nombre = nombre;
         this.apellido1 = apellido1;
         this.apellido2 = apellido2;
         this.email = email;
+        this.telefono = telefono;
         this.direccion = direccion;
         this.username = username;
         this.password = password;
@@ -142,6 +145,15 @@ public class UsuarioEntity {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    
+    public String getTelefono() {
+        return telefono;
+    }
+
+    public void setTelefono(String telefono) {
+        this.telefono = telefono;
     }
 
     public String getdireccion() {

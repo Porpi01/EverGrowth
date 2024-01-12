@@ -239,4 +239,14 @@ public class DataGenerationHelper {
         }
         return sentences;
     }
+
+    public static String generateRandomPhone() {
+      return  generateRandomNumber(600000000, 699999999);
+  }
+
+  private static String generateRandomNumber(int min, int max) {
+      Random random = new Random();
+      int randomNumber = random.nextInt(max - min + 1) + min;
+      return String.format("%09d", randomNumber);
+  }
 }
