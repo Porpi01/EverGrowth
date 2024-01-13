@@ -17,8 +17,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import EverGrowth.com.EverGrowthserver.entity.ProductoEntity;
-import EverGrowth.com.EverGrowthserver.entity.UsuarioEntity;
-import EverGrowth.com.EverGrowthserver.entity.ValoracionEntity;
 import EverGrowth.com.EverGrowthserver.service.ProductoService;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*", maxAge = 3600)
