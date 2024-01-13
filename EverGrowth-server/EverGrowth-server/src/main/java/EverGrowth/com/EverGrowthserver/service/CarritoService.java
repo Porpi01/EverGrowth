@@ -26,6 +26,12 @@ public class CarritoService {
     @Autowired
     ProductoRepository productoRepository;
 
+    @Autowired
+    UsuarioService usuarioService;
+
+    @Autowired
+    ProductoService productoService;
+
     public CarritoEntity get(Long id) {
         return carritoRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Carrito no encontrado"));
     }
@@ -55,17 +61,13 @@ public class CarritoService {
     }
 
     public Long populate(Integer amount) {
-        UsuarioEntity clientePorDefecto = usuarioRepository.findById(1L)
-                .orElseThrow(() -> new IllegalArgumentException("No se encontró un usuario por defecto con ID 1"));
-
-        ProductoEntity productoPorDefecto = productoRepository.findById(9L)
-                .orElseThrow(() -> new IllegalArgumentException("No se encontró un producto por defecto con ID 1"));
+    
 
         for (int i = 0; i < amount; i++) {
             CarritoEntity carrito = new CarritoEntity();
-            carrito.setUser(clientePorDefecto);
+            carrito.setUser(usuarioService.getOneRandom());
             carrito.setCantidad(0);
-            carrito.setProducto(productoPorDefecto);
+            carrito.setProducto(productoService.getOneRandom());
             carritoRepository.save(carrito);
         }
 

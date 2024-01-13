@@ -1,9 +1,13 @@
 package EverGrowth.com.EverGrowthserver.helper;
 
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Collectors;
 
 public class DataGenerationHelper {
 
@@ -128,21 +132,22 @@ public class DataGenerationHelper {
     return "No existe la categoría";
   }
 
-  private static String productoActual = null; 
+  private static String productoActual = null;
 
   public static String getRandomProducto() {
-      Random rand = new Random();
-      int index = rand.nextInt(nombresProducto.length);
-      productoActual = nombresProducto[index]; 
-      return productoActual;
+    Random rand = new Random();
+    int index = rand.nextInt(nombresProducto.length);
+    productoActual = nombresProducto[index];
+    return productoActual;
   }
-  
+
   public static String asociarCategoria(String randomProducto) {
-      if (productoActual == null) {
-          getRandomProducto(); 
-      }
-      return getCategoria(productoActual);
+    if (productoActual == null) {
+      getRandomProducto();
+    }
+    return getCategoria(productoActual);
   }
+
   private static final Random random = new Random();
 
   public static int generateRandomStock() {
@@ -163,90 +168,90 @@ public class DataGenerationHelper {
     return nombresCategoria[(int) (Math.random() * nombresCategoria.length)];
   }
 
-    // Define arrays for different word categories
-    private static String[] articles = { "the", "a", "one" };
-    private static String[] nouns = { "cat", "dog", "book", "birds", "sun", "sandwich", "friend", "car", "house" };
-    private static String[] verbs = { "sleeps", "barks", "reads", "fly", "shines", "run", "ate", "is" };
-    private static String[] adverbs = { "loudly", "quickly", "brightly", "slowly", "softly" };
-    private static String[] conjunctions = { "and", "but", "or" };
-    private static String[] subordinatingConjunctions = { "although", "because", "while", "if", "when", "as", "after",
-            "before", "since", "until", "unless", "where", "wherever", "whether", "while", "even if", "even though",
-            "once", "provided that", "so that", "than", "though", "in order to", "so that", "that", "unless", "until",
-            "when", "whenever", "where", "wherever", "whether", "while" };
+  // Define arrays for different word categories
+  private static String[] articles = { "the", "a", "one" };
+  private static String[] nouns = { "cat", "dog", "book", "birds", "sun", "sandwich", "friend", "car", "house" };
+  private static String[] verbs = { "sleeps", "barks", "reads", "fly", "shines", "run", "ate", "is" };
+  private static String[] adverbs = { "loudly", "quickly", "brightly", "slowly", "softly" };
+  private static String[] conjunctions = { "and", "but", "or" };
+  private static String[] subordinatingConjunctions = { "although", "because", "while", "if", "when", "as", "after",
+      "before", "since", "until", "unless", "where", "wherever", "whether", "while", "even if", "even though",
+      "once", "provided that", "so that", "than", "though", "in order to", "so that", "that", "unless", "until",
+      "when", "whenever", "where", "wherever", "whether", "while" };
 
-    public static String generateSentence() {
-        // Randomly decide if it's a simple, compound, or complex sentence
-        int sentenceType = random.nextInt(3);
-        if (sentenceType == 0) {
-            return generateSimpleSentence();
-        } else if (sentenceType == 1) {
-            return generateCompoundSentence();
-        } else {
-            return generateComplexSentence();
-        }
+  public static String generateSentence() {
+    int sentenceType = random.nextInt(3);
+    if (sentenceType == 0) {
+      return generateSimpleSentence();
+    } else if (sentenceType == 1) {
+      return generateCompoundSentence();
+    } else {
+      return generateComplexSentence();
     }
+  }
 
-    public static String generateSimpleSentence() {
-        String subject = generateNounPhrase();
-        String verb = generateVerbPhrase();
-        return subject + " " + verb;
+  public static String generateSimpleSentence() {
+    String subject = generateNounPhrase();
+    String verb = generateVerbPhrase();
+    return subject + " " + verb;
+  }
+
+  public static String generateCompoundSentence() {
+    String simpleSentence1 = generateSimpleSentence();
+    String conjunction = conjunctions[random.nextInt(conjunctions.length)];
+    String simpleSentence2 = generateSimpleSentence();
+    return simpleSentence1 + " " + conjunction + " " + simpleSentence2;
+  }
+
+  public static String generateComplexSentence() {
+    String subordinatingConjunction = subordinatingConjunctions[random.nextInt(subordinatingConjunctions.length)];
+    String subordinateClause = subordinatingConjunction + " " + generateSimpleSentence();
+    String mainClause = generateMainClause();
+    return subordinateClause + " " + mainClause;
+  }
+
+  public static String generateMainClause() {
+    if (random.nextBoolean()) {
+      return generateSimpleSentence();
+    } else {
+      return generateCompoundSentence();
     }
+  }
 
-    public static String generateCompoundSentence() {
-        String simpleSentence1 = generateSimpleSentence();
-        String conjunction = conjunctions[random.nextInt(conjunctions.length)];
-        String simpleSentence2 = generateSimpleSentence();
-        return simpleSentence1 + " " + conjunction + " " + simpleSentence2;
+  public static String generateNounPhrase() {
+    String article = articles[random.nextInt(articles.length)];
+    String noun = nouns[random.nextInt(nouns.length)];
+    return article + " " + noun;
+  }
+
+  public static String generateVerbPhrase() {
+    String verb = verbs[random.nextInt(verbs.length)];
+    if (random.nextBoolean()) {
+      String adverb = adverbs[random.nextInt(adverbs.length)];
+      return verb + " " + adverb;
+    } else {
+      return verb;
     }
+  }
 
-    public static String generateComplexSentence() {
-        String subordinatingConjunction = subordinatingConjunctions[random.nextInt(subordinatingConjunctions.length)];
-        String subordinateClause = subordinatingConjunction + " " + generateSimpleSentence();
-        String mainClause = generateMainClause();
-        return subordinateClause + " " + mainClause;
+  public static String getSpeech(int amount) {
+    String sentences = "";
+    for (int i = 0; i < amount; i++) {
+      String sentence = generateSentence();
+      sentences += sentence.substring(0, 1).toUpperCase() + sentence.substring(1) + ". ";
     }
+    return sentences;
+  }
 
-    public static String generateMainClause() {
-        if (random.nextBoolean()) {
-            return generateSimpleSentence();
-        } else {
-            return generateCompoundSentence();
-        }
-    }
-
-    public static String generateNounPhrase() {
-        String article = articles[random.nextInt(articles.length)];
-        String noun = nouns[random.nextInt(nouns.length)];
-        return article + " " + noun;
-    }
-
-    public static String generateVerbPhrase() {
-        String verb = verbs[random.nextInt(verbs.length)];
-        // Randomly decide if it's just a verb or a verb with an adverb
-        if (random.nextBoolean()) {
-            String adverb = adverbs[random.nextInt(adverbs.length)];
-            return verb + " " + adverb;
-        } else {
-            return verb;
-        }
-    }
-
-    public static String getSpeech(int amount) {
-        String sentences = "";
-        for (int i = 0; i < amount; i++) {
-            String sentence = generateSentence();
-            sentences += sentence.substring(0, 1).toUpperCase() + sentence.substring(1) + ". ";
-        }
-        return sentences;
-    }
-
-    public static String generateRandomPhone() {
-      return  generateRandomNumber(600000000, 699999999);
+  public static String generateRandomPhone() {
+    return generateRandomNumber(600000000, 699999999);
   }
 
   private static String generateRandomNumber(int min, int max) {
-      Random random = new Random();
-      int randomNumber = random.nextInt(max - min + 1) + min;
-      return String.format("%09d", randomNumber);
+    Random random = new Random();
+    int randomNumber = random.nextInt(max - min + 1) + min;
+    return String.format("%09d", randomNumber);
   }
+
+
 }

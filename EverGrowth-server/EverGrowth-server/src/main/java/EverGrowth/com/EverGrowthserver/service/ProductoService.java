@@ -3,13 +3,14 @@ package EverGrowth.com.EverGrowthserver.service;
 import java.sql.Blob;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import EverGrowth.com.EverGrowthserver.entity.CategoriaEntity;
 import EverGrowth.com.EverGrowthserver.entity.ProductoEntity;
-import EverGrowth.com.EverGrowthserver.entity.ValoracionEntity;
 import EverGrowth.com.EverGrowthserver.exception.ResourceNotFoundException;
 import EverGrowth.com.EverGrowthserver.helper.DataGenerationHelper;
 import EverGrowth.com.EverGrowthserver.repository.CategoriaRepository;
@@ -24,6 +25,12 @@ public class ProductoService {
 
     @Autowired
     CategoriaRepository categoriaRepository;
+
+     @Value("${../imagenes/}")
+    private String rutaImagenes;
+
+    private static final String NOMBRE_IMAGEN = "default1.jpg";
+
 
     public ProductoEntity get(Long id) {
         return productoRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Producto not found"));
@@ -72,11 +79,11 @@ public class ProductoService {
 
     public Long populate(Integer amount) {
         Long productosCreados = 0L;
-    
+
         for (int i = 0; i < amount; i++) {
             String randomProducto = DataGenerationHelper.getRandomProducto();
-            String categoriaProducto = DataGenerationHelper.asociarCategoria(randomProducto); 
-    
+            String categoriaProducto = DataGenerationHelper.asociarCategoria(randomProducto);
+
             CategoriaEntity categoria = categoriaRepository.findByNombre(categoriaProducto);
             if (categoria != null) {
                 ProductoEntity producto = new ProductoEntity();
@@ -94,7 +101,13 @@ public class ProductoService {
         return productosCreados;
     }
 
-  @Transactional
+    public ProductoEntity getOneRandom() {
+
+        Pageable oPageable = PageRequest.of((int) (Math.random() * productoRepository.count()), 1);
+        return productoRepository.findAll(oPageable).getContent().get(0);
+    }
+
+    @Transactional
     public Long empty() {
 
         productoRepository.deleteAll();
@@ -102,6 +115,5 @@ public class ProductoService {
         productoRepository.flush();
         return productoRepository.count();
     }
-
 
 }

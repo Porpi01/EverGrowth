@@ -21,12 +21,27 @@ public class ValoracionEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotNull
+    @Size(min = 3, max = 255)
+    private String titulo;
+
     private LocalDateTime fecha;
 
     @NotNull
     @NotBlank
     @Size(min = 3, max = 255)
     private String mensaje;
+
+    public ValoracionEntity(){
+
+    }
+
+    public ValoracionEntity(String titulo, LocalDateTime fecha, String mensaje) {
+        this.titulo = titulo;
+        this.fecha = fecha;
+        this.mensaje = mensaje;
+
+    }
 
     @ManyToOne
     @JoinColumn(name = "id_usuario")
@@ -74,6 +89,14 @@ public class ValoracionEntity {
 
     public void setUser(UsuarioEntity user) {
         this.user = user;
+    }
+    
+    public String getTitulo() {
+        return titulo;
+    }
+
+    public void setTitulo(String titulo) {
+        this.titulo = titulo;
     }
 
 }

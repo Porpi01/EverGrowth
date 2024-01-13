@@ -26,6 +26,12 @@ public class DetallePedidoService {
     @Autowired
     ProductoRepository productoRepository;
 
+    @Autowired
+    PedidoService PedidoService;
+
+    @Autowired
+    ProductoService ProductoService;
+
     public DetallePedidoEntity get(Long id) {
         return detallePedidoRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Categoria no encontrada"));
@@ -55,17 +61,12 @@ public class DetallePedidoService {
 
     public Long populate(Integer amount) {
 
-        PedidoEntity pedidoporDefecto = pedidoRepository.findById(1L)
-                .orElseThrow(() -> new IllegalArgumentException("No se encontró un pedido por defecto con ID 1"));
-        ProductoEntity productoporDefecto = productoRepository.findById(9L)
-                .orElseThrow(() -> new IllegalArgumentException("No se encontró un producto por defecto con ID 1"));
-
         for (int i = 0; i < amount; i++) {
             DetallePedidoEntity detallePedido = new DetallePedidoEntity();
             detallePedido.setCantidad(12);
             detallePedido.setPrecio_unitario((float) 0.45);
-            detallePedido.setPedidos(pedidoporDefecto);
-            detallePedido.setProductos(productoporDefecto);
+            detallePedido.setPedidos(PedidoService.getOneRandom());
+            detallePedido.setProductos(ProductoService.getOneRandom());
 
             detallePedidoRepository.save(detallePedido);
         }

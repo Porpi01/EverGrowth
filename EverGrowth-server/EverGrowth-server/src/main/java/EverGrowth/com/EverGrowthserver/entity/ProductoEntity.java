@@ -9,6 +9,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
@@ -34,8 +35,8 @@ public class ProductoEntity {
     @PositiveOrZero
     Float precio;
 
-   
-    Blob imagen;
+    @Lob
+    private byte[] imagen;
 
     @NotNull
     @PositiveOrZero
@@ -60,7 +61,7 @@ public class ProductoEntity {
         detallePedido = new ArrayList<>();
     }
 
-    public ProductoEntity(String nombre, Float precio, int stock, Blob imagen) {
+    public ProductoEntity(String nombre, Float precio, int stock, byte[] imagen) {
         this.nombre = nombre;
         this.precio = precio;
         this.stock = stock;
@@ -115,11 +116,11 @@ public class ProductoEntity {
         this.categoria = categoria;
     }
 
-    public Blob getImagen() {
+    public byte[] getImagen() {
         return imagen;
     }
 
-    public void setImagen(Blob imagen) {
+    public void setImagen(byte[] imagen) {
         this.imagen = imagen;
     }
 

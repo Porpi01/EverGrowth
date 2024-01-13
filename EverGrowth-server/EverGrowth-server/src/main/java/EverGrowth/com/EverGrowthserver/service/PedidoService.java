@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +25,9 @@ public class PedidoService {
 
     @Autowired
     UsuarioRepository UsuarioRepository;
+
+    @Autowired
+    UsuarioService UsuarioService;
 
     public PedidoEntity get(Long id) {
         return pedidoRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Pedido not found"));
@@ -52,11 +56,10 @@ public class PedidoService {
     }
 
     public Long populate(Integer amount) {
-        UsuarioEntity usuario = UsuarioRepository.findById(1L)
-                .orElseThrow(() -> new IllegalArgumentException("No se encontró un usuario por defecto con ID 1"));
+     
         for (int i = 0; i < amount; i++) {
             PedidoEntity pedido = new PedidoEntity();
-            pedido.setUser(usuario);
+            pedido.setUser(UsuarioService.getOneRandom());
             pedido.setEstado_pedido(false);
             pedido.setFecha_entrega(DataGenerationHelper.getRadomDate());
             pedido.setFecha_pedido(LocalDateTime.now());
@@ -64,6 +67,13 @@ public class PedidoService {
             pedidoRepository.save(pedido);
         }
         return amount.longValue();
+    }
+
+    
+    public PedidoEntity getOneRandom() {
+
+        Pageable oPageable = PageRequest.of((int) (Math.random() * pedidoRepository.count()), 1);
+        return pedidoRepository.findAll(oPageable).getContent().get(0);
     }
   @Transactional
     public Long empty() {

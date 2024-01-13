@@ -1,5 +1,8 @@
 package EverGrowth.com.EverGrowthserver.service;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -43,20 +46,25 @@ public class CategoriaService {
     public Page<CategoriaEntity> getPage(Pageable oPageable) {
         return categoriaRepository.findAll(oPageable);
     }
+public Long populate(Integer amount) {
+    Set<String> nombresGenerados = new HashSet<>();
 
-    public Long populate(Integer amount) {
-        for (int i = 0; i < amount; i++) {
-            String nombre = DataGenerationHelper.getRandomCategoria();
-    
+    for (int i = 0; i < amount; ) {
+        String nombre = DataGenerationHelper.getRandomCategoria();
+
+        // Verifica si el nombre ya fue generado
+        if (!nombresGenerados.contains(nombre)) {
             CategoriaEntity existingCategory = categoriaRepository.findByNombre(nombre);
             if (existingCategory == null) {
                 CategoriaEntity categoria = new CategoriaEntity(nombre);
                 categoriaRepository.save(categoria);
+                nombresGenerados.add(nombre);
+                i++;  // Incrementa el contador solo si se crea una nueva categoría
             }
         }
-        return categoriaRepository.count();
     }
-
+    return categoriaRepository.count();
+}
       @Transactional
     public Long empty() {
 

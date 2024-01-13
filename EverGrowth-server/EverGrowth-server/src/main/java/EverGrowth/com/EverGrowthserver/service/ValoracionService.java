@@ -30,6 +30,12 @@ public class ValoracionService {
     @Autowired
     ProductoRepository productoRepository;
 
+    @Autowired
+    UsuarioService UsuarioService;
+
+    @Autowired
+    ProductoService ProductoService;
+
     public ValoracionEntity get(Long id) {
         return valoracionRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Valoracion no encontrada"));
@@ -68,22 +74,22 @@ public class ValoracionService {
 
     public Long populate(Integer amount) {
 
-        UsuarioEntity usuarioporDefecto = usuarioRepository.findById(1L)
-                .orElseThrow(() -> new IllegalArgumentException("No se encontró un usuario por defecto con ID 1"));
-        ProductoEntity productoporDefecto = productoRepository.findById(9L)
-                .orElseThrow(() -> new IllegalArgumentException("No se encontró un producto por defecto con ID 1"));
 
         for (int i = 0; i < amount; i++) {
             ValoracionEntity valoracion = new ValoracionEntity();
+            valoracion.setTitulo(DataGenerationHelper.getSpeech(1));
             valoracion.setFecha(LocalDateTime.now());
             valoracion.setMensaje(DataGenerationHelper.getSpeech(1));
-            valoracion.setUser(usuarioporDefecto);
-            valoracion.setProducto(productoporDefecto);
+            valoracion.setUser(UsuarioService.getOneRandom());
+            valoracion.setProducto(ProductoService.getOneRandom());
 
             valoracionRepository.save(valoracion);
         }
         return amount.longValue();
     }
+    
+
+    
 
     @Transactional
     public Long empty() {

@@ -2,6 +2,7 @@ package EverGrowth.com.EverGrowthserver.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -87,6 +88,14 @@ public class UsuarioService {
         return usuarioRepository.count();// Devuelve el número de usuarios que hay en la base de datos
 
     }
+
+    public UsuarioEntity getOneRandom() {
+
+        Pageable oPageable = PageRequest.of((int) (Math.random() * usuarioRepository.count()), 1);
+        return usuarioRepository.findAll(oPageable).getContent().get(0);
+    }
+
+
 
     @Transactional
     public Long empty() {
