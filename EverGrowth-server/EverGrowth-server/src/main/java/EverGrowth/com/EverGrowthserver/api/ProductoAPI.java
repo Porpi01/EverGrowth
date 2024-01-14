@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import EverGrowth.com.EverGrowthserver.entity.ProductoEntity;
 import EverGrowth.com.EverGrowthserver.service.ProductoService;
@@ -31,16 +32,27 @@ public class ProductoAPI {
     public ResponseEntity<ProductoEntity> get(@PathVariable("id") Long id) {
         return ResponseEntity.ok(oProductoService.get(id));
     }
-
     @PostMapping("")
     public ResponseEntity<Long> create(@RequestBody ProductoEntity oProductoEntity) {
-        return ResponseEntity.ok(oProductoService.create(oProductoEntity));
+        try {
+            return ResponseEntity.ok(oProductoService.create(oProductoEntity));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     @PutMapping("")
-    public ResponseEntity<ProductoEntity> update(@RequestBody ProductoEntity oProductoEntity) {
-        return ResponseEntity.ok(oProductoService.update(oProductoEntity));
+    public ResponseEntity<ProductoEntity> updateWithImage(
+        @RequestBody ProductoEntity oProductoEntity,
+        @RequestParam(value = "imagen", required = false) MultipartFile nuevaImagen) {
+    try {
+       
+        return ResponseEntity.ok(oProductoService.update(oProductoEntity, nuevaImagen));
+    } catch (Exception e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
+}
+    
 
 
     @DeleteMapping("/{id}")
