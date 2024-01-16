@@ -22,7 +22,7 @@ import EverGrowth.com.EverGrowthserver.service.UsuarioService;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*", maxAge = 3600)
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/usuario")
 public class UsuarioAPI {
 
     @Autowired
