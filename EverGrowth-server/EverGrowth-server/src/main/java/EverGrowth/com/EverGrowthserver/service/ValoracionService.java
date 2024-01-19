@@ -1,6 +1,6 @@
 package EverGrowth.com.EverGrowthserver.service;
 
-import java.time.LocalDate;
+
 import java.time.LocalDateTime;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,8 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import EverGrowth.com.EverGrowthserver.entity.ValoracionEntity;
-import EverGrowth.com.EverGrowthserver.entity.ProductoEntity;
-import EverGrowth.com.EverGrowthserver.entity.UsuarioEntity;
+
 import EverGrowth.com.EverGrowthserver.exception.ResourceNotFoundException;
 import EverGrowth.com.EverGrowthserver.helper.DataGenerationHelper;
 import EverGrowth.com.EverGrowthserver.repository.ProductoRepository;
@@ -66,8 +65,8 @@ public class ValoracionService {
         if (filter == null || filter.isEmpty() || filter.trim().isEmpty()) {
             page = valoracionRepository.findAll(oPageable);
         } else {
-            page = valoracionRepository.findByMensaje(
-                    filter, oPageable);
+            page = valoracionRepository.findByMensajeOrTitulo(
+                    filter,filter, oPageable);
         }
         return page;
     }

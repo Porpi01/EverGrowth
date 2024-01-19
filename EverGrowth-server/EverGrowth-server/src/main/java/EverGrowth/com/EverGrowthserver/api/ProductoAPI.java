@@ -53,8 +53,6 @@ public class ProductoAPI {
     }
 }
     
-
-
     @DeleteMapping("/{id}")
     public ResponseEntity<Long> delete(@PathVariable("id") Long id) {
         return ResponseEntity.ok(oProductoService.delete(id));

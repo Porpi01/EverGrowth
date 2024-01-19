@@ -67,15 +67,22 @@ public class UsuarioEntity {
     @OneToMany(mappedBy = "user", fetch = jakarta.persistence.FetchType.LAZY)
     private List<PedidoEntity> pedidos;
 
-    public UsuarioEntity() {
-        pedidos = new ArrayList<>();
-        valoracion = new ArrayList<>();
-    }
-
     @OneToMany(mappedBy = "user", fetch = jakarta.persistence.FetchType.LAZY)
     private List<ValoracionEntity> valoracion;
 
-    public UsuarioEntity(Long id, String nombre, String apellido1, String apellido2, String email, String direccion,
+    @OneToMany(mappedBy = "user", fetch = jakarta.persistence.FetchType.LAZY)
+    private List<CarritoEntity> carrito;
+
+
+    public UsuarioEntity() {
+        pedidos = new ArrayList<>();
+        valoracion = new ArrayList<>();
+        carrito = new ArrayList<>();
+    }
+
+
+
+    public UsuarioEntity(Long id, String nombre, String apellido1, String apellido2, String email, String telefono, String direccion,
             String username,
             String password, Boolean rol) {
         this.id = id;
@@ -83,6 +90,7 @@ public class UsuarioEntity {
         this.apellido1 = apellido1;
         this.apellido2 = apellido2;
         this.email = email;
+        this.telefono = telefono;
         this.direccion = direccion;
         this.username = username;
         this.password = password;
@@ -195,5 +203,11 @@ public class UsuarioEntity {
     public int getValoracion() {
         return valoracion.size();
     }
+
+    public int getCarritos() {
+        return carrito.size();
+    }
+
+
 
 }

@@ -15,6 +15,8 @@ import jakarta.transaction.Transactional;
 
 @Service
 public class UsuarioService {
+    private final String foxforumPASSWORD = "e2cac5c5f7e52ab03441bb70e89726ddbd1f6e5b683dde05fb65e0720290179e";
+
 
     @Autowired
     UsuarioRepository usuarioRepository;
@@ -97,12 +99,17 @@ public class UsuarioService {
 
 
 
+     
     @Transactional
     public Long empty() {
-
         usuarioRepository.deleteAll();
         usuarioRepository.resetAutoIncrement();
-        usuarioRepository.flush();
+        UsuarioEntity oUserEntity1 = new UsuarioEntity(1L, "Pedro", "Picapiedra", "Roca",
+                "pedropicapiedra@ausiasmarch.net", "123456789","Calle del Cerezo Nº 17", "pedropicapiedra", foxforumPASSWORD, false);
+        usuarioRepository.save(oUserEntity1);
+        oUserEntity1 = new UsuarioEntity(2L, "Pablo", "Mármol", "Granito", "pablomarmol@ausiasmarch.net", "123456789","Calle del Cerezo Nº 17",
+                "pablomarmol", foxforumPASSWORD, true);
+        usuarioRepository.save(oUserEntity1);
         return usuarioRepository.count();
     }
 
