@@ -5,11 +5,12 @@ import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import EverGrowth.com.EverGrowthserver.entity.CategoriaEntity;
-
+import EverGrowth.com.EverGrowthserver.entity.PedidoEntity;
 import EverGrowth.com.EverGrowthserver.exception.ResourceNotFoundException;
 import EverGrowth.com.EverGrowthserver.helper.DataGenerationHelper;
 import EverGrowth.com.EverGrowthserver.repository.CategoriaRepository;
@@ -43,29 +44,29 @@ public class CategoriaService {
             throw new ResourceNotFoundException("La categoría con el ID " + id + " no existe");
         }
     }
+
     public Page<CategoriaEntity> getPage(Pageable oPageable) {
         return categoriaRepository.findAll(oPageable);
     }
+
 public Long populate(Integer amount) {
-    Set<String> nombresGenerados = new HashSet<>();
 
-    for (int i = 0; i < amount; ) {
-        String nombre = DataGenerationHelper.getRandomCategoria();
-
-        // Verifica si el nombre ya fue generado
-        if (!nombresGenerados.contains(nombre)) {
-            CategoriaEntity existingCategory = categoriaRepository.findByNombre(nombre);
-            if (existingCategory == null) {
-                CategoriaEntity categoria = new CategoriaEntity(nombre);
-                categoriaRepository.save(categoria);
-                nombresGenerados.add(nombre);
-                i++;  // Incrementa el contador solo si se crea una nueva categoría
-            }
-        }
-    }
-    return categoriaRepository.count();
+    for (int i = 0; i < amount; i++ ) {
+     
+        CategoriaEntity categoria = new CategoriaEntity();
+       categoria.setNombre("Frutas");
+         categoriaRepository.save(categoria);
+    
+    
+    }return categoriaRepository.count();
 }
-      @Transactional
+
+  public CategoriaEntity getOneRandom() {
+
+        Pageable oPageable = PageRequest.of((int) (Math.random() * categoriaRepository.count()), 1);
+        return categoriaRepository.findAll(oPageable).getContent().get(0);
+    }
+    @Transactional
     public Long empty() {
 
         categoriaRepository.deleteAll();

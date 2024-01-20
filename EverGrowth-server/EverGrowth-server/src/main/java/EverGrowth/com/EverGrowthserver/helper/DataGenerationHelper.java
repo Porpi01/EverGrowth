@@ -11,12 +11,14 @@ import java.util.stream.Collectors;
 
 public class DataGenerationHelper {
 
+  //Información usuarios
+  //Nombres
   private static final String[] aNames = {
       "Alejandro", "Sofía", "Mateo", "Valentina", "Javier", "Emma", "Pablo", "Isabella", "Diego", "Lucía",
       "Adrián", "Camila", "Carlos", "Valeria", "Martín", "Gabriela", "Julián", "María", "Tomás", "Elena",
       "Luis", "Ana", "Andrés", "Catalina", "Juan", "Laura", "Santiago", "Clara", "Emilio", "Paula"
   };
-
+//Apellidos
   private static final String[] aSurnames = {
       "García", "Rodríguez", "López", "Martínez", "Hernández", "Pérez", "González", "Sánchez", "Ramírez", "Torres",
       "Flores", "Díaz", "Gómez", "Vázquez", "Rojas", "Ruiz", "Serrano", "Blanco", "Molina", "Suárez",
@@ -41,6 +43,7 @@ public class DataGenerationHelper {
     return cadenaSinAcentos;
   }
 
+//Dirección
   private static final String[] streetNames = {
       "Avenida de la Constitución", "Calle del Arenal", "Carrera de San Jerónimo", "Paseo de Recoletos",
       "Calle Fuencarral", "Avenida Gran Vía de Colón", "Paseo de la Independencia", "Calle del Príncipe",
@@ -100,6 +103,7 @@ public class DataGenerationHelper {
     return randomNum;
   }
 
+  //Fechas
   public static LocalDateTime getRadomDate() {
     long minDay = LocalDate.of(2024, 1, 1).toEpochDay();
     long maxDay = LocalDate.of(2026, 12, 31).toEpochDay();
@@ -108,6 +112,17 @@ public class DataGenerationHelper {
 
   }
 
+  //Stock y precio
+  private static final Random random = new Random();
+
+  public static int generateRandomStock() {
+    return random.nextInt(100);
+  }
+
+  public static float generateRandomPrecio() {
+    return 5 + random.nextFloat() * (100 - 5);
+  }
+//Productos
   private static final String[] nombresProducto = {
       "Agua mineral", "Coca cola", "Fanta de naranja", "Aquarius", "Tónica", "Nestea",
       "Aceitunas rellenas de anchoa",
@@ -142,22 +157,10 @@ public class DataGenerationHelper {
   }
 
   public static String asociarCategoria(String randomProducto) {
-    if (productoActual == null) {
-      getRandomProducto();
-    }
-    return getCategoria(productoActual);
-  }
+    return getCategoria(randomProducto);
+}
 
-  private static final Random random = new Random();
-
-  public static int generateRandomStock() {
-    return random.nextInt(100);
-  }
-
-  public static float generateRandomPrecio() {
-    return 5 + random.nextFloat() * (100 - 5);
-  }
-
+//Categorias
   private static final String[] nombresCategoria = {
       "Carnes", "Lácteos", "Frutas y Verduras", "Bebidas", "Congelados", "Enlatados", "Cereales", "Pescado y Marisco",
       "Panadería", "Repostería",
@@ -168,7 +171,7 @@ public class DataGenerationHelper {
     return nombresCategoria[(int) (Math.random() * nombresCategoria.length)];
   }
 
-  // Define arrays for different word categories
+  // Discursos 
   private static String[] articles = { "the", "a", "one" };
   private static String[] nouns = { "cat", "dog", "book", "birds", "sun", "sandwich", "friend", "car", "house" };
   private static String[] verbs = { "sleeps", "barks", "reads", "fly", "shines", "run", "ate", "is" };
@@ -243,6 +246,7 @@ public class DataGenerationHelper {
     return sentences;
   }
 
+  //Telefonos
   public static String generateRandomPhone() {
     return generateRandomNumber(600000000, 699999999);
   }

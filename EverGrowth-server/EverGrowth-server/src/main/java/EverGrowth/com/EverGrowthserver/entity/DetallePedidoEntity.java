@@ -1,5 +1,6 @@
 package EverGrowth.com.EverGrowthserver.entity;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -20,11 +21,11 @@ public class DetallePedidoEntity {
 
     private Float precio_unitario;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_producto")
     private ProductoEntity producto;
 
-    @ManyToOne
+     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_pedido")
     private PedidoEntity pedidos;
 

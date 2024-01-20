@@ -3,6 +3,7 @@ package EverGrowth.com.EverGrowthserver.entity;
 import java.util.ArrayList;
 import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -26,7 +27,7 @@ public class CategoriaEntity {
     @Size(min = 3, max = 255)
     private String nombre;
 
-    @OneToMany(mappedBy = "categoria", fetch = jakarta.persistence.FetchType.LAZY)
+    @OneToMany(mappedBy = "categoria", fetch = jakarta.persistence.FetchType.LAZY,cascade = CascadeType.REMOVE)
     private List<ProductoEntity> producto;
 
     public CategoriaEntity() {

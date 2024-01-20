@@ -30,6 +30,9 @@ public class ProductoService {
     @Autowired
     CategoriaRepository categoriaRepository;
 
+    @Autowired
+    CategoriaService CategoriaService;
+
     String rutaImagenPreexistente = "EverGrowth-server/EverGrowth-server/imagenes/default1.png";
     public ProductoEntity get(Long id) {
         return productoRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Producto not found"));
@@ -123,22 +126,17 @@ public class ProductoService {
             byte[] imagenBytes = loadImageBytes(rutaImagenPreexistente);
 
             for (int i = 0; i < amount; i++) {
-                String randomProducto = DataGenerationHelper.getRandomProducto();
-                String categoriaProducto = DataGenerationHelper.asociarCategoria(randomProducto);
-
-                CategoriaEntity categoria = categoriaRepository.findByNombre(categoriaProducto);
-                if (categoria != null) {
+    
+              
                     ProductoEntity producto = new ProductoEntity();
-                    producto.setCategoria(categoria);
+                    producto.setCategoria(CategoriaService.getOneRandom());
                     producto.setStock(DataGenerationHelper.generateRandomStock());
-                    producto.setnombre(randomProducto);
+                    producto.setnombre("Manzana");
                     producto.setprecio(DataGenerationHelper.generateRandomPrecio());
                     producto.setImagen(imagenBytes);
                     productoRepository.save(producto);
                     productosCreados++;
-                } else {
-                    throw new RuntimeException("La categoría no existe en la base de datos: " + categoriaProducto);
-                }
+               
             }
         } catch (Exception e) {
             throw new RuntimeException("Error al crear los productos: " + e.getMessage());
