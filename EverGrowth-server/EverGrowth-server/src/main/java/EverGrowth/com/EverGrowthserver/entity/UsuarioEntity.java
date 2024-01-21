@@ -35,7 +35,7 @@ public class UsuarioEntity {
     @Size(min = 3, max = 255)
     private String apellido1;
 
-    @Size(max = 255)
+    @Size(min = 3, max = 255)
     private String apellido2;
 
     @NotNull

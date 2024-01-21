@@ -32,6 +32,8 @@ public class ProductoAPI {
     public ResponseEntity<ProductoEntity> get(@PathVariable("id") Long id) {
         return ResponseEntity.ok(oProductoService.get(id));
     }
+
+    
     @PostMapping("")
     public ResponseEntity<Long> create(@RequestBody ProductoEntity oProductoEntity) {
         try {
