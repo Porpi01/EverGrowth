@@ -6,8 +6,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import EverGrowth.com.EverGrowthserver.entity.DetallePedidoEntity;
-import EverGrowth.com.EverGrowthserver.entity.PedidoEntity;
-import EverGrowth.com.EverGrowthserver.entity.ProductoEntity;
 import EverGrowth.com.EverGrowthserver.exception.ResourceNotFoundException;
 import EverGrowth.com.EverGrowthserver.repository.DetallePedidoRepository;
 import EverGrowth.com.EverGrowthserver.repository.PedidoRepository;

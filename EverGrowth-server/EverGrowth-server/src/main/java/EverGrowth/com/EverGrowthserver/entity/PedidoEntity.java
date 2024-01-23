@@ -5,7 +5,6 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -26,11 +25,13 @@ public class PedidoEntity {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
     private LocalDateTime fecha_pedido;
 
+
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
     private LocalDateTime fecha_entrega;
 
+ 
     private boolean estado_pedido;
-
+   
     private Long id_factura = 0L;
 
     @ManyToOne
@@ -51,11 +52,13 @@ public class PedidoEntity {
         this.estado_pedido = estado_pedido;
     }
 
-    public PedidoEntity(LocalDateTime fecha_pedido, LocalDateTime fecha_entrega, boolean estado_pedido) {
+    public PedidoEntity( LocalDateTime fecha_pedido, LocalDateTime fecha_entrega, boolean estado_pedido) {
+      
         this.fecha_pedido = fecha_pedido;
         this.fecha_entrega = fecha_entrega;
         this.estado_pedido = estado_pedido;
     }
+
 
     public void generarFactura(Long idFacturaGenerada) {
         this.id_factura = idFacturaGenerada;
@@ -69,13 +72,7 @@ public class PedidoEntity {
         this.id = id;
     }
 
-    public boolean getEstado_pedido() {
-        return estado_pedido;
-    }
-
-    public void setEstado_pedido(boolean estado_pedido) {
-        this.estado_pedido = estado_pedido;
-    }
+   
 
     public UsuarioEntity getUser() {
         return user;
@@ -85,9 +82,19 @@ public class PedidoEntity {
         this.user = user;
     }
 
-    public int getProductos() {
+    public int getDetallePedidos() {
         return detallepedidos.size();
     }
+
+    
+    public Long getId_factura() {
+        return id_factura;
+    }
+
+    public void setId_factura(Long id_factura) {
+        this.id_factura = id_factura;
+    }
+
 
     public LocalDateTime getFecha_pedido() {
         return fecha_pedido;
@@ -104,13 +111,12 @@ public class PedidoEntity {
     public void setFecha_entrega(LocalDateTime fecha_entrega) {
         this.fecha_entrega = fecha_entrega;
     }
- 
-    public Long getId_factura() {
-        return id_factura;
+    public boolean isEstado_pedido() {
+        return estado_pedido;
     }
 
-    public void setId_factura(Long id_factura) {
-        this.id_factura = id_factura;
+    public void setEstado_pedido(boolean estado_pedido) {
+        this.estado_pedido = estado_pedido;
     }
 
 
