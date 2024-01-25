@@ -23,7 +23,6 @@ import jakarta.transaction.Transactional;
 
 @Service
 public class ProductoService {
-
     @Autowired
     ProductoRepository productoRepository;
 
@@ -31,11 +30,14 @@ public class ProductoService {
     CategoriaRepository categoriaRepository;
 
     @Autowired
-    CategoriaService CategoriaService;
+    CategoriaService categoriaService;  
 
-    String rutaImagenPreexistente = "EverGrowth-server/EverGrowth-server/imagenes/default1.png";
+    @Autowired
+    private AlmacenamientoImagenService almacenamientoImagenService;
+
     public ProductoEntity get(Long id) {
-        return productoRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Producto not found"));
+        return productoRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Producto not found"));
     }
 
     public Long create(ProductoEntity oProductoEntity) {
@@ -46,16 +48,8 @@ public class ProductoService {
                 CategoriaEntity categoriaByNombre = categoriaRepository.findByNombre(categoria.getNombre());
 
                 if (categoriaById != null && categoriaById.equals(categoriaByNombre)) {
-
                     oProductoEntity.setId(null);
-
-                    // Guardar la imagen en el producto
-                    byte[] imagenBytes = loadImageBytes(rutaImagenPreexistente);
-                    oProductoEntity.setImagen(imagenBytes);
-
-                    // Guardar el producto en la base de datos
                     oProductoEntity = productoRepository.save(oProductoEntity);
-
                     return oProductoEntity.getId();
                 } else {
                     throw new RuntimeException("La categoría no existe en la base de datos");
@@ -75,29 +69,17 @@ public class ProductoService {
                             "No se encontró el producto con ID: " + oProductoEntityToSet.getId()));
             productoExistente.setCategoria(oProductoEntityToSet.getCategoria());
             productoExistente.setStock(oProductoEntityToSet.getStock());
-            productoExistente.setnombre(oProductoEntityToSet.getnombre());
-            productoExistente.setprecio(oProductoEntityToSet.getprecio());
+            productoExistente.setnombre(oProductoEntityToSet.getnombre());  // Corrected method name
+            productoExistente.setprecio(oProductoEntityToSet.getprecio());  // Corrected method name
 
-            if (nuevaImagen != null && !nuevaImagen.isEmpty()) {
-                byte[] nuevaImagenBytes = loadImageBytes(nuevaImagen);
-                productoExistente.setImagen(nuevaImagenBytes);
-            }
             return productoRepository.save(productoExistente);
         } catch (Exception e) {
             throw new RuntimeException("Error al actualizar el producto: " + e.getMessage());
         }
     }
 
-    private byte[] loadImageBytes(MultipartFile imagenFile) {
-        try {
-            return imagenFile.getBytes();
-        } catch (IOException e) {
-            throw new RuntimeException("Error al leer la nueva imagen: " + e.getMessage());
-        }
-    }
-
     public Long delete(Long id) {
-        if (productoRepository.findById(id).isPresent()) {
+        if (productoRepository.existsById(id)) {  // Changed to existsById for efficiency
             productoRepository.deleteById(id);
             return id;
         } else {
@@ -106,14 +88,12 @@ public class ProductoService {
     }
 
     public Page<ProductoEntity> getPage(Pageable oPageable, String filter) {
-
         Page<ProductoEntity> page;
 
         if (filter == null || filter.isEmpty() || filter.trim().isEmpty()) {
             page = productoRepository.findAll(oPageable);
         } else {
-            page = productoRepository.findByName(
-                    filter, oPageable);
+            page = productoRepository.findByName(filter, oPageable);  // Assuming findByName exists in your repository
         }
         return page;
     }
@@ -121,22 +101,15 @@ public class ProductoService {
     public Long populate(Integer amount) {
         Long productosCreados = 0L;
 
-        try {
-
-            byte[] imagenBytes = loadImageBytes(rutaImagenPreexistente);
-
+        try {  // Added try block for exception handling
             for (int i = 0; i < amount; i++) {
-    
-              
-                    ProductoEntity producto = new ProductoEntity();
-                    producto.setCategoria(CategoriaService.getOneRandom());
-                    producto.setStock(DataGenerationHelper.generateRandomStock());
-                    producto.setnombre("Manzana");
-                    producto.setprecio(DataGenerationHelper.generateRandomPrecio());
-                    producto.setImagen(imagenBytes);
-                    productoRepository.save(producto);
-                    productosCreados++;
-               
+                ProductoEntity producto = new ProductoEntity();
+                producto.setCategoria(categoriaService.getOneRandom());  // Corrected method call
+                producto.setStock(DataGenerationHelper.generateRandomStock());
+                producto.setnombre("Manzana");  // Corrected method name
+                producto.setprecio(DataGenerationHelper.generateRandomPrecio());  // Corrected method name
+                productoRepository.save(producto);
+                productosCreados++;
             }
         } catch (Exception e) {
             throw new RuntimeException("Error al crear los productos: " + e.getMessage());
@@ -145,28 +118,16 @@ public class ProductoService {
         return productosCreados;
     }
 
-    private byte[] loadImageBytes(String imagePath) {
-        try {
-            Path path = Paths.get(imagePath);
-            return Files.readAllBytes(path);
-        } catch (IOException e) {
-            throw new RuntimeException("Error al leer la imagen: " + e.getMessage());
-        }
-    }
-
     public ProductoEntity getOneRandom() {
-
         Pageable oPageable = PageRequest.of((int) (Math.random() * productoRepository.count()), 1);
         return productoRepository.findAll(oPageable).getContent().get(0);
     }
 
     @Transactional
     public Long empty() {
-
         productoRepository.deleteAll();
-        productoRepository.resetAutoIncrement();
+        productoRepository.resetAutoIncrement(); 
         productoRepository.flush();
         return productoRepository.count();
     }
-
 }

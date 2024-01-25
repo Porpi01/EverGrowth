@@ -24,7 +24,11 @@ public class DataGenerationHelper {
       "Flores", "Díaz", "Gómez", "Vázquez", "Rojas", "Ruiz", "Serrano", "Blanco", "Molina", "Suárez",
       "Castillo", "Jiménez", "Ortega", "Delgado", "Cruz", "Ramos", "Alvarez", "Morales", "Santos", "Reyes"
   };
-
+  public static int getRandomInt(int min, int max) {
+    Random rand = new Random();
+    int randomNum = rand.nextInt((max - min) + 1) + min;
+    return randomNum;
+  }
   public static String getRandomName() {
     return aNames[(int) (Math.random() * aNames.length)];
   }
@@ -97,11 +101,7 @@ public class DataGenerationHelper {
     return "00000";
   }
 
-  public static int getRandomInt(int min, int max) {
-    Random rand = new Random();
-    int randomNum = rand.nextInt((max - min) + 1) + min;
-    return randomNum;
-  }
+ 
 
   //Fechas
   public static LocalDateTime getRadomDate() {
@@ -123,42 +123,10 @@ public class DataGenerationHelper {
     return 5 + random.nextFloat() * (100 - 5);
   }
 //Productos
-  private static final String[] nombresProducto = {
-      "Agua mineral", "Coca cola", "Fanta de naranja", "Aquarius", "Tónica", "Nestea",
-      "Aceitunas rellenas de anchoa",
-      "Aceitunas picadedos", "Arroz redondo", "Arroz basmati aromático", "Arroz integral redondo", "Garbanzo cocido",
-      "Fideo Cabello de Ángel",
-      "Fideuá", "Pajaritas vegetales", "Macarrón fino", "Chocolate negro 72% de cacao",
-      "Chocolate puro Valor con almendras enteras"
-  };
 
-  private static final String[] categoriaProducto = {
-      "Bebidas", "Bebidas", "Bebidas", "Bebidas", "Bebidas", "Bebidas", "Conservas",
-      "Conservas", "Arroz",
-      "Arroz", "Arroz", "Legumbres", "Pasta", "Pasta", "Pasta", "Pasta", "Repostería", "Repostería"
-  };
 
-  private static String getCategoria(String producto) {
-    for (int i = 0; i < nombresProducto.length; i++) {
-      if (nombresProducto[i].equals(producto)) {
-        return categoriaProducto[i];
-      }
-    }
-    return "No existe la categoría";
-  }
 
-  private static String productoActual = null;
 
-  public static String getRandomProducto() {
-    Random rand = new Random();
-    int index = rand.nextInt(nombresProducto.length);
-    productoActual = nombresProducto[index];
-    return productoActual;
-  }
-
-  public static String asociarCategoria(String randomProducto) {
-    return getCategoria(randomProducto);
-}
 
 //Categorias
   private static final String[] nombresCategoria = {

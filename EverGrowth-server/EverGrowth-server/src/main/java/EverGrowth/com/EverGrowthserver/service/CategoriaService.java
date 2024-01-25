@@ -54,7 +54,7 @@ public Long populate(Integer amount) {
     for (int i = 0; i < amount; i++ ) {
      
         CategoriaEntity categoria = new CategoriaEntity();
-       categoria.setNombre("Frutas");
+       categoria.setNombre(DataGenerationHelper.getRandomCategoria());
          categoriaRepository.save(categoria);
     
     

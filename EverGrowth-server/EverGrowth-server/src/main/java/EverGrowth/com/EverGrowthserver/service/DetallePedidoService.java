@@ -44,6 +44,10 @@ public class DetallePedidoService {
         return detallePedidoRepository.save(DetallePedidoEntityToSet);
     }
 
+    public Float calcularPrecioTotal(DetallePedidoEntity detallePedidoEntity) {
+        return detallePedidoEntity.getCantidad() * detallePedidoEntity.getPrecio_unitario();
+    }
+
     public Long delete(Long id) {
         if (detallePedidoRepository.findById(id).isPresent()) {
             detallePedidoRepository.deleteById(id);

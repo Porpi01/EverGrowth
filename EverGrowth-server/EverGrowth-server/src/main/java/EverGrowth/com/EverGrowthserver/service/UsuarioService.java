@@ -72,9 +72,9 @@ public class UsuarioService {
             String nombre = DataGenerationHelper.getRandomName();
             String apellido1 = DataGenerationHelper.getRandomSurname();
             String apellido2 = DataGenerationHelper.getRandomSurname();
-            String email = (nombre.substring(0, 3) + apellido1.substring(0, 3) + apellido1.substring(0, 2) + i)
-                    .toLowerCase()
-                    + "@gmail.com";
+            String emailNamePart = DataGenerationHelper.doNormalizeString(nombre.substring(0, 3) + apellido1.substring(0, 3) + apellido2.substring(0, 2) + i);
+
+            String email = emailNamePart.toLowerCase() + "@gmail.com";
             String telefono = DataGenerationHelper.generateRandomPhone();
             String direccion = DataGenerationHelper.generateRandomAddress();
             String username = DataGenerationHelper
