@@ -30,6 +30,8 @@ public class DetallePedidoAPI {
         return ResponseEntity.ok(detallePedidoService.get(id));
     }
 
+   
+
     @PostMapping("")
     public ResponseEntity<Long> create(@RequestBody DetallePedidoEntity oDetallePedidoEntity) {
         return ResponseEntity.ok(detallePedidoService.create(oDetallePedidoEntity));
@@ -54,6 +56,7 @@ public class DetallePedidoAPI {
     public ResponseEntity<Long> populate(@PathVariable("amount") Integer amount) {
         return ResponseEntity.ok(detallePedidoService.populate(amount));
     }
+
     @DeleteMapping("/empty")
     public ResponseEntity<Long> empty() {
         return ResponseEntity.ok(detallePedidoService.empty());

@@ -2,6 +2,8 @@ package EverGrowth.com.EverGrowthserver.entity;
 
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -25,6 +27,8 @@ public class ValoracionEntity {
     @NotNull
     @Size(min = 3, max = 255)
     private String titulo;
+
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
 
     private LocalDateTime fecha;
 

@@ -21,11 +21,11 @@ public class CarritoEntity {
     
     private int cantidad;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "id_usuario")
     private UsuarioEntity user;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "id_producto")
     private ProductoEntity producto;
 

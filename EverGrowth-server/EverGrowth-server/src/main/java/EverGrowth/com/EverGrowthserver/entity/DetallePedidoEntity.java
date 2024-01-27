@@ -10,7 +10,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "detallePedido")
+@Table(name = "detalle_pedido")
 public class DetallePedidoEntity {
 
     @Id
@@ -22,11 +22,11 @@ public class DetallePedidoEntity {
     private Float precio_unitario;
 
   
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "id_producto")
     private ProductoEntity producto;
 
-     @ManyToOne(cascade = CascadeType.ALL)
+     @ManyToOne
     @JoinColumn(name = "id_pedido")
     private PedidoEntity pedidos;
 
