@@ -42,10 +42,14 @@ public class ValoracionService {
 
     public Long create(ValoracionEntity ValoracionEntity) {
         ValoracionEntity.setId(null);
+        validateFirstLetterUppercase(ValoracionEntity.getTitulo());
+        validateFirstLetterUppercase(ValoracionEntity.getMensaje());
         return valoracionRepository.save(ValoracionEntity).getId();
     }
 
     public ValoracionEntity update(ValoracionEntity ValoracionEntityToSet) {
+        validateFirstLetterUppercase(ValoracionEntityToSet.getTitulo());
+        validateFirstLetterUppercase(ValoracionEntityToSet.getMensaje());
         return valoracionRepository.save(ValoracionEntityToSet);
     }
 
@@ -84,11 +88,18 @@ public class ValoracionService {
 
             valoracionRepository.save(valoracion);
         }
-        return amount.longValue();
+        return valoracionRepository.count();
     }
     
 
-    
+    private void validateFirstLetterUppercase(String value) {
+        if (value != null && !value.isEmpty()) {
+            char firstChar = value.charAt(0);
+            if (!Character.isLetter(firstChar) || !Character.isUpperCase(firstChar)) {
+                throw new RuntimeException("La primera letra de " + value + " debe estar en mayúscula");
+            }
+        }
+    }
 
     @Transactional
     public Long empty() {

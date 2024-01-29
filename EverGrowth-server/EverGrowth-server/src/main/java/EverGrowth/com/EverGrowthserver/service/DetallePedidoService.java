@@ -69,7 +69,7 @@ public class DetallePedidoService {
 
             detallePedidoRepository.save(detallePedido);
         }
-        return amount.longValue();
+        return detallePedidoRepository.count();
     }
 
     @Transactional

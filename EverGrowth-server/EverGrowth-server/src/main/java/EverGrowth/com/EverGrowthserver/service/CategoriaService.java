@@ -29,6 +29,7 @@ public class CategoriaService {
 
     public Long create(CategoriaEntity categoriaEntity) {
         categoriaEntity.setId(null);
+        validateFirstLetterUppercase(categoriaEntity.getNombre());
         return categoriaRepository.save(categoriaEntity).getId();
     }
 
@@ -49,23 +50,33 @@ public class CategoriaService {
         return categoriaRepository.findAll(oPageable);
     }
 
-public Long populate(Integer amount) {
+    public Long populate(Integer amount) {
 
-    for (int i = 0; i < amount; i++ ) {
-     
-        CategoriaEntity categoria = new CategoriaEntity();
-       categoria.setNombre(DataGenerationHelper.getRandomCategoria());
-         categoriaRepository.save(categoria);
-    
-    
-    }return categoriaRepository.count();
-}
+        for (int i = 0; i < amount; i++) {
 
-  public CategoriaEntity getOneRandom() {
+            CategoriaEntity categoria = new CategoriaEntity();
+            categoria.setNombre(DataGenerationHelper.getRandomCategoria());
+            categoriaRepository.save(categoria);
+
+        }
+        return categoriaRepository.count();
+    }
+
+    public CategoriaEntity getOneRandom() {
 
         Pageable oPageable = PageRequest.of((int) (Math.random() * categoriaRepository.count()), 1);
         return categoriaRepository.findAll(oPageable).getContent().get(0);
     }
+
+    private void validateFirstLetterUppercase(String value) {
+        if (value != null && !value.isEmpty()) {
+            char firstChar = value.charAt(0);
+            if (!Character.isLetter(firstChar) || !Character.isUpperCase(firstChar)) {
+                throw new RuntimeException("La primera letra de " + value + " debe estar en mayúscula");
+            }
+        }
+    }
+
     @Transactional
     public Long empty() {
 

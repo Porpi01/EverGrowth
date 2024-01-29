@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import EverGrowth.com.EverGrowthserver.entity.ProductoEntity;
+import EverGrowth.com.EverGrowthserver.entity.UsuarioEntity;
 import EverGrowth.com.EverGrowthserver.service.ProductoService;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*", maxAge = 3600)
@@ -43,17 +44,11 @@ public class ProductoAPI {
         }
     }
 
-    @PutMapping("")
-    public ResponseEntity<ProductoEntity> updateWithImage(
-        @RequestBody ProductoEntity oProductoEntity,
-        @RequestParam(value = "imagen", required = false) MultipartFile nuevaImagen) {
-    try {
-       
-        return ResponseEntity.ok(oProductoService.update(oProductoEntity, nuevaImagen));
-    } catch (Exception e) {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+ 
+@PutMapping("")
+    public ResponseEntity<ProductoEntity> update(@RequestBody ProductoEntity oProductoEntity) {
+        return ResponseEntity.ok(oProductoService.update(oProductoEntity));
     }
-}
     
     @DeleteMapping("/{id}")
     public ResponseEntity<Long> delete(@PathVariable("id") Long id) {

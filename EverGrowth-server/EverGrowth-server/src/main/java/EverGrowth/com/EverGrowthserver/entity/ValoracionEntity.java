@@ -3,8 +3,6 @@ package EverGrowth.com.EverGrowthserver.entity;
 import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -28,13 +26,12 @@ public class ValoracionEntity {
     @Size(min = 3, max = 255)
     private String titulo;
 
-        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
-
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
     private LocalDateTime fecha;
 
     @NotNull
     @NotBlank
-    @Size(min = 3, max = 255)
+    @Size(min = 3, max = 2048)
     private String mensaje;
 
     public ValoracionEntity(){

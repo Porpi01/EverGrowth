@@ -15,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import EverGrowth.com.EverGrowthserver.entity.CategoriaEntity;
 import EverGrowth.com.EverGrowthserver.entity.ProductoEntity;
+import EverGrowth.com.EverGrowthserver.entity.ValoracionEntity;
 import EverGrowth.com.EverGrowthserver.exception.ResourceNotFoundException;
 import EverGrowth.com.EverGrowthserver.helper.DataGenerationHelper;
 import EverGrowth.com.EverGrowthserver.repository.CategoriaRepository;
@@ -30,7 +31,7 @@ public class ProductoService {
     CategoriaRepository categoriaRepository;
 
     @Autowired
-    CategoriaService categoriaService;  
+    CategoriaService categoriaService;
 
     @Autowired
     private AlmacenamientoImagenService almacenamientoImagenService;
@@ -50,6 +51,8 @@ public class ProductoService {
                 if (categoriaById != null && categoriaById.equals(categoriaByNombre)) {
                     oProductoEntity.setId(null);
                     oProductoEntity = productoRepository.save(oProductoEntity);
+                    validateFirstLetterUppercase(oProductoEntity.getnombre());
+
                     return oProductoEntity.getId();
                 } else {
                     throw new RuntimeException("La categoría no existe en la base de datos");
@@ -62,24 +65,15 @@ public class ProductoService {
         }
     }
 
-    public ProductoEntity update(ProductoEntity oProductoEntityToSet, MultipartFile nuevaImagen) {
-        try {
-            ProductoEntity productoExistente = productoRepository.findById(oProductoEntityToSet.getId())
-                    .orElseThrow(() -> new RuntimeException(
-                            "No se encontró el producto con ID: " + oProductoEntityToSet.getId()));
-            productoExistente.setCategoria(oProductoEntityToSet.getCategoria());
-            productoExistente.setStock(oProductoEntityToSet.getStock());
-            productoExistente.setnombre(oProductoEntityToSet.getnombre());  // Corrected method name
-            productoExistente.setprecio(oProductoEntityToSet.getprecio());  // Corrected method name
+    public ProductoEntity update(ProductoEntity oProductoEntityToSet) {
+        validateFirstLetterUppercase(oProductoEntityToSet.getnombre());
 
-            return productoRepository.save(productoExistente);
-        } catch (Exception e) {
-            throw new RuntimeException("Error al actualizar el producto: " + e.getMessage());
-        }
+        return productoRepository.save(oProductoEntityToSet);
+
     }
 
     public Long delete(Long id) {
-        if (productoRepository.existsById(id)) {  // Changed to existsById for efficiency
+        if (productoRepository.existsById(id)) { // Changed to existsById for efficiency
             productoRepository.deleteById(id);
             return id;
         } else {
@@ -93,40 +87,42 @@ public class ProductoService {
         if (filter == null || filter.isEmpty() || filter.trim().isEmpty()) {
             page = productoRepository.findAll(oPageable);
         } else {
-            page = productoRepository.findByName(filter, oPageable);  // Assuming findByName exists in your repository
+            page = productoRepository.findByName(filter, oPageable); // Assuming findByName exists in your repository
         }
         return page;
     }
 
     public Long populate(Integer amount) {
-        Long productosCreados = 0L;
-
-        try {  // Added try block for exception handling
+       
             for (int i = 0; i < amount; i++) {
                 ProductoEntity producto = new ProductoEntity();
-                producto.setCategoria(categoriaService.getOneRandom());  // Corrected method call
+                producto.setCategoria(categoriaService.getOneRandom()); // Corrected method call
                 producto.setStock(DataGenerationHelper.generateRandomStock());
-                producto.setnombre("Manzana");  // Corrected method name
-                producto.setprecio(DataGenerationHelper.generateRandomPrecio());  // Corrected method name
+                producto.setnombre("Manzana"); // Corrected method name
+                producto.setprecio(DataGenerationHelper.generateRandomPrecio()); // Corrected method name
                 productoRepository.save(producto);
-                productosCreados++;
-            }
-        } catch (Exception e) {
-            throw new RuntimeException("Error al crear los productos: " + e.getMessage());
+            
+            } return productoRepository.count();
         }
-
-        return productosCreados;
-    }
 
     public ProductoEntity getOneRandom() {
         Pageable oPageable = PageRequest.of((int) (Math.random() * productoRepository.count()), 1);
         return productoRepository.findAll(oPageable).getContent().get(0);
     }
 
+    private void validateFirstLetterUppercase(String value) {
+        if (value != null && !value.isEmpty()) {
+            char firstChar = value.charAt(0);
+            if (!Character.isLetter(firstChar) || !Character.isUpperCase(firstChar)) {
+                throw new RuntimeException("La primera letra de " + value + " debe estar en mayúscula");
+            }
+        }
+    }
+
     @Transactional
     public Long empty() {
         productoRepository.deleteAll();
-        productoRepository.resetAutoIncrement(); 
+        productoRepository.resetAutoIncrement();
         productoRepository.flush();
         return productoRepository.count();
     }

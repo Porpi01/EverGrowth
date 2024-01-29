@@ -71,7 +71,7 @@ public class CarritoService {
             carritoRepository.save(carrito);
         }
 
-        return amount.longValue();
+        return carritoRepository.count();
     }
 
     @Transactional

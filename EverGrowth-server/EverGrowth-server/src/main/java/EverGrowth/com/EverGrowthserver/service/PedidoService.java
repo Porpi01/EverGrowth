@@ -65,7 +65,7 @@ public class PedidoService {
 
             pedidoRepository.save(pedido);
         }
-        return amount.longValue();
+        return pedidoRepository.count();
     }
 
     

@@ -36,10 +36,19 @@ public class UsuarioService {
     public Long create(UsuarioEntity oUsuarioEntity) {
         oUsuarioEntity.setId(null);
         oUsuarioEntity.setPassword(tiendaOnlinePassword);
+        validateFirstLetterUppercase(oUsuarioEntity.getnombre());
+        validateFirstLetterUppercase(oUsuarioEntity.getapellido1());
+        validateFirstLetterUppercase(oUsuarioEntity.getapellido2());
+        validateFirstLetterUppercase(oUsuarioEntity.getdireccion());
+
         return usuarioRepository.save(oUsuarioEntity).getId();
     }
 
     public UsuarioEntity update(UsuarioEntity oUsuarioEntityToSet) {
+        validateFirstLetterUppercase(oUsuarioEntityToSet.getnombre());
+        validateFirstLetterUppercase(oUsuarioEntityToSet.getapellido1());
+        validateFirstLetterUppercase(oUsuarioEntityToSet.getapellido2());
+        validateFirstLetterUppercase(oUsuarioEntityToSet.getdireccion());
         return usuarioRepository.save(oUsuarioEntityToSet);
 
     }
@@ -97,6 +106,14 @@ public class UsuarioService {
         return usuarioRepository.findAll(oPageable).getContent().get(0);
     }
 
+    private void validateFirstLetterUppercase(String value) {
+        if (value != null && !value.isEmpty()) {
+            char firstChar = value.charAt(0);
+            if (!Character.isLetter(firstChar) || !Character.isUpperCase(firstChar)) {
+                throw new RuntimeException("La primera letra de " + value + " debe estar en mayúscula");
+            }
+        }
+    }
 
 
      
