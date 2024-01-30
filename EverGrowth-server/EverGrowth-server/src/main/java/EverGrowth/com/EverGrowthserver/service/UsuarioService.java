@@ -7,21 +7,25 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import EverGrowth.com.EverGrowthserver.entity.UsuarioEntity;
-import EverGrowth.com.EverGrowthserver.entity.ValoracionEntity;
 import EverGrowth.com.EverGrowthserver.exception.ResourceNotFoundException;
 import EverGrowth.com.EverGrowthserver.helper.DataGenerationHelper;
 import EverGrowth.com.EverGrowthserver.repository.UsuarioRepository;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 
 @Service
 public class UsuarioService {
-    private final String foxforumPASSWORD = "e2cac5c5f7e52ab03441bb70e89726ddbd1f6e5b683dde05fb65e0720290179e";
+    private final String tiendaOnlinePassword = "e2cac5c5f7e52ab03441bb70e89726ddbd1f6e5b683dde05fb65e0720290179e";
 
 
     @Autowired
     UsuarioRepository usuarioRepository;
 
-    private final String tiendaOnlinePassword = "e2cac5c5f7e52ab03441bb70e89726ddbd1f6e5b683dde05fb65e0720290179e";
+    @Autowired
+    HttpServletRequest httpServletRequest;
+
+    @Autowired
+    SesionService sesionService;
 
     public UsuarioEntity get(Long id) {
         return usuarioRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("User not found"));
@@ -34,6 +38,7 @@ public class UsuarioService {
 
 
     public Long create(UsuarioEntity oUsuarioEntity) {
+        sesionService.onlyAdmins();
         oUsuarioEntity.setId(null);
         oUsuarioEntity.setPassword(tiendaOnlinePassword);
         validateFirstLetterUppercase(oUsuarioEntity.getnombre());
@@ -45,6 +50,7 @@ public class UsuarioService {
     }
 
     public UsuarioEntity update(UsuarioEntity oUsuarioEntityToSet) {
+        sesionService.onlyAdminsOrUsersWithIisOwnData(oUsuarioEntityToSet.getId());
         validateFirstLetterUppercase(oUsuarioEntityToSet.getnombre());
         validateFirstLetterUppercase(oUsuarioEntityToSet.getapellido1());
         validateFirstLetterUppercase(oUsuarioEntityToSet.getapellido2());
@@ -54,6 +60,8 @@ public class UsuarioService {
     }
 
     public Long delete(Long id) {
+        sesionService.onlyAdmins();
+
         if (usuarioRepository.findById(id).isPresent()) {
             usuarioRepository.deleteById(id);
             return id;
@@ -63,6 +71,7 @@ public class UsuarioService {
     }
 
     public Page<UsuarioEntity> getPage(Pageable oPageable, String filter) {
+        sesionService.onlyAdmins();
 
         Page<UsuarioEntity> page;
 
@@ -76,6 +85,7 @@ public class UsuarioService {
     }
 
     public Long populate(Integer amount) {
+        sesionService.onlyAdmins();
 
         for (int i = 0; i < amount; i++) {
             String nombre = DataGenerationHelper.getRandomName();
@@ -119,13 +129,15 @@ public class UsuarioService {
      
     @Transactional
     public Long empty() {
+        sesionService.onlyAdmins();
+
         usuarioRepository.deleteAll();
         usuarioRepository.resetAutoIncrement();
-        UsuarioEntity oUserEntity1 = new UsuarioEntity(1L, "Pedro", "Picapiedra", "Roca",
-                "pedropicapiedra@ausiasmarch.net", "123456789","Calle del Cerezo Nº 17", "pedropicapiedra", foxforumPASSWORD, false);
+        UsuarioEntity oUserEntity1 = new UsuarioEntity(1L, "Ana ", "Pérez", "Roca",
+                "anita@gmail.com", "632156987","Calle del Cerezo Nº 17", "anita17", tiendaOnlinePassword, false);
         usuarioRepository.save(oUserEntity1);
-        oUserEntity1 = new UsuarioEntity(2L, "Pablo", "Mármol", "Granito", "pablomarmol@ausiasmarch.net", "123456789","Calle del Cerezo Nº 17",
-                "pablomarmol", foxforumPASSWORD, true);
+        oUserEntity1 = new UsuarioEntity(2L, "Monica", "Alcañiz", "Puig", "monica@gmail.com", "642156657","Alameda",
+                "moni01", tiendaOnlinePassword, true);
         usuarioRepository.save(oUserEntity1);
         return usuarioRepository.count();
     }

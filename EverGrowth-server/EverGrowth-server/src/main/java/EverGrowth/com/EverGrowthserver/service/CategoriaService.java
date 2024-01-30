@@ -1,8 +1,5 @@
 package EverGrowth.com.EverGrowthserver.service;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -10,7 +7,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import EverGrowth.com.EverGrowthserver.entity.CategoriaEntity;
-import EverGrowth.com.EverGrowthserver.entity.PedidoEntity;
 import EverGrowth.com.EverGrowthserver.exception.ResourceNotFoundException;
 import EverGrowth.com.EverGrowthserver.helper.DataGenerationHelper;
 import EverGrowth.com.EverGrowthserver.repository.CategoriaRepository;
@@ -22,22 +18,28 @@ public class CategoriaService {
     @Autowired
     CategoriaRepository categoriaRepository;
 
+    @Autowired
+    SesionService sesionService;
+
     public CategoriaEntity get(Long id) {
         return categoriaRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Categoria no encontrada"));
     }
 
     public Long create(CategoriaEntity categoriaEntity) {
+        sesionService.onlyAdmins();
         categoriaEntity.setId(null);
         validateFirstLetterUppercase(categoriaEntity.getNombre());
         return categoriaRepository.save(categoriaEntity).getId();
     }
 
     public CategoriaEntity update(CategoriaEntity categoriaEntityToSet) {
+        sesionService.onlyAdmins();
         return categoriaRepository.save(categoriaEntityToSet);
     }
 
     public Long delete(Long id) {
+        sesionService.onlyAdmins();
         if (categoriaRepository.findById(id).isPresent()) {
             categoriaRepository.deleteById(id);
             return id;
@@ -47,11 +49,12 @@ public class CategoriaService {
     }
 
     public Page<CategoriaEntity> getPage(Pageable oPageable) {
+        sesionService.onlyAdminsOrUsers();
         return categoriaRepository.findAll(oPageable);
     }
 
     public Long populate(Integer amount) {
-
+        sesionService.onlyAdmins();
         for (int i = 0; i < amount; i++) {
 
             CategoriaEntity categoria = new CategoriaEntity();
@@ -79,7 +82,7 @@ public class CategoriaService {
 
     @Transactional
     public Long empty() {
-
+        sesionService.onlyAdmins();
         categoriaRepository.deleteAll();
         categoriaRepository.resetAutoIncrement();
         categoriaRepository.flush();

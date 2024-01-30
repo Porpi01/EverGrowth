@@ -32,6 +32,9 @@ public class CarritoService {
     @Autowired
     ProductoService productoService;
 
+    @Autowired
+    SesionService sesionService;
+
     public CarritoEntity get(Long id) {
         return carritoRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Carrito no encontrado"));
     }
@@ -41,12 +44,13 @@ public class CarritoService {
     }
 
     public Long create(CarritoEntity carritoEntity) {
+        sesionService.onlyAdminsOrUsersWithIisOwnData(carritoEntity.getUser().getId());
         carritoEntity.setId(null);
         return carritoRepository.save(carritoEntity).getId();
     }
 
     public CarritoEntity update(CarritoEntity carritoEntityToSet) {
-
+        sesionService.onlyAdminsOrUsersWithIisOwnData(carritoEntityToSet.getUser().getId());
         return carritoRepository.save(carritoEntityToSet);
 
     }
@@ -57,12 +61,13 @@ public class CarritoService {
     }
 
     public Page<CarritoEntity> getPage(Pageable oPageable) {
+        sesionService.onlyAdminsOrUsers();
         return carritoRepository.findAll(oPageable);
     }
 
     public Long populate(Integer amount) {
-    
 
+        sesionService.onlyAdmins();
         for (int i = 0; i < amount; i++) {
             CarritoEntity carrito = new CarritoEntity();
             carrito.setUser(usuarioService.getOneRandom());
@@ -76,10 +81,12 @@ public class CarritoService {
 
     @Transactional
     public Long empty() {
-
+        sesionService.onlyAdmins();
         carritoRepository.deleteAll();
         carritoRepository.resetAutoIncrement();
         carritoRepository.flush();
         return carritoRepository.count();
     }
+
+    
 }

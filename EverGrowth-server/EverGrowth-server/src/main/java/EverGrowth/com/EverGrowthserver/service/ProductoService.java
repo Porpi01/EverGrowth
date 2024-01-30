@@ -1,21 +1,13 @@
 package EverGrowth.com.EverGrowthserver.service;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.sql.Blob;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import EverGrowth.com.EverGrowthserver.entity.CategoriaEntity;
 import EverGrowth.com.EverGrowthserver.entity.ProductoEntity;
-import EverGrowth.com.EverGrowthserver.entity.ValoracionEntity;
 import EverGrowth.com.EverGrowthserver.exception.ResourceNotFoundException;
 import EverGrowth.com.EverGrowthserver.helper.DataGenerationHelper;
 import EverGrowth.com.EverGrowthserver.repository.CategoriaRepository;
@@ -34,7 +26,7 @@ public class ProductoService {
     CategoriaService categoriaService;
 
     @Autowired
-    private AlmacenamientoImagenService almacenamientoImagenService;
+    SesionService sesionService;
 
     public ProductoEntity get(Long id) {
         return productoRepository.findById(id)
@@ -42,30 +34,13 @@ public class ProductoService {
     }
 
     public Long create(ProductoEntity oProductoEntity) {
-        try {
-            CategoriaEntity categoria = oProductoEntity.getCategoria();
-            if (categoria != null) {
-                CategoriaEntity categoriaById = categoriaRepository.findById(categoria.getId()).orElse(null);
-                CategoriaEntity categoriaByNombre = categoriaRepository.findByNombre(categoria.getNombre());
-
-                if (categoriaById != null && categoriaById.equals(categoriaByNombre)) {
-                    oProductoEntity.setId(null);
-                    oProductoEntity = productoRepository.save(oProductoEntity);
-                    validateFirstLetterUppercase(oProductoEntity.getnombre());
-
-                    return oProductoEntity.getId();
-                } else {
-                    throw new RuntimeException("La categoría no existe en la base de datos");
-                }
-            } else {
-                throw new RuntimeException("La categoría no puede ser nula");
-            }
-        } catch (Exception e) {
-            throw new RuntimeException("Error al crear el producto: " + e.getMessage());
-        }
+        sesionService.onlyAdmins();
+        oProductoEntity.setId(null);
+        return productoRepository.save(oProductoEntity).getId();
     }
 
     public ProductoEntity update(ProductoEntity oProductoEntityToSet) {
+        sesionService.onlyAdmins();
         validateFirstLetterUppercase(oProductoEntityToSet.getnombre());
 
         return productoRepository.save(oProductoEntityToSet);
@@ -73,6 +48,7 @@ public class ProductoService {
     }
 
     public Long delete(Long id) {
+        sesionService.onlyAdmins();
         if (productoRepository.existsById(id)) { // Changed to existsById for efficiency
             productoRepository.deleteById(id);
             return id;
@@ -82,6 +58,7 @@ public class ProductoService {
     }
 
     public Page<ProductoEntity> getPage(Pageable oPageable, String filter) {
+        sesionService.onlyAdmins();
         Page<ProductoEntity> page;
 
         if (filter == null || filter.isEmpty() || filter.trim().isEmpty()) {
@@ -93,7 +70,7 @@ public class ProductoService {
     }
 
     public Long populate(Integer amount) {
-       
+        sesionService.onlyAdmins();
             for (int i = 0; i < amount; i++) {
                 ProductoEntity producto = new ProductoEntity();
                 producto.setCategoria(categoriaService.getOneRandom()); // Corrected method call
@@ -121,6 +98,7 @@ public class ProductoService {
 
     @Transactional
     public Long empty() {
+        sesionService.onlyAdmins();
         productoRepository.deleteAll();
         productoRepository.resetAutoIncrement();
         productoRepository.flush();

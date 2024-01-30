@@ -12,13 +12,17 @@ import EverGrowth.com.EverGrowthserver.entity.UsuarioEntity;
 
 public interface UsuarioRepository extends JpaRepository<UsuarioEntity, Long> {
 
-    @Modifying
-    @Query(value = "ALTER TABLE usuario AUTO_INCREMENT = 1", nativeQuery = true)
-    void resetAutoIncrement();
-
+ 
     @Query(value = "SELECT * FROM usuario WHERE length(?1) >= 3 AND (nombre LIKE %?1% OR apellido1 LIKE %?1% OR apellido2 LIKE %?1% OR username LIKE %?1% OR email LIKE %?1%)", nativeQuery = true)
     Page<UsuarioEntity> findByUserByNameOrSurnameOrLastnameContainingIgnoreCase(String nombre, String apellido1,
             String apellido2, String email, Pageable oPageable);
 
     Optional<UsuarioEntity> findByUsername(String username);
+
+    Optional<UsuarioEntity> findByUsernameAndPassword(String username, String password);
+
+    @Modifying
+    @Query(value = "ALTER TABLE usuario AUTO_INCREMENT = 1", nativeQuery = true)
+    void resetAutoIncrement();
+
 }

@@ -30,22 +30,28 @@ public class DetallePedidoService {
     @Autowired
     ProductoService ProductoService;
 
+    @Autowired
+    SesionService sesionService;
+
     public DetallePedidoEntity get(Long id) {
         return detallePedidoRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Categoria no encontrada"));
     }
 
     public Long create(DetallePedidoEntity DetallePedidoEntity) {
+        sesionService.onlyAdmins();
         DetallePedidoEntity.setId(null);
         return detallePedidoRepository.save(DetallePedidoEntity).getId();
     }
 
     public DetallePedidoEntity update(DetallePedidoEntity DetallePedidoEntityToSet) {
+        sesionService.onlyAdmins();
         return detallePedidoRepository.save(DetallePedidoEntityToSet);
     }
 
 
     public Long delete(Long id) {
+        sesionService.onlyAdmins();
         if (detallePedidoRepository.findById(id).isPresent()) {
             detallePedidoRepository.deleteById(id);
             return id;
@@ -55,11 +61,12 @@ public class DetallePedidoService {
     }
 
     public Page<DetallePedidoEntity> getPage(Pageable oPageable) {
+        sesionService.onlyAdminsOrUsers();
         return detallePedidoRepository.findAll(oPageable);
     }
 
     public Long populate(Integer amount) {
-
+        sesionService.onlyAdmins();
         for (int i = 0; i < amount; i++) {
             DetallePedidoEntity detallePedido = new DetallePedidoEntity();
             detallePedido.setCantidad(12);
@@ -74,7 +81,7 @@ public class DetallePedidoService {
 
     @Transactional
     public Long empty() {
-
+        sesionService.onlyAdmins();
         detallePedidoRepository.deleteAll();
         detallePedidoRepository.resetAutoIncrement();
         detallePedidoRepository.flush();

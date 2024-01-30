@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import EverGrowth.com.EverGrowthserver.entity.UsuarioEntity;
 import EverGrowth.com.EverGrowthserver.entity.ValoracionEntity;
 
 import EverGrowth.com.EverGrowthserver.exception.ResourceNotFoundException;
@@ -35,6 +36,9 @@ public class ValoracionService {
     @Autowired
     ProductoService ProductoService;
 
+    @Autowired
+    SesionService sesionService;
+
     public ValoracionEntity get(Long id) {
         return valoracionRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Valoracion no encontrada"));
@@ -48,12 +52,14 @@ public class ValoracionService {
     }
 
     public ValoracionEntity update(ValoracionEntity ValoracionEntityToSet) {
+        sesionService.onlyAdminsOrUsersWithIisOwnData(ValoracionEntityToSet.getId());
         validateFirstLetterUppercase(ValoracionEntityToSet.getTitulo());
         validateFirstLetterUppercase(ValoracionEntityToSet.getMensaje());
         return valoracionRepository.save(ValoracionEntityToSet);
     }
 
     public Long delete(Long id) {
+        sesionService.onlyAdmins();
         if (valoracionRepository.findById(id).isPresent()) {
             valoracionRepository.deleteById(id);
             return id;
@@ -63,6 +69,7 @@ public class ValoracionService {
     }
 
     public Page<ValoracionEntity> getPage(Pageable oPageable, String filter) {
+        sesionService.onlyAdmins();
 
         Page<ValoracionEntity> page;
 
@@ -77,6 +84,7 @@ public class ValoracionService {
 
     public Long populate(Integer amount) {
 
+        sesionService.onlyAdmins();
 
         for (int i = 0; i < amount; i++) {
             ValoracionEntity valoracion = new ValoracionEntity();
@@ -103,7 +111,7 @@ public class ValoracionService {
 
     @Transactional
     public Long empty() {
-
+        sesionService.onlyAdmins();
         valoracionRepository.deleteAll();
         valoracionRepository.resetAutoIncrement();
         valoracionRepository.flush();

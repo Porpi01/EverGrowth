@@ -28,6 +28,9 @@ public class PedidoService {
     @Autowired
     UsuarioService UsuarioService;
 
+    @Autowired
+    SesionService sesionService;
+
     public PedidoEntity get(Long id) {
         return pedidoRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Pedido not found"));
     }
@@ -38,6 +41,7 @@ public class PedidoService {
     }
 
     public PedidoEntity update(PedidoEntity oPedidoEntityToSet) {
+        sesionService.onlyAdmins();
         return pedidoRepository.save(oPedidoEntityToSet);
     }
 
@@ -51,11 +55,13 @@ public class PedidoService {
     }
 
     public Page<PedidoEntity> getPage(Pageable oPageable) {
+        sesionService.onlyAdminsOrUsers();
         return pedidoRepository.findAll(oPageable);
     }
 
     public Long populate(Integer amount) {
-     
+        sesionService.onlyAdmins();
+
         for (int i = 0; i < amount; i++) {
             PedidoEntity pedido = new PedidoEntity();
             pedido.setUser(UsuarioService.getOneRandom());
@@ -68,20 +74,20 @@ public class PedidoService {
         return pedidoRepository.count();
     }
 
-    
     public PedidoEntity getOneRandom() {
 
         Pageable oPageable = PageRequest.of((int) (Math.random() * pedidoRepository.count()), 1);
         return pedidoRepository.findAll(oPageable).getContent().get(0);
     }
-  @Transactional
+
+    @Transactional
     public Long empty() {
 
+        sesionService.onlyAdmins();
         pedidoRepository.deleteAll();
         pedidoRepository.resetAutoIncrement();
         pedidoRepository.flush();
         return pedidoRepository.count();
     }
-
 
 }
