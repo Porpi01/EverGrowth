@@ -36,8 +36,11 @@ public class ProductoEntity {
     @PositiveOrZero
     Float precio;
 
-    @Lob
-    private byte[] imagen;
+    @NotNull
+    @NotBlank
+    @Size(min = 3, max = 2048)
+    String imagen;
+
 
     @NotNull
     @PositiveOrZero
@@ -62,7 +65,7 @@ public class ProductoEntity {
         detallePedido = new ArrayList<>();
     }
 
-    public ProductoEntity(String nombre, Float precio, int stock, byte[] imagen) {
+    public ProductoEntity(String nombre, Float precio, int stock, String imagen) {
         this.nombre = nombre;
         this.precio = precio;
         this.stock = stock;
@@ -117,12 +120,13 @@ public class ProductoEntity {
         this.categoria = categoria;
     }
 
-    public byte[] getImagen() {
+    public String getImagen() {
         return imagen;
     }
 
-    public void setImagen(byte[] imagen) {
+    public void setImagen(String imagen) {
         this.imagen = imagen;
     }
+ 
 
 }

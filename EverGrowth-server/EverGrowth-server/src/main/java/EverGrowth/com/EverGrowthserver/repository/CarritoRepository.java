@@ -10,8 +10,9 @@ import EverGrowth.com.EverGrowthserver.entity.UsuarioEntity;
 public interface CarritoRepository  extends JpaRepository<CarritoEntity, Long>{
     
       Long countByUser(UsuarioEntity user);
+      
 
-       @Modifying
+    @Modifying
     @Query(value = "ALTER TABLE carrito AUTO_INCREMENT = 1", nativeQuery = true)
     void resetAutoIncrement();
 

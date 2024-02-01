@@ -77,6 +77,7 @@ public class ProductoService {
                 producto.setStock(DataGenerationHelper.generateRandomStock());
                 producto.setnombre("Manzana"); // Corrected method name
                 producto.setprecio(DataGenerationHelper.generateRandomPrecio()); // Corrected method name
+                producto.setImagen( "http://localhost:8085/media/default.jpg");
                 productoRepository.save(producto);
             
             } return productoRepository.count();

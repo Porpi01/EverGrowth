@@ -3,6 +3,7 @@ package EverGrowth.com.EverGrowthserver.api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -12,9 +13,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import EverGrowth.com.EverGrowthserver.entity.CategoriaEntity;
+import EverGrowth.com.EverGrowthserver.entity.ProductoEntity;
 import EverGrowth.com.EverGrowthserver.service.CategoriaService;
 
 
@@ -50,9 +53,12 @@ public class CategoriaAPI {
     }
 
     @GetMapping("")
-    public ResponseEntity<Page<CategoriaEntity>> getPage(Pageable oPageable) {
-        return ResponseEntity.ok(oCategoriaService.getPage(oPageable));
+    public ResponseEntity<Page<CategoriaEntity>> getPage(
+            Pageable oPageable,
+            @RequestParam(name = "filter", required = false) String strFilter) {
+        return new ResponseEntity<>(oCategoriaService.getPage(oPageable, strFilter), HttpStatus.OK);
     }
+
 
     @PostMapping("/populate/{amount}")
     public ResponseEntity<Long> populate(@PathVariable("amount") Integer amount) {

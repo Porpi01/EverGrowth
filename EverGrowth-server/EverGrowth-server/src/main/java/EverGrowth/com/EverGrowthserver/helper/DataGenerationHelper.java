@@ -1,13 +1,11 @@
 package EverGrowth.com.EverGrowthserver.helper;
 
-import java.nio.file.Files;
-import java.nio.file.Paths;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.stream.Collectors;
+
 
 public class DataGenerationHelper {
 
@@ -120,8 +118,14 @@ public class DataGenerationHelper {
   }
 
   public static float generateRandomPrecio() {
-    return 5 + random.nextFloat() * (100 - 5);
-  }
+    float min = 5.00f;
+    float max = 100.00f;
+    float randomNumber = min + random.nextFloat() * (max - min);
+    randomNumber = Math.round(randomNumber * 100.0f) / 100.0f;
+    
+    return randomNumber;
+}
+  
 //Productos
 
 

@@ -19,4 +19,6 @@ public interface ValoracionRepository extends JpaRepository<ValoracionEntity, Lo
     @Query(value = "SELECT * FROM valoracion WHERE length(?1) >= 3 AND (mensaje LIKE %?1% OR titulo LIKE %?1%)", nativeQuery = true)
     Page<ValoracionEntity> findByMensajeOrTitulo( String titulo, String mensaje, Pageable oPageable);
 
+
+
 }

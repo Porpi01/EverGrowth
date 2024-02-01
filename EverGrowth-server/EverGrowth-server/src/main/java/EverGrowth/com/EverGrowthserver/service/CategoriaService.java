@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import EverGrowth.com.EverGrowthserver.entity.CategoriaEntity;
+import EverGrowth.com.EverGrowthserver.entity.ProductoEntity;
 import EverGrowth.com.EverGrowthserver.exception.ResourceNotFoundException;
 import EverGrowth.com.EverGrowthserver.helper.DataGenerationHelper;
 import EverGrowth.com.EverGrowthserver.repository.CategoriaRepository;
@@ -48,9 +49,16 @@ public class CategoriaService {
         }
     }
 
-    public Page<CategoriaEntity> getPage(Pageable oPageable) {
+    public Page<CategoriaEntity> getPage(Pageable oPageable, String filter) {
         sesionService.onlyAdminsOrUsers();
-        return categoriaRepository.findAll(oPageable);
+      Page<CategoriaEntity> page;
+
+        if (filter == null || filter.isEmpty() || filter.trim().isEmpty()) {
+            page = categoriaRepository.findAll(oPageable);
+        } else {
+            page = categoriaRepository.findByName(filter, oPageable); // Assuming findByName exists in your repository
+        }
+        return page;
     }
 
     public Long populate(Integer amount) {
