@@ -11,10 +11,14 @@ import EverGrowth.com.EverGrowthserver.entity.ProductoEntity;
 
 public interface ProductoRepository extends JpaRepository<ProductoEntity, Long> {
 
+    Page<ProductoEntity> findByCategoria(Long id, Pageable oPageable);
+
+
     @Modifying
     @Query(value = "ALTER TABLE producto AUTO_INCREMENT = 1", nativeQuery = true)
     void resetAutoIncrement();
 
     @Query(value = "SELECT * FROM producto WHERE length(?1) >= 3 AND (nombre LIKE %?1% )", nativeQuery = true)
     Page<ProductoEntity> findByName( String nombre, Pageable oPageable);
+    
 }

@@ -1,7 +1,7 @@
 package EverGrowth.com.EverGrowthserver.service;
 
-
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -67,17 +67,35 @@ public class ValoracionService {
             throw new ResourceNotFoundException("No existe una valoracion con " + id);
         }
     }
+    public List<ValoracionEntity> getValoracionesPorProducto(Long productoId) {
+        return valoracionRepository.findByProductoId(productoId);
+    }
+    // public Page<ValoracionEntity> getPage(Pageable oPageable, Long id_usuario,
+    // Long id_producto, String filter) {
+
+    // if (id_usuario == null) {
+    // if (id_producto == null) {
+    // if (filter == null || filter.isEmpty()) {
+    // return valoracionRepository.findAll(oPageable);
+    // } else {
+    // return valoracionRepository.findByMensajeOrTitulo(filter, filter, oPageable);
+    // }
+    // } else {
+    // return valoracionRepository.findByProducto(id_producto, oPageable);
+    // }
+    // } else {
+    // return valoracionRepository.findByUser(id_usuario, oPageable);
+    // }
+    // }
 
     public Page<ValoracionEntity> getPage(Pageable oPageable, String filter) {
-        sesionService.onlyAdmins();
-
         Page<ValoracionEntity> page;
 
         if (filter == null || filter.isEmpty() || filter.trim().isEmpty()) {
             page = valoracionRepository.findAll(oPageable);
         } else {
             page = valoracionRepository.findByMensajeOrTitulo(
-                    filter,filter, oPageable);
+                    filter, filter, oPageable);
         }
         return page;
     }
@@ -98,7 +116,6 @@ public class ValoracionService {
         }
         return valoracionRepository.count();
     }
-    
 
     private void validateFirstLetterUppercase(String value) {
         if (value != null && !value.isEmpty()) {

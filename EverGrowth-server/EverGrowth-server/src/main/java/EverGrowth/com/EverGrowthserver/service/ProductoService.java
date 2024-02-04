@@ -36,6 +36,7 @@ public class ProductoService {
     public Long create(ProductoEntity oProductoEntity) {
         sesionService.onlyAdmins();
         oProductoEntity.setId(null);
+        validateFirstLetterUppercase(oProductoEntity.getnombre());
         return productoRepository.save(oProductoEntity).getId();
     }
 
@@ -58,7 +59,7 @@ public class ProductoService {
     }
 
     public Page<ProductoEntity> getPage(Pageable oPageable, String filter) {
-        sesionService.onlyAdmins();
+    
         Page<ProductoEntity> page;
 
         if (filter == null || filter.isEmpty() || filter.trim().isEmpty()) {
@@ -73,10 +74,11 @@ public class ProductoService {
         sesionService.onlyAdmins();
             for (int i = 0; i < amount; i++) {
                 ProductoEntity producto = new ProductoEntity();
-                producto.setCategoria(categoriaService.getOneRandom()); // Corrected method call
+                producto.setCategoria(categoriaService.getOneRandom());
                 producto.setStock(DataGenerationHelper.generateRandomStock());
-                producto.setnombre("Manzana"); // Corrected method name
-                producto.setprecio(DataGenerationHelper.generateRandomPrecio()); // Corrected method name
+                producto.setnombre(DataGenerationHelper.generateRandomNombre()); 
+                producto.setprecio(DataGenerationHelper.generateRandomPrecio()); 
+                producto.setDescripcion("Disfruta de la frescura y el sabor incomparables de nuestros productos. Una experiencia gastronómica que no olvidarás.");
                 producto.setImagen( "http://localhost:8085/media/default.jpg");
                 productoRepository.save(producto);
             
@@ -87,6 +89,8 @@ public class ProductoService {
         Pageable oPageable = PageRequest.of((int) (Math.random() * productoRepository.count()), 1);
         return productoRepository.findAll(oPageable).getContent().get(0);
     }
+
+ 
 
     private void validateFirstLetterUppercase(String value) {
         if (value != null && !value.isEmpty()) {

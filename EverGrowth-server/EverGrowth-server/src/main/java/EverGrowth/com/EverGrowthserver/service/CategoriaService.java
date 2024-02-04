@@ -50,7 +50,6 @@ public class CategoriaService {
     }
 
     public Page<CategoriaEntity> getPage(Pageable oPageable, String filter) {
-        sesionService.onlyAdminsOrUsers();
       Page<CategoriaEntity> page;
 
         if (filter == null || filter.isEmpty() || filter.trim().isEmpty()) {

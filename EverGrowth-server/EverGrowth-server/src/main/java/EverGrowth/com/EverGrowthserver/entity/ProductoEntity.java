@@ -46,6 +46,11 @@ public class ProductoEntity {
     @PositiveOrZero
     int stock;
 
+    @NotNull
+    @NotBlank
+    @Size(min = 3, max = 2048)
+    String descripcion;
+
     @ManyToOne
     @JoinColumn(name = "id_categoria")
     private CategoriaEntity categoria;
@@ -127,6 +132,16 @@ public class ProductoEntity {
     public void setImagen(String imagen) {
         this.imagen = imagen;
     }
+
+    
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
+
  
 
 }
