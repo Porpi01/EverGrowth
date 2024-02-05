@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import EverGrowth.com.EverGrowthserver.entity.PedidoEntity;
@@ -48,8 +49,9 @@ public class PedidoAPI {
     }
 
     @GetMapping("")
-    public ResponseEntity<Page<PedidoEntity>> getPage(Pageable oPageable) {
-        return ResponseEntity.ok(oPedidoService.getPage(oPageable));
+    public ResponseEntity<Page<PedidoEntity>> getPage(Pageable oPageable,
+    @RequestParam(name = "usuario", defaultValue = "0", required=false ) Long id_usuario){
+    return ResponseEntity.ok(oPedidoService.getPage(oPageable, id_usuario));
     }
 
     @PostMapping("/populate/{amount}")

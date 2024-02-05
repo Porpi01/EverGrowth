@@ -1,7 +1,6 @@
 package EverGrowth.com.EverGrowthserver.repository;
 
-import java.time.LocalDate;
-import java.util.List;
+
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -13,18 +12,17 @@ import EverGrowth.com.EverGrowthserver.entity.ValoracionEntity;
 
 public interface ValoracionRepository extends JpaRepository<ValoracionEntity, Long> {
 
-    Page<ValoracionEntity> findByUser(Long id_usuario, Pageable oPageable);
+  @Query("SELECT v FROM ValoracionEntity v WHERE v.user.id = :userId")
+  Page<ValoracionEntity> findByUser(Long userId, Pageable pageable);
 
-    Page<ValoracionEntity> findByProducto(Long id_producto, Pageable oPageable);
+  @Query("SELECT v FROM ValoracionEntity v WHERE v.producto.id = :productoId")
+  Page<ValoracionEntity> findByProducto(Long productoId, Pageable pageable);
 
-    @Modifying
-    @Query(value = "ALTER TABLE valoracion AUTO_INCREMENT = 1", nativeQuery = true)
-    void resetAutoIncrement();
+  @Modifying
+  @Query(value = "ALTER TABLE valoracion AUTO_INCREMENT = 1", nativeQuery = true)
+  void resetAutoIncrement();
 
-    @Query(value = "SELECT * FROM valoracion WHERE length(?1) >= 3 AND (mensaje LIKE %?1% OR titulo LIKE %?1%)", nativeQuery = true)
-    Page<ValoracionEntity> findByMensajeOrTitulo(String titulo, String mensaje, Pageable oPageable);
-
-    List<ValoracionEntity> findByProductoId(Long productoId);
-
+  @Query(value = "SELECT * FROM valoracion WHERE length(?1) >= 3 AND (mensaje LIKE %?1% OR titulo LIKE %?1%)", nativeQuery = true)
+  Page<ValoracionEntity> findByMensajeOrTitulo(String titulo, String mensaje, Pageable oPageable);
 
 }

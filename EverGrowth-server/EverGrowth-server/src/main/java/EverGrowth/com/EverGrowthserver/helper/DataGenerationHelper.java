@@ -138,23 +138,7 @@ public static String generateRandomNombre() {
   return NOMBRES_PRODUCTOS[index];
 }
 
-private static final String[] DESCRIPCIONES = {
-  "Las Semillas de Lino Dorado Bio de Biográ son una excelente fuente de fibra y nutrientes esenciales. Añádelas a tu dieta diaria para disfrutar de sus beneficios para la salud y su delicioso sabor.",
-  "Nuestro Queso Artesanal Añejo es el resultado de años de experiencia y dedicación. Elaborado con leche de la más alta calidad, cada bocado es una explosión de sabor y tradición.",
-  "Sumérgete en la indulgencia con nuestro Chocolate Gourmet 70% Cacao. El equilibrio perfecto entre amargura y dulzura, este chocolate es una experiencia sensorial incomparable.",
-  "Nuestro Vino Tinto Reserva es una expresión auténtica del terruño y la pasión por la vinificación. Con notas de frutas maduras y especias, cada copa es un viaje a la elegancia y la sofisticación.",
-  "Las Barritas Energéticas Orgánicas son el compañero perfecto para tus aventuras diarias. Empacadas con ingredientes naturales y nutritivos, te mantienen lleno de energía y vitalidad.",
-  "Explora el mundo del té con nuestra Selección Exclusiva de Tés Premium. Desde sabores suaves y florales hasta infusiones robustas y terrosas, cada té es una experiencia única.",
-  "Nuestras Especias Gourmet de Oriente Medio son el secreto mejor guardado de los chefs profesionales. Añade un toque de exotismo y aromas seductores a tus platos caseros.",
-  "Las Verduras Frescas de Temporada son la base de una dieta saludable y equilibrada. Recogidas en su punto óptimo de madurez, ofrecen frescura y sabor incomparables.",
-  "Dulce, suave y tentador, nuestro Postre Gourmet de Crema Catalana es una delicia para los sentidos. Disfruta de la cremosidad y el sabor inigualable en cada cucharada."
-};
 
-public static String generateRandomDescripcion() {
-  Random random = new Random();
-  int index = random.nextInt(DESCRIPCIONES.length);
-  return DESCRIPCIONES[index];
-}
 
 //Categorias
   private static final String[] nombresCategoria = {

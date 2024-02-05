@@ -66,8 +66,11 @@ public class CarritoAPI {
     }
 
     @GetMapping("")
-    public ResponseEntity<Page<CarritoEntity>> getPage(Pageable oPageable) {
-        return ResponseEntity.ok(carritoService.getPage(oPageable));
+    public ResponseEntity<Page<CarritoEntity>> getPage(Pageable oPageable,
+    
+    @RequestParam(name = "usuario",defaultValue = "0" , required=false) Long id_usuario ,
+    @RequestParam(name = "producto", defaultValue = "0", required=false ) Long id_producto) {
+        return ResponseEntity.ok(carritoService.getPage(oPageable, id_usuario, id_producto));
     }
 
     @PostMapping("/populate/{amount}")

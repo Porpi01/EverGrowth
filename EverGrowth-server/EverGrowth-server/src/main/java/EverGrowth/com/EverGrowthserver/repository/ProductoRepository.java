@@ -8,10 +8,10 @@ import org.springframework.data.jpa.repository.Query;
 
 import EverGrowth.com.EverGrowthserver.entity.ProductoEntity;
 
-
 public interface ProductoRepository extends JpaRepository<ProductoEntity, Long> {
 
-    Page<ProductoEntity> findByCategoria(Long id, Pageable oPageable);
+    @Query("SELECT p FROM ProductoEntity p WHERE p.categoria.id = :categoriaId")
+    Page<ProductoEntity> findByCategoria(Long categoriaId, Pageable pageable);
 
 
     @Modifying
@@ -19,6 +19,6 @@ public interface ProductoRepository extends JpaRepository<ProductoEntity, Long> 
     void resetAutoIncrement();
 
     @Query(value = "SELECT * FROM producto WHERE length(?1) >= 3 AND (nombre LIKE %?1% )", nativeQuery = true)
-    Page<ProductoEntity> findByName( String nombre, Pageable oPageable);
-    
+    Page<ProductoEntity> findByName(String nombre, Pageable oPageable);
+
 }

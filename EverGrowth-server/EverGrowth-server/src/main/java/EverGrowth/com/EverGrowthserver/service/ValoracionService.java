@@ -1,14 +1,12 @@
 package EverGrowth.com.EverGrowthserver.service;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import EverGrowth.com.EverGrowthserver.entity.UsuarioEntity;
 import EverGrowth.com.EverGrowthserver.entity.ValoracionEntity;
 
 import EverGrowth.com.EverGrowthserver.exception.ResourceNotFoundException;
@@ -67,37 +65,89 @@ public class ValoracionService {
             throw new ResourceNotFoundException("No existe una valoracion con " + id);
         }
     }
-    public List<ValoracionEntity> getValoracionesPorProducto(Long productoId) {
-        return valoracionRepository.findByProductoId(productoId);
-    }
-    // public Page<ValoracionEntity> getPage(Pageable oPageable, Long id_usuario,
-    // Long id_producto, String filter) {
 
-    // if (id_usuario == null) {
+    // public Page<ValoracionDTO> getValoracionesByUser(Long id_usuario, Pageable
+    // oPageable) {
+    // return filterContent(oPageable, null, id_usuario);
+    // }
+
+    // public Page<ValoracionDTO> getValoracionesByProducto(Long id_producto,
+    // Pageable oPageable) {
+    // return filterContent(oPageable, id_producto, null);
+    // }
+
+    // private Page<ValoracionDTO> filterContent(Pageable oPageable, Long
+    // id_producto, Long id_usuario) {
     // if (id_producto == null) {
-    // if (filter == null || filter.isEmpty()) {
-    // return valoracionRepository.findAll(oPageable);
+    // if (id_usuario == null) {
+    // return
+    // valoracionRepository.findAll(oPageable).map(ValoracionDTO::fromValoracion);
+
     // } else {
-    // return valoracionRepository.findByMensajeOrTitulo(filter, filter, oPageable);
+    // List<ValoracionDTO> filtro = valoracionRepository.findAll().stream()
+    // .filter(valoracion -> valoracion.getUser().getId().equals(id_usuario))
+    // .map(ValoracionDTO::fromValoracion).collect(Collectors.toList());
+
+    // return new PageImpl<>(filtro, oPageable, filtro.size());
     // }
     // } else {
-    // return valoracionRepository.findByProducto(id_producto, oPageable);
-    // }
-    // } else {
-    // return valoracionRepository.findByUser(id_usuario, oPageable);
+    // List<ValoracionDTO> filtro = valoracionRepository.findAll().stream()
+    // .filter(valoracion -> valoracion.getProducto().getId().equals(id_producto))
+    // .map(ValoracionDTO::fromValoracion).collect(Collectors.toList());
+
+    // return new PageImpl<>(filtro, oPageable, filtro.size());
     // }
     // }
 
-    public Page<ValoracionEntity> getPage(Pageable oPageable, String filter) {
-        Page<ValoracionEntity> page;
+    // public Page<ValoracionDTO> getPage(Pageable oPageable, Long id_usuario, Long
+    // id_producto, String filter) {
+    // Page<ValoracionEntity> page;
 
-        if (filter == null || filter.isEmpty() || filter.trim().isEmpty()) {
-            page = valoracionRepository.findAll(oPageable);
+    // if (filter == null || filter.trim().isEmpty()) {
+    // page = valoracionRepository.findAll(oPageable);
+    // } else {
+    // page = valoracionRepository.findByMensajeOrTitulo(filter, filter,
+    // oPageable);
+    // }
+
+    // return page.map(this::mapToValoracionDTO);
+    // }
+
+    // private ValoracionDTO mapToValoracionDTO(ValoracionEntity valoracion) {
+    // return new ValoracionDTO(valoracion.getId(), valoracion.getTitulo(),
+    // valoracion.getMensaje(), valoracion.getFecha(), valoracion.getUser(),
+    // valoracion.getProducto());
+    // }
+
+    public Page<ValoracionEntity> getPage(Pageable oPageable, String filter, Long id_usuario, Long id_producto) {
+
+        if (id_usuario == 0) {
+            if (id_producto == 0) {
+                if (filter == null || filter.isEmpty()) {
+                    return valoracionRepository.findAll(oPageable);
+                } else {
+                    return valoracionRepository.findByMensajeOrTitulo(filter, filter, oPageable);
+                }
+            } else {
+
+                return valoracionRepository.findByProducto(id_producto, oPageable);
+            }
         } else {
-            page = valoracionRepository.findByMensajeOrTitulo(
-                    filter, filter, oPageable);
+            if (id_producto == 0) {
+                return valoracionRepository.findByUser(id_usuario, oPageable);
+            } else {
+
+                return Page.empty();
+            }
         }
-        return page;
+    }
+
+    public Page<ValoracionEntity> getValoracionesByUser(Long id_usuario, Pageable oPageable) {
+        return valoracionRepository.findByUser(id_usuario, oPageable);
+    }
+
+    public Page<ValoracionEntity> getValoracionesByProducto(Long id_producto, Pageable oPageable) {
+        return valoracionRepository.findByProducto(id_producto, oPageable);
     }
 
     public Long populate(Integer amount) {

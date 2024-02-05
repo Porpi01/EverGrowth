@@ -12,9 +12,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import EverGrowth.com.EverGrowthserver.entity.DetallePedidoEntity;
+import EverGrowth.com.EverGrowthserver.entity.ValoracionEntity;
 import EverGrowth.com.EverGrowthserver.service.DetallePedidoService;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*", maxAge = 3600)
@@ -46,11 +48,13 @@ public class DetallePedidoAPI {
     public ResponseEntity<Long> delete(@PathVariable("id") Long id) {
         return ResponseEntity.ok(detallePedidoService.delete(id));
     }
-
-    @GetMapping("")
-    public ResponseEntity<Page<DetallePedidoEntity>> getPage(Pageable oPageable) {
-        return ResponseEntity.ok(detallePedidoService.getPage(oPageable));
-    }
+  @GetMapping("")
+    public ResponseEntity<Page<DetallePedidoEntity>> getPage(
+            Pageable oPageable,
+            @RequestParam(name = "pedido",defaultValue = "0" , required=false) Long id_pedido ,
+            @RequestParam(name = "producto", defaultValue = "0", required=false ) Long id_producto){
+                return ResponseEntity.ok(detallePedidoService.getPage(oPageable, id_pedido, id_producto));
+            }
 
     @PostMapping("/populate/{amount}")
     public ResponseEntity<Long> populate(@PathVariable("amount") Integer amount) {

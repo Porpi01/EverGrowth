@@ -58,17 +58,20 @@ public class ProductoService {
         }
     }
 
-    public Page<ProductoEntity> getPage(Pageable oPageable, String filter) {
+    public Page<ProductoEntity> getPage(Pageable oPageable, String filter, Long id_categoria) {
     
-        Page<ProductoEntity> page;
-
-        if (filter == null || filter.isEmpty() || filter.trim().isEmpty()) {
-            page = productoRepository.findAll(oPageable);
+      
+        if (id_categoria == 0) {
+            if (filter == null || filter.isEmpty() || filter.trim().isEmpty()) {
+                return productoRepository.findAll(oPageable);
+            } else {
+                return productoRepository.findByName(filter, oPageable);
+            }
         } else {
-            page = productoRepository.findByName(filter, oPageable); // Assuming findByName exists in your repository
+            return productoRepository.findByCategoria(id_categoria, oPageable);
         }
-        return page;
-    }
+        }
+    
 
     public Long populate(Integer amount) {
         sesionService.onlyAdmins();

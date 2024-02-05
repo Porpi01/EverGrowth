@@ -58,8 +58,9 @@ public class ProductoAPI {
    @GetMapping("")
     public ResponseEntity<Page<ProductoEntity>> getPage(
             Pageable oPageable,
+            @RequestParam(name = "categoria", defaultValue = "0", required=false ) Long id_categoria,
             @RequestParam(name = "filter", required = false) String strFilter) {
-        return new ResponseEntity<>(oProductoService.getPage(oPageable, strFilter), HttpStatus.OK);
+        return new ResponseEntity<>(oProductoService.getPage(oPageable, strFilter, id_categoria), HttpStatus.OK);
     }
 
     @PostMapping("/populate/{amount}")

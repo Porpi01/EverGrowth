@@ -6,6 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import EverGrowth.com.EverGrowthserver.entity.DetallePedidoEntity;
+import EverGrowth.com.EverGrowthserver.entity.DetallePedidoEntity;
 import EverGrowth.com.EverGrowthserver.exception.ResourceNotFoundException;
 import EverGrowth.com.EverGrowthserver.repository.DetallePedidoRepository;
 import EverGrowth.com.EverGrowthserver.repository.PedidoRepository;
@@ -60,11 +61,21 @@ public class DetallePedidoService {
         }
     }
 
-    public Page<DetallePedidoEntity> getPage(Pageable oPageable) {
-        sesionService.onlyAdminsOrUsers();
-        return detallePedidoRepository.findAll(oPageable);
+    public Page<DetallePedidoEntity> getPage(Pageable oPageable, Long id_pedido, Long id_producto) {
+        if (id_pedido == 0) {
+            if (id_producto == 0) {
+                return detallePedidoRepository.findAll(oPageable); 
+            } else {
+                return detallePedidoRepository.findByProducto(id_producto, oPageable);
+            }
+        } else {
+            if (id_producto == 0) {
+                return detallePedidoRepository.findByPedido(id_pedido, oPageable);
+            } else {
+                return Page.empty();
+            }
+        }
     }
-
     public Long populate(Integer amount) {
         sesionService.onlyAdmins();
         for (int i = 0; i < amount; i++) {

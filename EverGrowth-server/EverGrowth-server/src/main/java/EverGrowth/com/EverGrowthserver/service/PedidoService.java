@@ -9,7 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import EverGrowth.com.EverGrowthserver.entity.PedidoEntity;
-
+import EverGrowth.com.EverGrowthserver.entity.ProductoEntity;
 import EverGrowth.com.EverGrowthserver.exception.ResourceNotFoundException;
 import EverGrowth.com.EverGrowthserver.helper.DataGenerationHelper;
 import EverGrowth.com.EverGrowthserver.repository.UsuarioRepository;
@@ -54,11 +54,18 @@ public class PedidoService {
         }
     }
 
-    public Page<PedidoEntity> getPage(Pageable oPageable) {
-        sesionService.onlyAdminsOrUsers();
-        return pedidoRepository.findAll(oPageable);
-    }
-
+   
+    public Page<PedidoEntity> getPage(Pageable oPageable,  Long id_usuario) {
+    sesionService.onlyAdmins();
+      
+        if (id_usuario == 0) {
+                return pedidoRepository.findAll(oPageable);
+            } else {
+                return pedidoRepository.findByUser(id_usuario, oPageable);
+            }
+            }
+        
+    
     public Long populate(Integer amount) {
         sesionService.onlyAdmins();
 

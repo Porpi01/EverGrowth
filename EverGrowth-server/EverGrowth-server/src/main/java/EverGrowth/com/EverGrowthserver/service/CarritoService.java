@@ -6,7 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import EverGrowth.com.EverGrowthserver.entity.CarritoEntity;
-import EverGrowth.com.EverGrowthserver.entity.ProductoEntity;
+import EverGrowth.com.EverGrowthserver.entity.DetallePedidoEntity;
 import EverGrowth.com.EverGrowthserver.entity.UsuarioEntity;
 import EverGrowth.com.EverGrowthserver.exception.ResourceNotFoundException;
 import EverGrowth.com.EverGrowthserver.repository.CarritoRepository;
@@ -60,9 +60,20 @@ public class CarritoService {
         return id;
     }
 
-    public Page<CarritoEntity> getPage(Pageable oPageable) {
-        sesionService.onlyAdminsOrUsers();
-        return carritoRepository.findAll(oPageable);
+  public Page<CarritoEntity> getPage(Pageable oPageable, Long id_usuario, Long id_producto) {
+        if (id_usuario == 0) {
+            if (id_producto == 0) {
+                return carritoRepository.findAll(oPageable); 
+            } else {
+                return carritoRepository.findByProducto(id_producto, oPageable);
+            }
+        } else {
+            if (id_producto == 0) {
+                return carritoRepository.findByUser(id_usuario, oPageable);
+            } else {
+                return Page.empty();
+            }
+        }
     }
 
     public Long populate(Integer amount) {
@@ -87,6 +98,8 @@ public class CarritoService {
         carritoRepository.flush();
         return carritoRepository.count();
     }
+
+    
 
     
 }

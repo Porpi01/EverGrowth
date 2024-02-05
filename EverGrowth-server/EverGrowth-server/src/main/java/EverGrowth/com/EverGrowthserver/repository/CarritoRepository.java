@@ -13,12 +13,20 @@ public interface CarritoRepository extends JpaRepository<CarritoEntity, Long> {
 
   Long countByUser(UsuarioEntity user);
 
-  Page<CarritoEntity> findByUser(Long id, Pageable oPageable);
+  @Query("SELECT c FROM CarritoEntity c WHERE c.producto.id = :productoId")
+  Page<CarritoEntity> findByProducto(Long productoId, Pageable pageable);
 
-  Page<CarritoEntity> findByProducto(Long id, Pageable oPageable);
+  @Query("SELECT c FROM CarritoEntity c WHERE c.user.id = :userId")
+  Page<CarritoEntity> findByUser(Long userId, Pageable pageable);
 
   @Modifying
   @Query(value = "ALTER TABLE carrito AUTO_INCREMENT = 1", nativeQuery = true)
   void resetAutoIncrement();
+
+  @Query(value = "SELECT c.cantidad * c.producto.precio FROM carrito c WHERE c.id = ?1", nativeQuery = true)
+  Double calculateCartCost(Long id);
+
+  @Query(value = "SELECT SUM(c.cantidad * c.producto.precio) FROM carrito c WHERE c.id_usuario = ?1", nativeQuery = true)
+  Double calculateTotalCartCost(Long user_id);
 
 }
