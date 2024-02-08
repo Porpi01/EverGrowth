@@ -14,6 +14,7 @@ public interface CategoriaRepository extends JpaRepository<CategoriaEntity, Long
 
     CategoriaEntity findByNombre(String nombre);
 
+
     Optional<CategoriaEntity> findById(Long id);
 
     @Modifying

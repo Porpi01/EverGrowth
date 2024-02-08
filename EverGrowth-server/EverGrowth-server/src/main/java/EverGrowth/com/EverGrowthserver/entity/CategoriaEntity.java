@@ -27,6 +27,13 @@ public class CategoriaEntity {
     @Size(min = 3, max = 255)
     private String nombre;
 
+    @NotNull
+    @NotBlank
+    @Size(min = 3, max = 2048)
+    String imagen;
+
+  
+
     @OneToMany(mappedBy = "categoria", fetch = jakarta.persistence.FetchType.LAZY,cascade = CascadeType.REMOVE)
     private List<ProductoEntity> producto;
 
@@ -56,5 +63,13 @@ public class CategoriaEntity {
 
     public int getProductos(){
         return producto.size();
+    }
+
+    public String getImagen() {
+        return imagen;
+    }
+
+    public void setImagen(String imagen) {
+        this.imagen = imagen;
     }
 }

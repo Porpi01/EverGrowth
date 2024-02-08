@@ -1,5 +1,7 @@
 package EverGrowth.com.EverGrowthserver.repository;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -12,6 +14,8 @@ public interface ProductoRepository extends JpaRepository<ProductoEntity, Long> 
 
     @Query("SELECT p FROM ProductoEntity p WHERE p.categoria.id = :categoriaId")
     Page<ProductoEntity> findByCategoria(Long categoriaId, Pageable pageable);
+
+  
 
 
     @Modifying

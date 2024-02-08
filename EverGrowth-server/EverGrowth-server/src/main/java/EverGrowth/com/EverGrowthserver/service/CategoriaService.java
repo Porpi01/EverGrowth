@@ -66,6 +66,7 @@ public class CategoriaService {
 
             CategoriaEntity categoria = new CategoriaEntity();
             categoria.setNombre(DataGenerationHelper.getRandomCategoria());
+            categoria.setImagen("http://localhost:8085/media/default.jpg");
             categoriaRepository.save(categoria);
 
         }
