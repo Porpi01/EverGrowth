@@ -1,5 +1,7 @@
 package EverGrowth.com.EverGrowthserver.api;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import EverGrowth.com.EverGrowthserver.entity.CarritoEntity;
 import EverGrowth.com.EverGrowthserver.entity.CategoriaEntity;
+import EverGrowth.com.EverGrowthserver.entity.ProductoEntity;
 import EverGrowth.com.EverGrowthserver.entity.UsuarioEntity;
 import EverGrowth.com.EverGrowthserver.exception.ResourceNotFoundException;
 import EverGrowth.com.EverGrowthserver.repository.UsuarioRepository;
@@ -83,5 +86,16 @@ public class CarritoAPI {
         return ResponseEntity.ok(carritoService.empty());
     }
 
+    @PostMapping("/agregarProducto")
+    public ResponseEntity<Long> agregarProductoAlCarrito(@RequestParam("idUsuario") Long idUsuario, 
+                                                         @RequestParam("idProducto") Long idProducto) {
+        Long cantidadTotalEnCarrito = carritoService.agregarProductoAlCarrito(idUsuario, idProducto);
+        return ResponseEntity.ok(cantidadTotalEnCarrito);
+    }
+//  @GetMapping("/{idCarrito}/productos")
+//     public ResponseEntity<List<ProductoEntity>> getProductosEnCarrito(@PathVariable Long idCarrito) {
+//         List<ProductoEntity> productos = carritoService.getProductosEnCarrito(idCarrito);
+//         return ResponseEntity.ok().body(productos);
+//     }
 
 }

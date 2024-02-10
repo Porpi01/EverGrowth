@@ -112,4 +112,22 @@ public class ProductoService {
         productoRepository.flush();
         return productoRepository.count();
     }
+
+    @Transactional
+    public void actualizarStock(ProductoEntity oProductoEntity, int amount) {
+        ProductoEntity productFound = productoRepository.findById(oProductoEntity.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Error: Producto no encontrado"));
+
+        if (productFound != null) {
+            int currentStock = productFound.getStock();
+            int newStock = currentStock - amount;
+
+            if (newStock < 0) {
+                throw new IllegalStateException("No hay suficiente stock");
+            }
+
+            productFound.setStock(newStock);
+            productoRepository.save(productFound);
+        }
+    }
 }

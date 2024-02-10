@@ -1,5 +1,6 @@
 package EverGrowth.com.EverGrowthserver.service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,12 +9,15 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import EverGrowth.com.EverGrowthserver.entity.DetallePedidoEntity;
 import EverGrowth.com.EverGrowthserver.entity.PedidoEntity;
 import EverGrowth.com.EverGrowthserver.entity.ProductoEntity;
+import EverGrowth.com.EverGrowthserver.entity.UsuarioEntity;
 import EverGrowth.com.EverGrowthserver.exception.ResourceNotFoundException;
 import EverGrowth.com.EverGrowthserver.helper.DataGenerationHelper;
 import EverGrowth.com.EverGrowthserver.repository.UsuarioRepository;
 import jakarta.transaction.Transactional;
+import EverGrowth.com.EverGrowthserver.repository.DetallePedidoRepository;
 import EverGrowth.com.EverGrowthserver.repository.PedidoRepository;
 
 @Service
@@ -30,6 +34,12 @@ public class PedidoService {
 
     @Autowired
     SesionService sesionService;
+
+    @Autowired
+    ProductoService oProductoService;
+
+    @Autowired
+    DetallePedidoRepository detallePedidoRepository;
 
     public PedidoEntity get(Long id) {
         return pedidoRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Pedido not found"));
@@ -66,10 +76,10 @@ public class PedidoService {
             }
         
     
-    public Long populate(Integer amount) {
+    public Long populate(Integer cantidad) {
         sesionService.onlyAdmins();
 
-        for (int i = 0; i < amount; i++) {
+        for (int i = 0; i < cantidad; i++) {
             PedidoEntity pedido = new PedidoEntity();
             pedido.setUser(UsuarioService.getOneRandom());
             pedido.setEstado_pedido(false);
@@ -95,6 +105,33 @@ public class PedidoService {
         pedidoRepository.resetAutoIncrement();
         pedidoRepository.flush();
         return pedidoRepository.count();
+    }
+
+    
+    @Transactional
+    public PedidoEntity sumarProducto(ProductoEntity oProductoEntity, UsuarioEntity oUserEntity, int cantidad) {
+
+        sesionService.onlyAdminsOrUsersWithIisOwnData(oUserEntity.getId());
+
+        PedidoEntity oPedidoEntity = new PedidoEntity();
+
+        oPedidoEntity.setUser(oUserEntity);
+        oPedidoEntity.setFecha_entrega(DataGenerationHelper.getRadomDate());
+        oPedidoEntity.setFecha_pedido(LocalDateTime.now());
+
+        pedidoRepository.save(oPedidoEntity);
+
+        DetallePedidoEntity detallePedidoEntity = new DetallePedidoEntity();
+        detallePedidoEntity.setId(null);
+        detallePedidoEntity.setProductos(oProductoEntity);
+        detallePedidoEntity.setPedidos(oPedidoEntity);
+        detallePedidoEntity.setCantidad(cantidad);
+        detallePedidoEntity.setPrecio_unitario(oProductoEntity.getprecio());
+        
+        detallePedidoRepository.save(detallePedidoEntity);
+
+        oProductoService.actualizarStock(oProductoEntity, cantidad);
+        return oPedidoEntity;
     }
 
 }
