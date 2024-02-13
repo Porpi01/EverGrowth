@@ -1,13 +1,10 @@
 package EverGrowth.com.EverGrowthserver.repository;
 
-import java.util.List;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 
 import EverGrowth.com.EverGrowthserver.entity.CarritoEntity;
 import EverGrowth.com.EverGrowthserver.entity.ProductoEntity;
@@ -18,7 +15,6 @@ public interface CarritoRepository extends JpaRepository<CarritoEntity, Long> {
   Long countByUser(UsuarioEntity user);
 
   CarritoEntity findByUserAndProducto(UsuarioEntity usuario, ProductoEntity producto);
-
 
   @Query("SELECT c FROM CarritoEntity c WHERE c.producto.id = :productoId")
   Page<CarritoEntity> findByProducto(Long productoId, Pageable pageable);
@@ -31,7 +27,7 @@ public interface CarritoRepository extends JpaRepository<CarritoEntity, Long> {
   void resetAutoIncrement();
 
   @Query(value = "SELECT c.cantidad * c.producto.precio FROM carrito c WHERE c.id = ?1", nativeQuery = true)
-  Double calculateCartCost(Long id);
+  Double calcularCosteCarrito(Long id);
 
   @Query(value = "SELECT SUM(c.cantidad * c.producto.precio) FROM carrito c WHERE c.id_usuario = ?1", nativeQuery = true)
   Double calculateTotalCartCost(Long user_id);

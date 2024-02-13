@@ -92,32 +92,13 @@ public class CarritoService {
 
         return carritoRepository.count();
     }
-@Transactional
-     public Long agregarProductoAlCarrito(Long idUsuario, Long idProducto) {
-        // Verificar si el usuario y el producto existen
-        UsuarioEntity usuario = usuarioRepository.findById(idUsuario)
-            .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado: " + idUsuario));
-        ProductoEntity producto = productoRepository.findById(idProducto)
-            .orElseThrow(() -> new ResourceNotFoundException("Producto no encontrado: " + idProducto));
 
-        // Verificar si ya existe un carrito para este usuario y producto
-        CarritoEntity carritoExistente = carritoRepository.findByUserAndProducto(usuario, producto);
+    public Double calcularCosteCarrito(Long id) {
+        return carritoRepository.calcularCosteCarrito(id);
+    }
 
-        if (carritoExistente != null) {
-            // Si ya existe un carrito para este usuario y producto, aumenta la cantidad
-            carritoExistente.setCantidad(carritoExistente.getCantidad() + 1);
-            carritoRepository.save(carritoExistente);
-        } else {
-            // Si no existe un carrito para este usuario y producto, crea uno nuevo
-            CarritoEntity nuevoCarrito = new CarritoEntity();
-            nuevoCarrito.setUser(usuario);
-            nuevoCarrito.setProducto(producto);
-            nuevoCarrito.setCantidad(1); // Comienza con una cantidad de 1
-            carritoRepository.save(nuevoCarrito);
-        }
-
-        // Devuelve el número total de elementos en el carrito del usuario
-        return carritoRepository.countByUser(usuario);
+    public Double calcularCosteTotalCarrito(Long usuario_id) {
+        return carritoRepository.calculateTotalCartCost(usuario_id);
     }
 
 
@@ -130,11 +111,7 @@ public class CarritoService {
         return carritoRepository.count();
     }
 
-    // public List<ProductoEntity> getProductosEnCarrito(Long idCarrito) {
-    //     CarritoEntity carrito = carritoRepository.findById(idCarrito)
-    //             .orElseThrow(() -> new ResourceNotFoundException("Carrito no encontrado: " + idCarrito));
-    //     return carritoRepository.findByProducto();
-    // }
+  
     
 
     

@@ -15,6 +15,7 @@ import EverGrowth.com.EverGrowthserver.repository.ProductoRepository;
 import EverGrowth.com.EverGrowthserver.repository.UsuarioRepository;
 import EverGrowth.com.EverGrowthserver.repository.ValoracionRepository;
 import jakarta.transaction.Transactional;
+import lombok.val;
 
 @Service
 public class ValoracionService {
@@ -43,6 +44,7 @@ public class ValoracionService {
     }
 
     public Long create(ValoracionEntity ValoracionEntity) {
+        sesionService.onlyAdminsOrUsersWithIisOwnData(sesionService.getSessionUser().getId());
         ValoracionEntity.setId(null);
         validateFirstLetterUppercase(ValoracionEntity.getTitulo());
         validateFirstLetterUppercase(ValoracionEntity.getMensaje());
@@ -66,58 +68,6 @@ public class ValoracionService {
         }
     }
 
-    // public Page<ValoracionDTO> getValoracionesByUser(Long id_usuario, Pageable
-    // oPageable) {
-    // return filterContent(oPageable, null, id_usuario);
-    // }
-
-    // public Page<ValoracionDTO> getValoracionesByProducto(Long id_producto,
-    // Pageable oPageable) {
-    // return filterContent(oPageable, id_producto, null);
-    // }
-
-    // private Page<ValoracionDTO> filterContent(Pageable oPageable, Long
-    // id_producto, Long id_usuario) {
-    // if (id_producto == null) {
-    // if (id_usuario == null) {
-    // return
-    // valoracionRepository.findAll(oPageable).map(ValoracionDTO::fromValoracion);
-
-    // } else {
-    // List<ValoracionDTO> filtro = valoracionRepository.findAll().stream()
-    // .filter(valoracion -> valoracion.getUser().getId().equals(id_usuario))
-    // .map(ValoracionDTO::fromValoracion).collect(Collectors.toList());
-
-    // return new PageImpl<>(filtro, oPageable, filtro.size());
-    // }
-    // } else {
-    // List<ValoracionDTO> filtro = valoracionRepository.findAll().stream()
-    // .filter(valoracion -> valoracion.getProducto().getId().equals(id_producto))
-    // .map(ValoracionDTO::fromValoracion).collect(Collectors.toList());
-
-    // return new PageImpl<>(filtro, oPageable, filtro.size());
-    // }
-    // }
-
-    // public Page<ValoracionDTO> getPage(Pageable oPageable, Long id_usuario, Long
-    // id_producto, String filter) {
-    // Page<ValoracionEntity> page;
-
-    // if (filter == null || filter.trim().isEmpty()) {
-    // page = valoracionRepository.findAll(oPageable);
-    // } else {
-    // page = valoracionRepository.findByMensajeOrTitulo(filter, filter,
-    // oPageable);
-    // }
-
-    // return page.map(this::mapToValoracionDTO);
-    // }
-
-    // private ValoracionDTO mapToValoracionDTO(ValoracionEntity valoracion) {
-    // return new ValoracionDTO(valoracion.getId(), valoracion.getTitulo(),
-    // valoracion.getMensaje(), valoracion.getFecha(), valoracion.getUser(),
-    // valoracion.getProducto());
-    // }
 
     public Page<ValoracionEntity> getPage(Pageable oPageable, String filter, Long id_usuario, Long id_producto) {
 
@@ -141,6 +91,8 @@ public class ValoracionService {
             }
         }
     }
+
+  
 
     public Page<ValoracionEntity> getValoracionesByUser(Long id_usuario, Pageable oPageable) {
         return valoracionRepository.findByUser(id_usuario, oPageable);

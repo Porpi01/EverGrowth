@@ -81,21 +81,21 @@ public class CarritoAPI {
         return ResponseEntity.ok(carritoService.populate(amount));
     }
 
+    @GetMapping("/coste/{carritoId}")
+    public ResponseEntity<Double> getCosteCarrito(@PathVariable("carritoId") Long carritoId) {
+        return ResponseEntity.ok(carritoService.calcularCosteCarrito(carritoId));
+    }
+
+    @GetMapping("/costetotal/{usuarioId}")
+    public ResponseEntity<Double> getCosteTotalCarrito(@PathVariable("usuarioId") Long usuarioId) {
+        return ResponseEntity.ok(carritoService.calcularCosteTotalCarrito(usuarioId));
+    }
+
     @DeleteMapping("/empty")
     public ResponseEntity<Long> empty() {
         return ResponseEntity.ok(carritoService.empty());
     }
 
-    @PostMapping("/agregarProducto")
-    public ResponseEntity<Long> agregarProductoAlCarrito(@RequestParam("idUsuario") Long idUsuario, 
-                                                         @RequestParam("idProducto") Long idProducto) {
-        Long cantidadTotalEnCarrito = carritoService.agregarProductoAlCarrito(idUsuario, idProducto);
-        return ResponseEntity.ok(cantidadTotalEnCarrito);
-    }
-//  @GetMapping("/{idCarrito}/productos")
-//     public ResponseEntity<List<ProductoEntity>> getProductosEnCarrito(@PathVariable Long idCarrito) {
-//         List<ProductoEntity> productos = carritoService.getProductosEnCarrito(idCarrito);
-//         return ResponseEntity.ok().body(productos);
-//     }
+   
 
 }
