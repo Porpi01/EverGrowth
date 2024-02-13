@@ -55,13 +55,13 @@ public class ProductoEntity {
     @JoinColumn(name = "id_categoria")
     private CategoriaEntity categoria;
 
-    @OneToMany(mappedBy = "producto", fetch = jakarta.persistence.FetchType.LAZY)
+    @OneToMany(mappedBy = "producto", fetch = jakarta.persistence.FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<CarritoEntity> carritos;
 
-    @OneToMany(mappedBy = "producto", fetch = jakarta.persistence.FetchType.LAZY)
+    @OneToMany(mappedBy = "producto", fetch = jakarta.persistence.FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<ValoracionEntity> valoracion;
 
-    @OneToMany(mappedBy = "producto", fetch = jakarta.persistence.FetchType.LAZY)
+    @OneToMany(mappedBy = "producto", fetch = jakarta.persistence.FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<DetallePedidoEntity> detallePedido;
 
     public ProductoEntity() {

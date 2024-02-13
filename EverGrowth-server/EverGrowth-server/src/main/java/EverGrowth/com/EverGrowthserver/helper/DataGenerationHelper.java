@@ -152,75 +152,77 @@ public static String generateRandomNombre() {
   }
 
   // Discursos 
-  private static String[] articles = { "the", "a", "one" };
-  private static String[] nouns = { "cat", "dog", "book", "birds", "sun", "sandwich", "friend", "car", "house" };
-  private static String[] verbs = { "sleeps", "barks", "reads", "fly", "shines", "run", "ate", "is" };
-  private static String[] adverbs = { "loudly", "quickly", "brightly", "slowly", "softly" };
-  private static String[] conjunctions = { "and", "but", "or" };
-  private static String[] subordinatingConjunctions = { "although", "because", "while", "if", "when", "as", "after",
-      "before", "since", "until", "unless", "where", "wherever", "whether", "while", "even if", "even though",
-      "once", "provided that", "so that", "than", "though", "in order to", "so that", "that", "unless", "until",
-      "when", "whenever", "where", "wherever", "whether", "while" };
+private static String[] articulos = { "el", "la", "los", "las", "un", "una", "unos", "unas" };
+private static String[] sustantivos = { "pan", "leche", "manzana", "arroz", "pollo", "pescado", "ensalada", "queso", "huevo", "naranja", 
+"agua", "tomate", "carne", "yogur", "sopa", "galleta", "patata", "pizza" };
+private static String[] verbos = { "come", "bebe", "prepara", "cocina", "disfruta", "compra", "vende", "elige", "prueba", "saborea" };
+private static String[] adverbios = { "rápidamente", "cuidadosamente", "fácilmente", "alegremente", "con gusto" };
+private static String[] conjunciones = { "y", "o", "pero", "sin embargo", "además", "por lo tanto", "así que" };
+private static String[] conjuncionesSubordinadas = { "aunque", "porque", "mientras", "si", "cuando", "como", "después de", 
+"antes de", "desde", "hasta", "siempre que", "donde", "dondequiera que", "si", "aun cuando", "a pesar de que", "una vez que", 
+"siempre y cuando", "para que", "de manera que", "que", "a menos que", "hasta que", "cuando", "siempre que", "donde", 
+"dondequiera que", "si", "aun cuando", "a pesar de que" };
 
-  public static String generateSentence() {
-    int sentenceType = random.nextInt(3);
-    if (sentenceType == 0) {
-      return generateSimpleSentence();
-    } else if (sentenceType == 1) {
-      return generateCompoundSentence();
-    } else {
-      return generateComplexSentence();
-    }
+
+public static String generateOracion() {
+  int tipoOracion = random.nextInt(3);
+  if (tipoOracion == 0) {
+      return generarOracionSimple();
+  } else if (tipoOracion == 1) {
+      return generarOracionCompuesta();
+  } else {
+      return generarOracionCompleja();
   }
+}
 
-  public static String generateSimpleSentence() {
-    String subject = generateNounPhrase();
-    String verb = generateVerbPhrase();
-    return subject + " " + verb;
-  }
+public static String generarOracionSimple() {
+  String sujeto = generarFraseSustantivo();
+  String verbo = generarFraseVerbo();
+  return sujeto + " " + verbo + ".";
+}
 
-  public static String generateCompoundSentence() {
-    String simpleSentence1 = generateSimpleSentence();
-    String conjunction = conjunctions[random.nextInt(conjunctions.length)];
-    String simpleSentence2 = generateSimpleSentence();
-    return simpleSentence1 + " " + conjunction + " " + simpleSentence2;
-  }
+public static String generarOracionCompuesta() {
+  String oracionSimple1 = generarOracionSimple();
+  String conjuncion = conjunciones[random.nextInt(conjunciones.length)];
+  String oracionSimple2 = generarOracionSimple();
+  return oracionSimple1 + " " + conjuncion + " " + oracionSimple2;
+}
 
-  public static String generateComplexSentence() {
-    String subordinatingConjunction = subordinatingConjunctions[random.nextInt(subordinatingConjunctions.length)];
-    String subordinateClause = subordinatingConjunction + " " + generateSimpleSentence();
-    String mainClause = generateMainClause();
-    return subordinateClause + " " + mainClause;
-  }
+public static String generarOracionCompleja() {
+  String conjuncionSubordinada = conjuncionesSubordinadas[random.nextInt(conjuncionesSubordinadas.length)];
+  String clausulaSubordinada = conjuncionSubordinada + " " + generarOracionSimple();
+  String clausulaPrincipal = generarClausulaPrincipal();
+  return clausulaSubordinada + ", " + clausulaPrincipal;
+}
 
-  public static String generateMainClause() {
+public static String generarClausulaPrincipal() {
     if (random.nextBoolean()) {
-      return generateSimpleSentence();
+        return generarOracionSimple();
     } else {
-      return generateCompoundSentence();
+        return generarOracionCompuesta();
     }
-  }
+}
 
-  public static String generateNounPhrase() {
-    String article = articles[random.nextInt(articles.length)];
-    String noun = nouns[random.nextInt(nouns.length)];
-    return article + " " + noun;
-  }
+public static String generarFraseSustantivo() {
+    String articulo = articulos[random.nextInt(articulos.length)];
+    String sustantivo = sustantivos[random.nextInt(sustantivos.length)];
+    return articulo + " " + sustantivo;
+}
 
-  public static String generateVerbPhrase() {
-    String verb = verbs[random.nextInt(verbs.length)];
+public static String generarFraseVerbo() {
+    String verbo = verbos[random.nextInt(verbos.length)];
     if (random.nextBoolean()) {
-      String adverb = adverbs[random.nextInt(adverbs.length)];
-      return verb + " " + adverb;
+        String adverbio = adverbios[random.nextInt(adverbios.length)];
+        return verbo + " " + adverbio;
     } else {
-      return verb;
+        return verbo;
     }
-  }
+}
 
   public static String getSpeech(int amount) {
     String sentences = "";
     for (int i = 0; i < amount; i++) {
-      String sentence = generateSentence();
+      String sentence = generateOracion();
       sentences += sentence.substring(0, 1).toUpperCase() + sentence.substring(1) + ". ";
     }
     return sentences;

@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -38,7 +39,7 @@ public class PedidoEntity {
     @JoinColumn(name = "id_usuario")
     private UsuarioEntity user;
 
-    @OneToMany(mappedBy = "pedidos", fetch = jakarta.persistence.FetchType.LAZY)
+    @OneToMany(mappedBy = "pedidos", fetch = jakarta.persistence.FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<DetallePedidoEntity> detallepedidos;
 
     public PedidoEntity() {

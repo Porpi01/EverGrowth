@@ -59,7 +59,8 @@ public class ValoracionService {
     }
 
     public Long delete(Long id) {
-        sesionService.onlyAdmins();
+        ValoracionEntity ValoracionEntity = this.get(id);
+        sesionService.onlyAdminsOrUsersWithIisOwnData(ValoracionEntity.getUser().getId());
         if (valoracionRepository.findById(id).isPresent()) {
             valoracionRepository.deleteById(id);
             return id;

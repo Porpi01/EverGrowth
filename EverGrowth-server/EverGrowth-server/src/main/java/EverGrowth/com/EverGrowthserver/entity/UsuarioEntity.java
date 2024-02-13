@@ -5,7 +5,9 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -64,14 +66,14 @@ public class UsuarioEntity {
 
     private Boolean rol = false;
 
-    @OneToMany(mappedBy = "user", fetch = jakarta.persistence.FetchType.LAZY)
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<PedidoEntity> pedidos;
 
-    @OneToMany(mappedBy = "user", fetch = jakarta.persistence.FetchType.LAZY)
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<ValoracionEntity> valoracion;
 
-    @OneToMany(mappedBy = "user", fetch = jakarta.persistence.FetchType.LAZY)
-    private List<CarritoEntity> carrito;
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    private List<CarritoEntity> carrito; 
 
 
     public UsuarioEntity() {
