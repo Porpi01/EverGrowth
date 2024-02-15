@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.data.domain.Sort;
 
 import EverGrowth.com.EverGrowthserver.entity.CarritoEntity;
 import EverGrowth.com.EverGrowthserver.entity.CategoriaEntity;
@@ -44,17 +46,28 @@ public class CarritoAPI {
         return ResponseEntity.ok(carritoService.get(id));
     }
 
-    @PostMapping("")
-    public ResponseEntity<Long> create(@RequestBody CarritoEntity orritoEntity) {
-        return ResponseEntity.ok(carritoService.create(orritoEntity));
+    @GetMapping("/usuario/{userId}")
+    public ResponseEntity<Page<CarritoEntity>> getCarritoByUsuario(@PathVariable("userId") Long usuarioId, @PageableDefault(size = 10, sort = {"id"}, direction = Sort.Direction.ASC) Pageable oPageable) {
+        return ResponseEntity.ok(carritoService.getCarritoByUsuario(usuarioId, oPageable));
+    }
+    
+
+    @GetMapping("/usuario/{userId}/producto/{productoId}")
+    public ResponseEntity<CarritoEntity> getCarritoByUsuarioAndProducto(@PathVariable("userId") Long usuarioId, @PathVariable("productoId") Long productoId) {
+        return ResponseEntity.ok(carritoService.getCarritoByUsuarioAndProducto(usuarioId, productoId));
     }
 
-    @PutMapping("")
-    public ResponseEntity<CarritoEntity> update(@RequestBody CarritoEntity CarritoEntity) {
-        return ResponseEntity.ok(carritoService.update(CarritoEntity));
+    @GetMapping("/coste/{carritoId}")
+    public ResponseEntity<Double> getCosteCarrito(@PathVariable("carritoId") Long carritoId) {
+        return ResponseEntity.ok(carritoService.calcularCosteCarrito(carritoId));
     }
 
-     @GetMapping("/cantidad")
+    @GetMapping("/costetotal/{userId}")
+    public ResponseEntity<Double> getCosteTotalCarrito(@PathVariable("userId") Long usuarioId) {
+        return ResponseEntity.ok(carritoService.calcularCosteTotalCarrito(usuarioId));
+    }
+
+    @GetMapping("/cantidad")
     public ResponseEntity<Long> countProductsInCart(@RequestParam("userId") Long userId) {
         UsuarioEntity user = usuarioRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado con el ID: " + userId));
@@ -63,12 +76,7 @@ public class CarritoAPI {
         return new ResponseEntity<>(count, HttpStatus.OK);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Long> delete(@PathVariable("id") Long id) {
-        return ResponseEntity.ok(carritoService.delete(id));
-    }
-
-    @GetMapping("")
+     @GetMapping("")
     public ResponseEntity<Page<CarritoEntity>> getPage(Pageable oPageable,
     
     @RequestParam(name = "usuario",defaultValue = "0" , required=false) Long id_usuario ,
@@ -76,20 +84,36 @@ public class CarritoAPI {
         return ResponseEntity.ok(carritoService.getPage(oPageable, id_usuario, id_producto));
     }
 
+
+    @PostMapping("")
+    public ResponseEntity<Long> create(@RequestBody CarritoEntity orritoEntity) {
+        return ResponseEntity.ok(carritoService.create(orritoEntity));
+    }
+
     @PostMapping("/populate/{amount}")
     public ResponseEntity<Long> populate(@PathVariable("amount") Integer amount) {
         return ResponseEntity.ok(carritoService.populate(amount));
     }
+    
 
-    @GetMapping("/coste/{carritoId}")
-    public ResponseEntity<Double> getCosteCarrito(@PathVariable("carritoId") Long carritoId) {
-        return ResponseEntity.ok(carritoService.calcularCosteCarrito(carritoId));
+    @PutMapping("")
+    public ResponseEntity<CarritoEntity> update(@RequestBody CarritoEntity CarritoEntity) {
+        return ResponseEntity.ok(carritoService.update(CarritoEntity));
     }
 
-    @GetMapping("/costetotal/{usuarioId}")
-    public ResponseEntity<Double> getCosteTotalCarrito(@PathVariable("usuarioId") Long usuarioId) {
-        return ResponseEntity.ok(carritoService.calcularCosteTotalCarrito(usuarioId));
+    @DeleteMapping("/{carritoId}")
+    public ResponseEntity<Long> deleteCarrito(@PathVariable("carritoId") Long carritoId) {
+        return ResponseEntity.ok(carritoService.delete(carritoId));
     }
+
+    @DeleteMapping("/usuario/{usuarioId}")
+    public ResponseEntity<Long> deleteCarritoByUsuario(@PathVariable("usuarioId") Long usuarioId) {
+        carritoService.deleteByUsuario(usuarioId);
+        return ResponseEntity.ok(usuarioId);
+    }
+
+
+
 
     @DeleteMapping("/empty")
     public ResponseEntity<Long> empty() {

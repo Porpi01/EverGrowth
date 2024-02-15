@@ -1,6 +1,8 @@
 package EverGrowth.com.EverGrowthserver.service;
 
-import java.util.List;
+
+
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -8,7 +10,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import EverGrowth.com.EverGrowthserver.entity.CarritoEntity;
-import EverGrowth.com.EverGrowthserver.entity.DetallePedidoEntity;
 import EverGrowth.com.EverGrowthserver.entity.ProductoEntity;
 import EverGrowth.com.EverGrowthserver.entity.UsuarioEntity;
 import EverGrowth.com.EverGrowthserver.exception.ResourceNotFoundException;
@@ -42,14 +43,40 @@ public class CarritoService {
         return carritoRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Carrito no encontrado"));
     }
 
+    public Page<CarritoEntity> getCarritoByUsuario(Long usuario_id, Pageable oPageable) {
+        sesionService.onlyAdminsOrUsersWithIisOwnData(usuario_id);
+        return carritoRepository.findByUser(usuario_id, oPageable);
+    }
+
+    public CarritoEntity getCarritoByUsuarioAndProducto(Long usuario_id, Long producto_id) {
+        sesionService.onlyAdminsOrUsersWithIisOwnData(usuario_id);
+        return carritoRepository.findByUserAndProducto(usuario_id, producto_id)
+                .orElseThrow(() -> new ResourceNotFoundException("Error: Carrito no encontrado."));
+    }
+
     public Long count(UsuarioEntity user) {
         return carritoRepository.countByUser(user);
     }
 
-    public Long create(CarritoEntity carritoEntity) {
-        sesionService.onlyAdminsOrUsersWithIisOwnData(carritoEntity.getUser().getId());
-        carritoEntity.setId(null);
-        return carritoRepository.save(carritoEntity).getId();
+    public Long create(CarritoEntity oCarritoEntity) {
+        sesionService.onlyAdminsOrUsersWithIisOwnData(sesionService.getSessionUser().getId());
+       
+            UsuarioEntity oUsuarioEntity = sesionService.getSessionUser();
+            ProductoEntity oProductoEntity = productoService.get(oCarritoEntity.getProducto().getId());
+
+            Optional<CarritoEntity> carritoBaseDatos = carritoRepository.findByUserAndProducto(oUsuarioEntity.getId(), oProductoEntity.getId());
+            if (carritoBaseDatos.isPresent()) {
+                CarritoEntity carrito = carritoBaseDatos.get();
+                carrito.setCantidad(carrito.getCantidad() + oCarritoEntity.getCantidad());
+                 carritoRepository.save(carrito);
+                return carrito.getId();
+            } else {
+                oCarritoEntity.setId(null);
+                oCarritoEntity.setUser(oUsuarioEntity);
+                oCarritoEntity.setProducto(oProductoEntity);
+                return carritoRepository.save(oCarritoEntity).getId();
+            }
+        
     }
 
     public CarritoEntity update(CarritoEntity carritoEntityToSet) {
@@ -85,7 +112,7 @@ public class CarritoService {
         for (int i = 0; i < amount; i++) {
             CarritoEntity carrito = new CarritoEntity();
             carrito.setUser(usuarioService.getOneRandom());
-            carrito.setCantidad(0);
+            carrito.setCantidad(1);
             carrito.setProducto(productoService.getOneRandom());
             carritoRepository.save(carrito);
         }
@@ -111,7 +138,12 @@ public class CarritoService {
         return carritoRepository.count();
     }
 
-  
+    @Transactional
+    public void deleteByUsuario(Long usuario_id) {
+        sesionService.onlyAdminsOrUsersWithIisOwnData(usuario_id);
+        carritoRepository.deleteByUsuarioId(usuario_id);
+    }
+
     
 
     

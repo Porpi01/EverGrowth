@@ -1,35 +1,44 @@
 package EverGrowth.com.EverGrowthserver.repository;
 
+import java.util.Optional;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import EverGrowth.com.EverGrowthserver.entity.CarritoEntity;
-import EverGrowth.com.EverGrowthserver.entity.ProductoEntity;
 import EverGrowth.com.EverGrowthserver.entity.UsuarioEntity;
 
 public interface CarritoRepository extends JpaRepository<CarritoEntity, Long> {
 
   Long countByUser(UsuarioEntity user);
 
-  CarritoEntity findByUserAndProducto(UsuarioEntity usuario, ProductoEntity producto);
+   @Query("SELECT c FROM CarritoEntity c WHERE c.user.id = :userId AND c.producto.id = :productoId")
+  Optional<CarritoEntity> findByUserAndProducto(@Param("userId") Long userId, @Param("productoId") Long productoId);
 
   @Query("SELECT c FROM CarritoEntity c WHERE c.producto.id = :productoId")
-  Page<CarritoEntity> findByProducto(Long productoId, Pageable pageable);
+  Page<CarritoEntity> findByProducto(@Param("productoId")Long productoId, Pageable pageable);
 
   @Query("SELECT c FROM CarritoEntity c WHERE c.user.id = :userId")
-  Page<CarritoEntity> findByUser(Long userId, Pageable pageable);
+  Page<CarritoEntity> findByUser(@Param("userId") Long userId, Pageable pageable);
+  
+
+  @Query(value = "SELECT SUM(c.cantidad * p.precio) FROM carrito c JOIN producto p ON c.id_producto = p.id WHERE c.id_usuario = ?1", nativeQuery = true)
+  Double calcularCosteCarrito(Long id);
+  
+  @Query(value = "SELECT SUM(c.cantidad * p.precio) FROM carrito c JOIN producto p ON c.id_producto = p.id WHERE c.id_usuario = ?1", nativeQuery = true)
+  Double calculateTotalCartCost(Long usuario_id);
 
   @Modifying
   @Query(value = "ALTER TABLE carrito AUTO_INCREMENT = 1", nativeQuery = true)
   void resetAutoIncrement();
 
-  @Query(value = "SELECT c.cantidad * c.producto.precio FROM carrito c WHERE c.id = ?1", nativeQuery = true)
-  Double calcularCosteCarrito(Long id);
+  @Modifying
+  @Query(value = "DELETE FROM carrito WHERE id_usuario = ?1", nativeQuery = true)
+  void deleteByUsuarioId(Long usuario_id);
 
-  @Query(value = "SELECT SUM(c.cantidad * c.producto.precio) FROM carrito c WHERE c.id_usuario = ?1", nativeQuery = true)
-  Double calculateTotalCartCost(Long user_id);
 
 }

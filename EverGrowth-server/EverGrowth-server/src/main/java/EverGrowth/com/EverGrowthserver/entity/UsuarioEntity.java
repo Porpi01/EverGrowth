@@ -62,7 +62,7 @@ public class UsuarioEntity {
     @NotBlank
     @Size(min = 64, max = 64)
     @Pattern(regexp = "^[a-fA-F0-9]+$", message = "Password must be hexadecimal")
-    private String password = "e2cac5c5f7e52ab03441bb70e89726ddbd1f6e5b683dde05fb65e0720290179e";
+    private String password = "dedb63fbd1f3c4bce46a6e29be0700dda4fe2eec46c79b79fa0c5704d96e308d";
 
     private Boolean rol = false;
 

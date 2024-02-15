@@ -2,6 +2,7 @@ package EverGrowth.com.EverGrowthserver.api;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,12 +17,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import EverGrowth.com.EverGrowthserver.entity.CarritoEntity;
 import EverGrowth.com.EverGrowthserver.entity.PedidoEntity;
 import EverGrowth.com.EverGrowthserver.entity.ProductoEntity;
 import EverGrowth.com.EverGrowthserver.entity.UsuarioEntity;
 import EverGrowth.com.EverGrowthserver.service.PedidoService;
 import EverGrowth.com.EverGrowthserver.service.ProductoService;
 import EverGrowth.com.EverGrowthserver.service.UsuarioService;
+import EverGrowth.com.EverGrowthserver.service.CarritoService;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*", maxAge = 3600)
 @RestController
@@ -36,6 +39,9 @@ public class PedidoAPI {
 
     @Autowired
     private UsuarioService UsuarioService;
+
+    @Autowired
+    private CarritoService CarritoService;
 
     @GetMapping("/{id}")
     public ResponseEntity<PedidoEntity> get(@PathVariable("id") Long id) {
@@ -73,13 +79,43 @@ public class PedidoAPI {
         return ResponseEntity.ok(oPedidoService.empty());
     }
 
-    @PostMapping("/sumarProducto/{producto_id}/{usuario_id}/{cantidad}")
-    public ResponseEntity<PedidoEntity> realizarCompraProducto(@PathVariable Long producto_id,
-            @PathVariable Long usuario_id, @PathVariable int cantidad) {
-        UsuarioEntity usuario = UsuarioService.get(usuario_id);
-        ProductoEntity producto = ProductoService.get(producto_id);
-        PedidoEntity carrito = oPedidoService.sumarProducto(producto, usuario, cantidad);
-        return new ResponseEntity<>(carrito, HttpStatus.CREATED);
+
+
+    @PostMapping("/realizarCompraUnicoCarrito/{usuarioId}/{carritoId}")
+    public ResponseEntity<PedidoEntity> realizarpedidoUnicoCarrito(@PathVariable Long usuarioId,
+            @PathVariable Long carritoId) {
+        UsuarioEntity usuario = UsuarioService.get(usuarioId);
+        CarritoEntity carrito = CarritoService.get(carritoId);
+
+        PedidoEntity pedido = oPedidoService.realizarCompraUnicoCarrito(carrito, usuario);
+
+        return new ResponseEntity<>(pedido, HttpStatus.CREATED);
     }
+
+    @PostMapping("/realizarCompraTodosCarritos/{usuarioId}")
+    public ResponseEntity<PedidoEntity> realizarpedidoTodosCarritos(
+            @PathVariable Long usuarioId, @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        UsuarioEntity usuario = UsuarioService.get(usuarioId);
+        Page<CarritoEntity> carritos = CarritoService.getCarritoByUsuario(usuarioId, PageRequest.of(page, size));
+        PedidoEntity pedido = oPedidoService.realizarCompraTodosCarritos(carritos, usuario);
+        return new ResponseEntity<>(pedido, HttpStatus.CREATED);
+    }
+
+    @PostMapping("/realizarCompraProducto/{productoId}/{usuarioId}/{cantidad}")
+    public ResponseEntity<PedidoEntity> realizarpedidoProducto(@PathVariable Long productoId,
+            @PathVariable Long usuarioId, @PathVariable int cantidad) {
+        UsuarioEntity usuario = UsuarioService.get(usuarioId);
+        ProductoEntity producto = ProductoService.get(productoId);
+        PedidoEntity pedido = oPedidoService.realizarCompraProducto(producto, usuario, cantidad);
+        return new ResponseEntity<>(pedido, HttpStatus.CREATED);
+    }
+
+    @DeleteMapping("/{carrito_id}")
+    public ResponseEntity<Long> cancelarCompra(@PathVariable("carrito_id") Long carrito_id) {
+        Long cancelarCompra = oPedidoService.cancelarCompra(carrito_id);
+        return new ResponseEntity<>(cancelarCompra, HttpStatus.OK);
+    }
+
 
 }

@@ -118,8 +118,8 @@ public class DataGenerationHelper {
   }
 
   public static float generateRandomPrecio() {
-    float min = 5.00f;
-    float max = 100.00f;
+    float min = 1.50f;
+    float max = 7.00f;
     float randomNumber = min + random.nextFloat() * (max - min);
     randomNumber = Math.round(randomNumber * 100.0f) / 100.0f;
     
