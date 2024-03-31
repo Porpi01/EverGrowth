@@ -32,7 +32,12 @@ public class DetallePedidoAPI {
         return ResponseEntity.ok(detallePedidoService.get(id));
     }
 
-   
+    @GetMapping("/pedido/{id_pedido}")
+    public ResponseEntity<Page<DetallePedidoEntity>> getDetallesPorPedido(
+            Pageable oPageable,
+            @PathVariable("id_pedido") Long id_pedido) {
+        return ResponseEntity.ok(detallePedidoService.getDetallesPorPedido(oPageable, id_pedido));
+    }
 
     @PostMapping("")
     public ResponseEntity<Long> create(@RequestBody DetallePedidoEntity oDetallePedidoEntity) {

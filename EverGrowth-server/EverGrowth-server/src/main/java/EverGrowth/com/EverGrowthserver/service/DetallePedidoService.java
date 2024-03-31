@@ -36,7 +36,7 @@ public class DetallePedidoService {
 
     public DetallePedidoEntity get(Long id) {
         return detallePedidoRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Categoria no encontrada"));
+                .orElseThrow(() -> new ResourceNotFoundException("Detalle pedido no encontrado"));
     }
 
     public Long create(DetallePedidoEntity DetallePedidoEntity) {
@@ -59,6 +59,10 @@ public class DetallePedidoService {
         } else {
             throw new ResourceNotFoundException("No existe un detalle pedido con " + id);
         }
+    }
+
+    public Page<DetallePedidoEntity> getDetallesPorPedido(Pageable oPageable, Long id_pedido) {
+        return detallePedidoRepository.findByPedido(id_pedido, oPageable);
     }
 
     public Page<DetallePedidoEntity> getPage(Pageable oPageable, Long id_pedido, Long id_producto) {
