@@ -80,7 +80,8 @@ public class ProductoService {
                 producto.setStock(DataGenerationHelper.generateRandomStock());
                 producto.setnombre(DataGenerationHelper.generateRandomNombre()); 
                 producto.setprecio(DataGenerationHelper.generateRandomPrecio()); 
-                producto.setDescripcion("Disfruta de la frescura y el sabor incomparables de nuestros productos. Una experiencia gastronómica que no olvidarás.");
+                producto.setIva(0);
+                producto.setDescripcion("Nuevo producto creado por el sistema");
                 producto.setImagen( "http://localhost:8085/media/default.jpg");
                 productoRepository.save(producto);
             

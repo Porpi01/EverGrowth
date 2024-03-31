@@ -2,6 +2,7 @@ package EverGrowth.com.EverGrowthserver.service;
 
 
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -124,10 +125,19 @@ public class CarritoService {
         return carritoRepository.calcularCosteCarrito(id);
     }
 
-    public Double calcularCosteTotalCarrito(Long usuario_id) {
-        return carritoRepository.calculateTotalCartCost(usuario_id);
+    public Double calculateTotalCartCost(Pageable pageable, Long usuario_id) {
+        Page<CarritoEntity> carritosPage = carritoRepository.findByUser(usuario_id, pageable);
+        List<CarritoEntity> carritos = carritosPage.getContent();
+        Double costeTotal = 0.0;
+    
+        for (CarritoEntity carrito : carritos) {
+            Double precioProductoConIVA = carrito.getProducto().getprecio() * (1 + carrito.getProducto().getIva());
+            Double precioTotalProducto = precioProductoConIVA * carrito.getCantidad();
+            costeTotal += precioTotalProducto;
+        }
+    
+        return costeTotal;
     }
-
 
     @Transactional
     public Long empty() {

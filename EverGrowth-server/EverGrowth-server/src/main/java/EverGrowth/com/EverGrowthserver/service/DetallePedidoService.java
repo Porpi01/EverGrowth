@@ -88,6 +88,7 @@ public class DetallePedidoService {
             detallePedido.setPrecio_unitario((float) 0.45);
             detallePedido.setPedidos(PedidoService.getOneRandom());
             detallePedido.setProductos(ProductoService.getOneRandom());
+            detallePedido.setIva(0);
 
             detallePedidoRepository.save(detallePedido);
         }

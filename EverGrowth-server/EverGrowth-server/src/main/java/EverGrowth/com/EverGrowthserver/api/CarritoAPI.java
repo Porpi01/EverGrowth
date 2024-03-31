@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
@@ -64,7 +65,9 @@ public class CarritoAPI {
 
     @GetMapping("/costetotal/{userId}")
     public ResponseEntity<Double> getCosteTotalCarrito(@PathVariable("userId") Long usuarioId) {
-        return ResponseEntity.ok(carritoService.calcularCosteTotalCarrito(usuarioId));
+        Pageable pageable = PageRequest.of(0, 10); // Aquí especificas la página y el tamaño de página que necesites
+        Double costeTotal = carritoService.calculateTotalCartCost(pageable, usuarioId);
+        return ResponseEntity.ok(costeTotal);
     }
 
     @GetMapping("/cantidad")

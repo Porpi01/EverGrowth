@@ -8,6 +8,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "detalle_pedido")
@@ -21,7 +23,18 @@ public class DetallePedidoEntity {
 
     private Float precio_unitario;
 
+    @NotNull
+ 
+    private double iva;
   
+    public double getIva() {
+        return iva;
+    }
+
+    public void setIva(double iva) {
+        this.iva = iva;
+    }
+
     @ManyToOne
     @JoinColumn(name = "id_producto")
     private ProductoEntity producto;

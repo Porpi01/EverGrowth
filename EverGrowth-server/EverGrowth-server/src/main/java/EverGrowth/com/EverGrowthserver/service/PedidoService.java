@@ -1,16 +1,12 @@
 package EverGrowth.com.EverGrowthserver.service;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import EverGrowth.com.EverGrowthserver.entity.CarritoEntity;
 import EverGrowth.com.EverGrowthserver.entity.DetallePedidoEntity;
@@ -153,6 +149,7 @@ public class PedidoService {
         oDetallePedidoEntity.setCantidad(cantidad);
         oDetallePedidoEntity.setPedidos(oPedidoEntity);
         oDetallePedidoEntity.setProductos(oProductoEntity);
+        oDetallePedidoEntity.setIva(oProductoEntity.getIva() );
 
 
         detallePedidoRepository.save(oDetallePedidoEntity);
@@ -181,6 +178,7 @@ public class PedidoService {
         oDetallePedidoEntity.setPrecio_unitario(oCarritoEntity.getProducto().getprecio());
         oDetallePedidoEntity.setCantidad(oCarritoEntity.getCantidad());
         oDetallePedidoEntity.setPedidos(oPedidoEntity);
+        oDetallePedidoEntity.setIva(oCarritoEntity.getProducto().getIva());
         oDetallePedidoEntity.setProductos(oCarritoEntity.getProducto());
 
         detallePedidoRepository.save(oDetallePedidoEntity);
@@ -215,6 +213,7 @@ public class PedidoService {
             oDetallePedidoEntity.setCantidad(carrito.getCantidad());
             oDetallePedidoEntity.setPedidos(oPedidoEntity);
             oDetallePedidoEntity.setProductos(carrito.getProducto());
+            oDetallePedidoEntity.setIva(carrito.getProducto().getIva());
             detallePedidoRepository.save(oDetallePedidoEntity);
             ProductoEntity producto = carrito.getProducto();
             oProductoService.actualizarStock(producto, carrito.getCantidad());
