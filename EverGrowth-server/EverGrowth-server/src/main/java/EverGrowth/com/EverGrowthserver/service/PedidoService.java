@@ -23,6 +23,8 @@ import EverGrowth.com.EverGrowthserver.repository.PedidoRepository;
 @Service
 public class PedidoService {
 
+    private Long contadorFactura = 0L;
+
     @Autowired
     PedidoRepository pedidoRepository;
 
@@ -98,26 +100,6 @@ public class PedidoService {
         return pedidoRepository.findAll(oPageable).getContent().get(0);
     }
 
-    public Long generarFactura(Long idPedido) {
-        PedidoEntity pedido = get(idPedido);
-    
-        // Crea una nueva instancia de PedidoEntity para representar la factura
-        PedidoEntity factura = new PedidoEntity();
-        factura.setId_factura(null);
-        factura.setFecha_entrega(pedido.getFecha_entrega());
-        factura.setFecha_pedido(pedido.getFecha_pedido());
-        factura.setEstado_pedido(false);
-    
-        pedidoRepository.save(factura);
-    
-        pedido.setId_factura(factura.getId());
-    
-        update(pedido);
-    
-        return factura.getId();
-    }
-
-
     @Transactional
     public Long empty() {
 
@@ -149,8 +131,7 @@ public class PedidoService {
         oDetallePedidoEntity.setCantidad(cantidad);
         oDetallePedidoEntity.setPedidos(oPedidoEntity);
         oDetallePedidoEntity.setProductos(oProductoEntity);
-        oDetallePedidoEntity.setIva(oProductoEntity.getIva() );
-
+        oDetallePedidoEntity.setIva(oProductoEntity.getIva());
 
         detallePedidoRepository.save(oDetallePedidoEntity);
 
@@ -191,39 +172,56 @@ public class PedidoService {
     }
 
     @Transactional
-    public PedidoEntity realizarCompraTodosCarritos(Page<CarritoEntity> carritos, UsuarioEntity oUsuarioEntity) {
+public PedidoEntity realizarCompraTodosCarritos(Page<CarritoEntity> carritos, UsuarioEntity oUsuarioEntity) {
+    // Verificar permisos del usuario
+    sesionService.onlyAdminsOrUsersWithIisOwnData(oUsuarioEntity.getId());
 
-        sesionService.onlyAdminsOrUsersWithIisOwnData(oUsuarioEntity.getId());
+    // Crear una instancia de PedidoEntity
+    PedidoEntity oPedidoEntity = new PedidoEntity();
 
-        PedidoEntity oPedidoEntity = new PedidoEntity();
+    // Asignar los datos del pedido
+    oPedidoEntity.setUser(oUsuarioEntity);
+    oPedidoEntity.setFecha_pedido(LocalDateTime.now());
+    oPedidoEntity.setEstado_pedido(false);
+    oPedidoEntity.setFecha_entrega(DataGenerationHelper.getRadomDate());
 
-        oPedidoEntity.setUser(oUsuarioEntity);
-        oPedidoEntity.setFecha_pedido(LocalDateTime.now());
-        oPedidoEntity.setEstado_pedido(false);
-        oPedidoEntity.setFecha_entrega(DataGenerationHelper.getRadomDate());
+    // Generar el código de factura
+    Long codigoFactura = generarCodigoFactura();
 
-        pedidoRepository.save(oPedidoEntity);
+    // Asignar el código de factura al pedido
+    oPedidoEntity.setId_factura(codigoFactura);
 
-        carritos = oCarritoService.getCarritoByUsuario(oUsuarioEntity.getId(), PageRequest.of(0, 1000));
+    // Guardar el pedido en la base de datos
+    pedidoRepository.save(oPedidoEntity);
 
-        carritos.forEach(carrito -> {
-            DetallePedidoEntity oDetallePedidoEntity = new DetallePedidoEntity();
-            oDetallePedidoEntity.setId(null);
-            oDetallePedidoEntity.setPrecio_unitario(carrito.getProducto().getprecio());
-            oDetallePedidoEntity.setCantidad(carrito.getCantidad());
-            oDetallePedidoEntity.setPedidos(oPedidoEntity);
-            oDetallePedidoEntity.setProductos(carrito.getProducto());
-            oDetallePedidoEntity.setIva(carrito.getProducto().getIva());
-            detallePedidoRepository.save(oDetallePedidoEntity);
-            ProductoEntity producto = carrito.getProducto();
-            oProductoService.actualizarStock(producto, carrito.getCantidad());
-        });
+    // Procesar cada carrito
+    carritos.forEach(carrito -> {
+        DetallePedidoEntity oDetallePedidoEntity = new DetallePedidoEntity();
+        oDetallePedidoEntity.setId(null);
+        oDetallePedidoEntity.setPrecio_unitario(carrito.getProducto().getprecio());
+        oDetallePedidoEntity.setCantidad(carrito.getCantidad());
+        oDetallePedidoEntity.setPedidos(oPedidoEntity);
+        oDetallePedidoEntity.setProductos(carrito.getProducto());
+        oDetallePedidoEntity.setIva(carrito.getProducto().getIva());
+        detallePedidoRepository.save(oDetallePedidoEntity);
 
-        oCarritoService.deleteByUsuario(oUsuarioEntity.getId());
+        // Actualizar el stock del producto
+        ProductoEntity producto = carrito.getProducto();
+        oProductoService.actualizarStock(producto, carrito.getCantidad());
+    });
 
-        return oPedidoEntity;
+    // Eliminar los carritos del usuario
+    oCarritoService.deleteByUsuario(oUsuarioEntity.getId());
 
-    }
+    // Retornar el pedido que contiene el código de factura generado
+    return oPedidoEntity;
+}
+
+private Long generarCodigoFactura() {
+    // Lógica para generar el código de factura
+    contadorFactura++; // Incrementa el contador
+    return contadorFactura; // Retorna el código de factura como un Long
+}
 
     public Long cancelarCompra(Long id) {
         PedidoEntity pedido = pedidoRepository.findById(id)

@@ -53,6 +53,8 @@ public class PedidoAPI {
         return ResponseEntity.ok(oPedidoService.create(oPedidoEntity));
     }
 
+ 
+
     @PutMapping("")
     public ResponseEntity<PedidoEntity> update(@RequestBody PedidoEntity oPedidoEntity) {
         return ResponseEntity.ok(oPedidoService.update(oPedidoEntity));
@@ -78,8 +80,6 @@ public class PedidoAPI {
     public ResponseEntity<Long> empty() {
         return ResponseEntity.ok(oPedidoService.empty());
     }
-
-
 
     @PostMapping("/realizarCompraUnicoCarrito/{usuarioId}/{carritoId}")
     public ResponseEntity<PedidoEntity> realizarpedidoUnicoCarrito(@PathVariable Long usuarioId,
@@ -116,6 +116,5 @@ public class PedidoAPI {
         Long cancelarCompra = oPedidoService.cancelarCompra(carrito_id);
         return new ResponseEntity<>(cancelarCompra, HttpStatus.OK);
     }
-
 
 }
