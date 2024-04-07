@@ -13,6 +13,9 @@ public interface PedidoRepository extends JpaRepository<PedidoEntity, Long> {
     @Query("SELECT p FROM PedidoEntity p WHERE p.user.id = :userId")
     Page<PedidoEntity> findByUser(Long userId, Pageable pageable);
 
+    @Query("SELECT MAX(p.id_factura) FROM PedidoEntity p")
+    Long findMaxCodigoFactura();
+
     @Modifying
     @Query(value = "ALTER TABLE pedido AUTO_INCREMENT = 1", nativeQuery = true)
     void resetAutoIncrement();

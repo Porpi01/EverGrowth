@@ -111,7 +111,7 @@ public class PedidoAPI {
         return new ResponseEntity<>(pedido, HttpStatus.CREATED);
     }
 
-    @DeleteMapping("/{carrito_id}")
+    @DeleteMapping("/borrarCarrito/{carrito_id}")
     public ResponseEntity<Long> cancelarCompra(@PathVariable("carrito_id") Long carrito_id) {
         Long cancelarCompra = oPedidoService.cancelarCompra(carrito_id);
         return new ResponseEntity<>(cancelarCompra, HttpStatus.OK);

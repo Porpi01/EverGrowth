@@ -3,6 +3,8 @@ package EverGrowth.com.EverGrowthserver.api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -36,6 +38,12 @@ public class DetallePedidoAPI {
     public ResponseEntity<Page<DetallePedidoEntity>> getDetallesPorPedido(
             Pageable oPageable,
             @PathVariable("id_pedido") Long id_pedido) {
+        return ResponseEntity.ok(detallePedidoService.getDetallesPorPedido(oPageable, id_pedido));
+    }
+
+    @GetMapping("/bypedido/{id_pedido}")
+    public ResponseEntity<Page<DetallePedidoEntity>> getDetallesPorPedido(
+        @PathVariable Long id_pedido, @PageableDefault(size = 10, sort = {"id"}, direction = Sort.Direction.ASC) Pageable oPageable) {
         return ResponseEntity.ok(detallePedidoService.getDetallesPorPedido(oPageable, id_pedido));
     }
 

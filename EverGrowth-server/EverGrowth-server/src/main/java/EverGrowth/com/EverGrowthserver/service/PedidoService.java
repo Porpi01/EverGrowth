@@ -172,56 +172,57 @@ public class PedidoService {
     }
 
     @Transactional
-public PedidoEntity realizarCompraTodosCarritos(Page<CarritoEntity> carritos, UsuarioEntity oUsuarioEntity) {
-    // Verificar permisos del usuario
-    sesionService.onlyAdminsOrUsersWithIisOwnData(oUsuarioEntity.getId());
+    public PedidoEntity realizarCompraTodosCarritos(Page<CarritoEntity> carritos, UsuarioEntity oUsuarioEntity) {
+        sesionService.onlyAdminsOrUsersWithIisOwnData(oUsuarioEntity.getId());
 
-    // Crear una instancia de PedidoEntity
-    PedidoEntity oPedidoEntity = new PedidoEntity();
+        PedidoEntity oPedidoEntity = new PedidoEntity();
 
-    // Asignar los datos del pedido
-    oPedidoEntity.setUser(oUsuarioEntity);
-    oPedidoEntity.setFecha_pedido(LocalDateTime.now());
-    oPedidoEntity.setEstado_pedido(false);
-    oPedidoEntity.setFecha_entrega(DataGenerationHelper.getRadomDate());
+        oPedidoEntity.setUser(oUsuarioEntity);
+        oPedidoEntity.setFecha_pedido(LocalDateTime.now());
+        oPedidoEntity.setEstado_pedido(false);
+        oPedidoEntity.setFecha_entrega(DataGenerationHelper.getRadomDate());
 
-    // Generar el código de factura
-    Long codigoFactura = generarCodigoFactura();
+        // Generar el código de factura
+        Long codigoFactura = generarCodigoFactura();
 
-    // Asignar el código de factura al pedido
-    oPedidoEntity.setId_factura(codigoFactura);
+        // Asignar el código de factura al pedido
+        oPedidoEntity.setId_factura(codigoFactura);
 
-    // Guardar el pedido en la base de datos
-    pedidoRepository.save(oPedidoEntity);
+        // Guardar el pedido en la base de datos
+        pedidoRepository.save(oPedidoEntity);
 
-    // Procesar cada carrito
-    carritos.forEach(carrito -> {
-        DetallePedidoEntity oDetallePedidoEntity = new DetallePedidoEntity();
-        oDetallePedidoEntity.setId(null);
-        oDetallePedidoEntity.setPrecio_unitario(carrito.getProducto().getprecio());
-        oDetallePedidoEntity.setCantidad(carrito.getCantidad());
-        oDetallePedidoEntity.setPedidos(oPedidoEntity);
-        oDetallePedidoEntity.setProductos(carrito.getProducto());
-        oDetallePedidoEntity.setIva(carrito.getProducto().getIva());
-        detallePedidoRepository.save(oDetallePedidoEntity);
+        // Procesar cada carrito
+        carritos.forEach(carrito -> {
+            DetallePedidoEntity oDetallePedidoEntity = new DetallePedidoEntity();
+            oDetallePedidoEntity.setId(null);
+            oDetallePedidoEntity.setPrecio_unitario(carrito.getProducto().getprecio());
+            oDetallePedidoEntity.setCantidad(carrito.getCantidad());
+            oDetallePedidoEntity.setPedidos(oPedidoEntity);
+            oDetallePedidoEntity.setProductos(carrito.getProducto());
+            oDetallePedidoEntity.setIva(carrito.getProducto().getIva());
+            detallePedidoRepository.save(oDetallePedidoEntity);
 
-        // Actualizar el stock del producto
-        ProductoEntity producto = carrito.getProducto();
-        oProductoService.actualizarStock(producto, carrito.getCantidad());
-    });
+            // Actualizar el stock del producto
+            ProductoEntity producto = carrito.getProducto();
+            oProductoService.actualizarStock(producto, carrito.getCantidad());
+        });
 
-    // Eliminar los carritos del usuario
-    oCarritoService.deleteByUsuario(oUsuarioEntity.getId());
+        // Eliminar los carritos del usuario
+        oCarritoService.deleteByUsuario(oUsuarioEntity.getId());
 
-    // Retornar el pedido que contiene el código de factura generado
-    return oPedidoEntity;
-}
+        // Retornar el pedido que contiene el código de factura generado
+        return oPedidoEntity;
+    }
 
-private Long generarCodigoFactura() {
-    // Lógica para generar el código de factura
-    contadorFactura++; // Incrementa el contador
-    return contadorFactura; // Retorna el código de factura como un Long
-}
+    private Long generarCodigoFactura() {
+        Long ultimoCodigo = pedidoRepository.findMaxCodigoFactura();
+        if (ultimoCodigo == null) {
+            contadorFactura = 1L;
+        } else {
+            contadorFactura = ultimoCodigo + 1L;
+        }
+        return contadorFactura;
+    }
 
     public Long cancelarCompra(Long id) {
         PedidoEntity pedido = pedidoRepository.findById(id)
