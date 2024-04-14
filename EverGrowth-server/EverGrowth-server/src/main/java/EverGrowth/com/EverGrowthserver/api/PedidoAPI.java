@@ -71,6 +71,11 @@ public class PedidoAPI {
         return ResponseEntity.ok(oPedidoService.getPage(oPageable, id_usuario));
     }
 
+    @GetMapping("/usuario/{usuarioId}")
+    public ResponseEntity<Page<PedidoEntity>> getComprasByUsuarioId(@PathVariable("usuarioId") Long usuarioId, Pageable oPageable) {
+        return ResponseEntity.ok(oPedidoService.getComprasUsuario(usuarioId, oPageable));
+    }
+
     @PostMapping("/populate/{cantidad}")
     public ResponseEntity<Long> populate(@PathVariable("cantidad") Integer cantidad) {
         return ResponseEntity.ok(oPedidoService.populate(cantidad));

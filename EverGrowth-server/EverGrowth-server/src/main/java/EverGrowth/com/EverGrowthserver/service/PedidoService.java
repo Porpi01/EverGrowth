@@ -243,4 +243,10 @@ public class PedidoService {
             throw new ResourceNotFoundException("Error: La compra no existe.");
         }
     }
+
+        // Encontrar a las compras de un usuario
+        public Page<PedidoEntity> getComprasUsuario(Long usuario_id, Pageable oPageable) {
+            sesionService.onlyAdminsOrUsersWithIisOwnData(usuario_id);
+            return pedidoRepository.findByUser(usuario_id, oPageable);
+        }
 }
