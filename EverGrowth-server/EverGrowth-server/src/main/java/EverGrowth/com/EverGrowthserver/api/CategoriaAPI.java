@@ -37,6 +37,12 @@ public class CategoriaAPI {
         return ResponseEntity.ok(oCategoriaService.get(id));
     }
 
+    @GetMapping("/total")
+    public ResponseEntity<Long> getTotalUsuarios() {
+        Long totalUsuarios = oCategoriaService.getTotalUsuarios();
+        return ResponseEntity.ok(totalUsuarios);
+    }
+
     @PostMapping("")
     public ResponseEntity<Long> create(@RequestBody CategoriaEntity oCategoriaEntity) {
         return ResponseEntity.ok(oCategoriaService.create(oCategoriaEntity));

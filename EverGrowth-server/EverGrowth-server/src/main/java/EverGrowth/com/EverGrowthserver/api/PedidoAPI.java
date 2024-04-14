@@ -1,5 +1,7 @@
 package EverGrowth.com.EverGrowthserver.api;
 
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -71,6 +73,16 @@ public class PedidoAPI {
         return ResponseEntity.ok(oPedidoService.getPage(oPageable, id_usuario));
     }
 
+    @GetMapping("/cantidadPedidosPorMes")
+    public Map<String, Integer> obtenerCantidadPedidosPorMes() {
+        return oPedidoService.obtenerCantidadPedidosPorMes();
+    }
+
+    @GetMapping("/total")
+    public ResponseEntity<Long> getTotalUsuarios() {
+        Long totalUsuarios = oPedidoService.getTotalUsuarios();
+        return ResponseEntity.ok(totalUsuarios);
+    }
     @GetMapping("/usuario/{usuarioId}")
     public ResponseEntity<Page<PedidoEntity>> getComprasByUsuarioId(@PathVariable("usuarioId") Long usuarioId, Pageable oPageable) {
         return ResponseEntity.ok(oPedidoService.getComprasUsuario(usuarioId, oPageable));

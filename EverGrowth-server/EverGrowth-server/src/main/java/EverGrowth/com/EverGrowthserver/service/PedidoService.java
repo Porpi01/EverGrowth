@@ -1,6 +1,12 @@
 package EverGrowth.com.EverGrowthserver.service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -54,7 +60,9 @@ public class PedidoService {
         oPedidoEntity.setId(null);
         return pedidoRepository.save(oPedidoEntity).getId();
     }
-
+    public Long getTotalUsuarios() {
+        return pedidoRepository.count();
+    }
     public PedidoEntity update(PedidoEntity oPedidoEntityToSet) {
         sesionService.onlyAdmins();
         return pedidoRepository.save(oPedidoEntityToSet);
@@ -249,4 +257,25 @@ public class PedidoService {
             sesionService.onlyAdminsOrUsersWithIisOwnData(usuario_id);
             return pedidoRepository.findByUser(usuario_id, oPageable);
         }
-}
+
+   
+        public Map<String, Integer> obtenerCantidadPedidosPorMes() {
+            Map<String, Integer> cantidadPedidosPorMes = new LinkedHashMap<>();
+            
+            // Crear un array con los nombres de los meses en el orden correcto
+            String[] mesesOrdenados = {"Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+                                       "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"};
+            
+            // Iterar sobre cada mes para obtener la cantidad de pedidos
+            for (int mes = 1; mes <= 12; mes++) {
+                // Realizar la consulta para obtener los pedidos por mes
+                List<PedidoEntity> pedidos = pedidoRepository.findByMes(mes);
+                // Contar la cantidad de pedidos para este mes
+                int cantidadPedidos = pedidos.size();
+                // Agregar la cantidad de pedidos al mapa
+                cantidadPedidosPorMes.put(mesesOrdenados[mes - 1], cantidadPedidos);
+            }
+            
+            return cantidadPedidosPorMes;
+        }
+    }

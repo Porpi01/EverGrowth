@@ -1,5 +1,7 @@
 package EverGrowth.com.EverGrowthserver.api;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -29,11 +31,26 @@ public class ProductoAPI {
     @Autowired
     private ProductoService oProductoService;
 
+    @GetMapping("masStock")
+    public List<ProductoEntity> getTop10ProductosMasStock() {
+        return oProductoService.getTop10ProductosMasStock();
+    }
+
+    @GetMapping("/menosStock")
+    public List<ProductoEntity> getTop10ProductosMenosStock() {
+        return oProductoService.getTop10ProductosMenosStock();
+    }
+
+
     @GetMapping("/{id}")
     public ResponseEntity<ProductoEntity> get(@PathVariable("id") Long id) {
         return ResponseEntity.ok(oProductoService.get(id));
     }
-
+    @GetMapping("/total")
+    public ResponseEntity<Long> getTotalUsuarios() {
+        Long totalUsuarios = oProductoService.getTotalUsuarios();
+        return ResponseEntity.ok(totalUsuarios);
+    }
     
     @PostMapping("")
     public ResponseEntity<Long> create(@RequestBody ProductoEntity oProductoEntity) {

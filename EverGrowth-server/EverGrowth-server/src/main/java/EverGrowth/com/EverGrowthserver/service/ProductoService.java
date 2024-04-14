@@ -1,5 +1,7 @@
 package EverGrowth.com.EverGrowthserver.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -27,9 +29,27 @@ public class ProductoService {
     @Autowired
     SesionService sesionService;
 
+    public List<ProductoEntity> getTop10ProductosMasStock() {
+        Pageable pageable = PageRequest.of(0, 5);
+        Page<ProductoEntity> page = productoRepository.findTop10ByOrderByStockDesc(pageable);
+        return page.getContent();
+    }
+    
+    public List<ProductoEntity> getTop10ProductosMenosStock() {
+        Pageable pageable = PageRequest.of(0, 5);
+        Page<ProductoEntity> page = productoRepository.findTop10ByOrderByStockASC(pageable);
+        return page.getContent();
+    }
+
+
+  
     public ProductoEntity get(Long id) {
         return productoRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Producto not found"));
+    }
+
+    public Long getTotalUsuarios() {
+        return productoRepository.count();
     }
 
     public Long create(ProductoEntity oProductoEntity) {

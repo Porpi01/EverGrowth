@@ -15,7 +15,11 @@ public interface ProductoRepository extends JpaRepository<ProductoEntity, Long> 
     @Query("SELECT p FROM ProductoEntity p WHERE p.categoria.id = :categoriaId")
     Page<ProductoEntity> findByCategoria(Long categoriaId, Pageable pageable);
 
+    @Query("SELECT p FROM ProductoEntity p ORDER BY p.stock DESC")
+    Page<ProductoEntity> findTop10ByOrderByStockDesc(Pageable pageable);
 
+    @Query("SELECT p FROM ProductoEntity p ORDER BY p.stock ASC")
+    Page<ProductoEntity> findTop10ByOrderByStockASC(Pageable pageable);
 
 
     @Modifying

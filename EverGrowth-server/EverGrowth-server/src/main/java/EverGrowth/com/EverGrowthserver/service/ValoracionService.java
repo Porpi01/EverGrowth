@@ -43,6 +43,11 @@ public class ValoracionService {
                 .orElseThrow(() -> new ResourceNotFoundException("Valoracion no encontrada"));
     }
 
+    public Long getTotalValoraciones() {
+        sesionService.onlyAdmins();
+        return valoracionRepository.count();
+    }
+
     public Long create(ValoracionEntity ValoracionEntity) {
         sesionService.onlyAdminsOrUsersWithIisOwnData(sesionService.getSessionUser().getId());
         ValoracionEntity.setId(null);

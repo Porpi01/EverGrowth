@@ -36,6 +36,10 @@ public class UsuarioService {
                 .orElseThrow(() -> new ResourceNotFoundException("User not found by username"));
     }
 
+    public Long getTotalUsuarios() {
+        return usuarioRepository.count();
+    }
+
 
     public Long create(UsuarioEntity oUsuarioEntity) {
         sesionService.onlyAdmins();

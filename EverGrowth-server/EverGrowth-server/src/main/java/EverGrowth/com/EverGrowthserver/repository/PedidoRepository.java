@@ -1,5 +1,7 @@
 package EverGrowth.com.EverGrowthserver.repository;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -12,6 +14,9 @@ public interface PedidoRepository extends JpaRepository<PedidoEntity, Long> {
 
     @Query("SELECT p FROM PedidoEntity p WHERE p.user.id = :userId")
     Page<PedidoEntity> findByUser(Long userId, Pageable pageable);
+
+    @Query("SELECT p FROM PedidoEntity p WHERE MONTH(p.fecha_pedido) = :mes")
+    List<PedidoEntity> findByMes(int mes);
 
     @Query("SELECT MAX(p.id_factura) FROM PedidoEntity p")
     Long findMaxCodigoFactura();

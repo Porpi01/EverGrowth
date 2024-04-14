@@ -46,7 +46,11 @@ public class CarritoAPI {
     public ResponseEntity<CarritoEntity> get(@PathVariable("id") Long id) {
         return ResponseEntity.ok(carritoService.get(id));
     }
-
+    @GetMapping("/total")
+    public ResponseEntity<Long> getTotalUsuarios() {
+        Long totalUsuarios = carritoService.getTotalUsuarios();
+        return ResponseEntity.ok(totalUsuarios);
+    }
     @GetMapping("/usuario/{userId}")
     public ResponseEntity<Page<CarritoEntity>> getCarritoByUsuario(@PathVariable("userId") Long usuarioId, @PageableDefault(size = 10, sort = {"id"}, direction = Sort.Direction.ASC) Pageable oPageable) {
         return ResponseEntity.ok(carritoService.getCarritoByUsuario(usuarioId, oPageable));

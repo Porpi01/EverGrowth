@@ -39,6 +39,12 @@ public class ValoracionAPI {
         return ResponseEntity.ok(valoracionService.get(id));
     }
 
+    @GetMapping("/total")
+    public ResponseEntity<Long> getTotalValoraciones() {
+        Long totalValoraciones = valoracionService.getTotalValoraciones();
+        return ResponseEntity.ok(totalValoraciones);
+    }
+
     @PostMapping("")
     public ResponseEntity<Long> create(@RequestBody ValoracionEntity valoracionEntity) {
         return ResponseEntity.ok(valoracionService.create(valoracionEntity));

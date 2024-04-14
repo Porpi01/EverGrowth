@@ -34,6 +34,12 @@ public class DetallePedidoAPI {
         return ResponseEntity.ok(detallePedidoService.get(id));
     }
 
+    @GetMapping("/total")
+    public ResponseEntity<Long> getTotalUsuarios() {
+        Long totalUsuarios = detallePedidoService.getTotalUsuarios();
+        return ResponseEntity.ok(totalUsuarios);
+    }
+
     @GetMapping("/pedido/{id_pedido}")
     public ResponseEntity<Page<DetallePedidoEntity>> getDetallesPorPedido(
             Pageable oPageable,

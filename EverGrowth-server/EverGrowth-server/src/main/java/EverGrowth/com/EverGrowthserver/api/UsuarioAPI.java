@@ -33,6 +33,12 @@ public class UsuarioAPI {
         return ResponseEntity.ok(oUsuarioService.get(id));
     }
 
+    @GetMapping("/total")
+    public ResponseEntity<Long> getTotalUsuarios() {
+        Long totalUsuarios = oUsuarioService.getTotalUsuarios();
+        return ResponseEntity.ok(totalUsuarios);
+    }
+
     @GetMapping("/byUsername/{username}")
     public ResponseEntity<UsuarioEntity> get(@PathVariable("username") String username) {
         return ResponseEntity.ok(oUsuarioService.getByUsername(username));
