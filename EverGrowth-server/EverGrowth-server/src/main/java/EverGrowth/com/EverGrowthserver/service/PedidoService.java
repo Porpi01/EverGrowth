@@ -70,7 +70,7 @@ public class PedidoService {
     }
 
     public Page<PedidoEntity> getPage(Pageable oPageable, Long id_usuario) {
-        sesionService.onlyAdmins();
+        sesionService.onlyAdminsOrUsers();
 
         if (id_usuario == 0) {
             return pedidoRepository.findAll(oPageable);
