@@ -60,7 +60,8 @@ public class PedidoService {
         oPedidoEntity.setId(null);
         return pedidoRepository.save(oPedidoEntity).getId();
     }
-    public Long getTotalUsuarios() {
+    public Long getTotalPedidos() {
+        sesionService.onlyAdmins();
         return pedidoRepository.count();
     }
     public PedidoEntity update(PedidoEntity oPedidoEntityToSet) {

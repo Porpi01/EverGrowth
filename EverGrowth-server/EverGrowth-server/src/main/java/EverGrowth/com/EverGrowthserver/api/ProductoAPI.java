@@ -48,7 +48,7 @@ public class ProductoAPI {
     }
     @GetMapping("/total")
     public ResponseEntity<Long> getTotalUsuarios() {
-        Long totalUsuarios = oProductoService.getTotalUsuarios();
+        Long totalUsuarios = oProductoService.getTotalProductos();
         return ResponseEntity.ok(totalUsuarios);
     }
     

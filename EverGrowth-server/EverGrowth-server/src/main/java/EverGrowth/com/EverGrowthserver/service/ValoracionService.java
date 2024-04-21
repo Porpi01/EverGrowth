@@ -44,7 +44,7 @@ public class ValoracionService {
     }
 
     public Long getTotalValoraciones() {
-     
+        sesionService.onlyAdmins();
         return valoracionRepository.count();
     }
 

@@ -37,6 +37,7 @@ public class UsuarioService {
     }
 
     public Long getTotalUsuarios() {
+        sesionService.onlyAdmins();
         return usuarioRepository.count();
     }
 

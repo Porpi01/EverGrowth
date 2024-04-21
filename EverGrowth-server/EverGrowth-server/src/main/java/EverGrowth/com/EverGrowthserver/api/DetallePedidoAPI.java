@@ -36,7 +36,7 @@ public class DetallePedidoAPI {
 
     @GetMapping("/total")
     public ResponseEntity<Long> getTotalUsuarios() {
-        Long totalUsuarios = detallePedidoService.getTotalUsuarios();
+        Long totalUsuarios = detallePedidoService.getTotalDetallesPedidos();
         return ResponseEntity.ok(totalUsuarios);
     }
 

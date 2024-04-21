@@ -80,7 +80,7 @@ public class PedidoAPI {
 
     @GetMapping("/total")
     public ResponseEntity<Long> getTotalUsuarios() {
-        Long totalUsuarios = oPedidoService.getTotalUsuarios();
+        Long totalUsuarios = oPedidoService.getTotalPedidos();
         return ResponseEntity.ok(totalUsuarios);
     }
     @GetMapping("/usuario/{usuarioId}")

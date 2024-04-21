@@ -44,7 +44,8 @@ public class CarritoService {
         return carritoRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Carrito no encontrado"));
     }
 
-    public Long getTotalUsuarios() {
+    public Long getTotalCarritos() {
+        sesionService.onlyAdmins();
         return carritoRepository.count();
     }
 

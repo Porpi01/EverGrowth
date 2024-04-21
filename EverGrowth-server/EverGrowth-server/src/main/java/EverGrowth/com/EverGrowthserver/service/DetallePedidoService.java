@@ -39,7 +39,8 @@ public class DetallePedidoService {
                 .orElseThrow(() -> new ResourceNotFoundException("Detalle pedido no encontrado"));
     }
 
-    public Long getTotalUsuarios() {
+    public Long getTotalDetallesPedidos() {
+        sesionService.onlyAdmins();
         return detallePedidoRepository.count();
     }
 

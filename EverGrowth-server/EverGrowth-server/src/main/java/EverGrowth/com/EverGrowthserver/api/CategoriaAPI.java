@@ -39,7 +39,7 @@ public class CategoriaAPI {
 
     @GetMapping("/total")
     public ResponseEntity<Long> getTotalUsuarios() {
-        Long totalUsuarios = oCategoriaService.getTotalUsuarios();
+        Long totalUsuarios = oCategoriaService.getTotalCategorias();
         return ResponseEntity.ok(totalUsuarios);
     }
 

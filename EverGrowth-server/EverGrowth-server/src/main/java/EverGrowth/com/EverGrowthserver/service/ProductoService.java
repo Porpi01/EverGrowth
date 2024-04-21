@@ -48,7 +48,8 @@ public class ProductoService {
                 .orElseThrow(() -> new ResourceNotFoundException("Producto not found"));
     }
 
-    public Long getTotalUsuarios() {
+    public Long getTotalProductos() {
+        sesionService.onlyAdmins();
         return productoRepository.count();
     }
 

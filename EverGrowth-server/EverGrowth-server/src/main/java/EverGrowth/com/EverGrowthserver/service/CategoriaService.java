@@ -27,7 +27,8 @@ public class CategoriaService {
                 .orElseThrow(() -> new ResourceNotFoundException("Categoria no encontrada"));
     }
 
-    public Long getTotalUsuarios() {
+    public Long getTotalCategorias() {
+        sesionService.onlyAdmins();
         return categoriaRepository.count();
     }
 
