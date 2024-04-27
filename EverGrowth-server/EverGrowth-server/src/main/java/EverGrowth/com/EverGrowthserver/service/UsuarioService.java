@@ -1,5 +1,8 @@
 package EverGrowth.com.EverGrowthserver.service;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -17,7 +20,6 @@ import jakarta.transaction.Transactional;
 public class UsuarioService {
     private final String tiendaOnlinePassword = "dedb63fbd1f3c4bce46a6e29be0700dda4fe2eec46c79b79fa0c5704d96e308d";
 
-
     @Autowired
     UsuarioRepository usuarioRepository;
 
@@ -26,6 +28,21 @@ public class UsuarioService {
 
     @Autowired
     SesionService sesionService;
+
+    public Long signUp(UsuarioEntity nuevoUsuario) {
+        if (usuarioRepository.findByUsername(nuevoUsuario.getusername()).isPresent()) {
+            throw new RuntimeException("El nombre de usuario ya está en uso");
+        }
+    
+        if (usuarioRepository.findByEmail(nuevoUsuario.getEmail()).isPresent()) {
+            throw new RuntimeException("El correo electrónico ya está registrado");
+        }
+    
+        nuevoUsuario.setrol(true);
+    
+        // Guarda el nuevo usuario en la base de datos
+        return usuarioRepository.save(nuevoUsuario).getId();
+    }
 
     public UsuarioEntity get(Long id) {
         return usuarioRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("User not found"));
@@ -40,7 +57,6 @@ public class UsuarioService {
         sesionService.onlyAdmins();
         return usuarioRepository.count();
     }
-
 
     public Long create(UsuarioEntity oUsuarioEntity) {
         sesionService.onlyAdmins();
@@ -96,7 +112,8 @@ public class UsuarioService {
             String nombre = DataGenerationHelper.getRandomName();
             String apellido1 = DataGenerationHelper.getRandomSurname();
             String apellido2 = DataGenerationHelper.getRandomSurname();
-            String emailNamePart = DataGenerationHelper.doNormalizeString(nombre.substring(0, 3) + apellido1.substring(0, 3) + apellido2.substring(0, 2) + i);
+            String emailNamePart = DataGenerationHelper.doNormalizeString(
+                    nombre.substring(0, 3) + apellido1.substring(0, 3) + apellido2.substring(0, 2) + i);
 
             String email = emailNamePart.toLowerCase() + "@gmail.com";
             String telefono = DataGenerationHelper.generateRandomPhone();
@@ -105,7 +122,8 @@ public class UsuarioService {
                     .doNormalizeString(
                             nombre.substring(0, 3) + apellido1.substring(1, 3) + apellido2.substring(1, 2) + i)
                     .toLowerCase();
-            UsuarioEntity usuario = new UsuarioEntity(nombre, apellido1, apellido2, email, telefono, direccion, username,
+            UsuarioEntity usuario = new UsuarioEntity(nombre, apellido1, apellido2, email, telefono, direccion,
+                    username,
                     "dedb63fbd1f3c4bce46a6e29be0700dda4fe2eec46c79b79fa0c5704d96e308d", true);
 
             usuarioRepository.save(usuario);
@@ -130,8 +148,6 @@ public class UsuarioService {
         }
     }
 
-
-     
     @Transactional
     public Long empty() {
         sesionService.onlyAdmins();
@@ -139,9 +155,9 @@ public class UsuarioService {
         usuarioRepository.deleteAll();
         usuarioRepository.resetAutoIncrement();
         UsuarioEntity oUserEntity1 = new UsuarioEntity(1L, "Ana ", "Pérez", "Roca",
-                "anita@gmail.com", "632156987","Calle del Cerezo Nº 17", "anita17", tiendaOnlinePassword, false);
+                "anita@gmail.com", "632156987", "Calle del Cerezo Nº 17", "anita17", tiendaOnlinePassword, false);
         usuarioRepository.save(oUserEntity1);
-        oUserEntity1 = new UsuarioEntity(2L, "Monica", "Alcañiz", "Puig", "monica@gmail.com", "642156657","Alameda",
+        oUserEntity1 = new UsuarioEntity(2L, "Monica", "Alcañiz", "Puig", "monica@gmail.com", "642156657", "Alameda",
                 "moni01", tiendaOnlinePassword, true);
         usuarioRepository.save(oUserEntity1);
         return usuarioRepository.count();

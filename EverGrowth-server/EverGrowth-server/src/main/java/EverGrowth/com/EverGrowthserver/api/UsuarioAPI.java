@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import EverGrowth.com.EverGrowthserver.entity.UsuarioEntity;
-import EverGrowth.com.EverGrowthserver.entity.ValoracionEntity;
 import EverGrowth.com.EverGrowthserver.service.UsuarioService;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*", maxAge = 3600)
@@ -47,6 +46,15 @@ public class UsuarioAPI {
     @PostMapping("")
     public ResponseEntity<Long> create(@RequestBody UsuarioEntity oUsuarioEntity) {
         return ResponseEntity.ok(oUsuarioService.create(oUsuarioEntity));
+    }
+    @PostMapping("/signup")
+    public ResponseEntity<Long> signUp(@RequestBody UsuarioEntity nuevoUsuario) {
+        try {
+            Long userId = oUsuarioService.signUp(nuevoUsuario);
+            return ResponseEntity.ok(userId);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
     }
 
     @PutMapping("")

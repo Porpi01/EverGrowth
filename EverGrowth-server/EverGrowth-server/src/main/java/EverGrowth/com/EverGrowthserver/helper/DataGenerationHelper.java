@@ -219,14 +219,15 @@ public static String generarFraseVerbo() {
     }
 }
 
-  public static String getSpeech(int amount) {
-    String sentences = "";
+public static String getSpeech(int amount) {
+    StringBuilder sentences = new StringBuilder();
     for (int i = 0; i < amount; i++) {
-      String sentence = generateOracion();
-      sentences += sentence.substring(0, 1).toUpperCase() + sentence.substring(1) + ". ";
+        String sentence = generateOracion();
+        sentence = sentence.substring(0, 1).toUpperCase() + sentence.substring(1) ;
+        sentences.append(sentence); // Agrega la oración al StringBuilder
     }
-    return sentences;
-  }
+    return sentences.toString();
+}
 
   //Telefonos
   public static String generateRandomPhone() {
