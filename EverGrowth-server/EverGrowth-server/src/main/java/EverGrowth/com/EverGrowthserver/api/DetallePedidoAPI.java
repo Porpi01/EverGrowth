@@ -49,7 +49,8 @@ public class DetallePedidoAPI {
 
     @GetMapping("/bypedido/{id_pedido}")
     public ResponseEntity<Page<DetallePedidoEntity>> getDetallesPorPedido(
-        @PathVariable Long id_pedido, @PageableDefault(size = 10, sort = {"id"}, direction = Sort.Direction.ASC) Pageable oPageable) {
+            @PathVariable Long id_pedido,
+            @PageableDefault(size = 20, sort = { "id" }, direction = Sort.Direction.ASC) Pageable oPageable) {
         return ResponseEntity.ok(detallePedidoService.getDetallesPorPedido(oPageable, id_pedido));
     }
 
@@ -67,13 +68,14 @@ public class DetallePedidoAPI {
     public ResponseEntity<Long> delete(@PathVariable("id") Long id) {
         return ResponseEntity.ok(detallePedidoService.delete(id));
     }
-  @GetMapping("")
+
+    @GetMapping("")
     public ResponseEntity<Page<DetallePedidoEntity>> getPage(
             Pageable oPageable,
-            @RequestParam(name = "pedido",defaultValue = "0" , required=false) Long id_pedido ,
-            @RequestParam(name = "producto", defaultValue = "0", required=false ) Long id_producto){
-                return ResponseEntity.ok(detallePedidoService.getPage(oPageable, id_pedido, id_producto));
-            }
+            @RequestParam(name = "pedido", defaultValue = "0", required = false) Long id_pedido,
+            @RequestParam(name = "producto", defaultValue = "0", required = false) Long id_producto) {
+        return ResponseEntity.ok(detallePedidoService.getPage(oPageable, id_pedido, id_producto));
+    }
 
     @PostMapping("/populate/{amount}")
     public ResponseEntity<Long> populate(@PathVariable("amount") Integer amount) {

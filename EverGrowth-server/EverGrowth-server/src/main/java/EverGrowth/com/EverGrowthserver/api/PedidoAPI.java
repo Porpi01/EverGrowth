@@ -112,7 +112,7 @@ public class PedidoAPI {
     @PostMapping("/realizarCompraTodosCarritos/{usuarioId}")
     public ResponseEntity<PedidoEntity> realizarpedidoTodosCarritos(
             @PathVariable Long usuarioId, @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
+            @RequestParam(defaultValue = "20") int size) {
         UsuarioEntity usuario = UsuarioService.get(usuarioId);
         Page<CarritoEntity> carritos = CarritoService.getCarritoByUsuario(usuarioId, PageRequest.of(page, size));
         PedidoEntity pedido = oPedidoService.realizarCompraTodosCarritos(carritos, usuario);

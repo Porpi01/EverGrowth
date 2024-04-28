@@ -1,6 +1,5 @@
 package EverGrowth.com.EverGrowthserver.api;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -38,25 +37,26 @@ public class CarritoAPI {
     @Autowired
     UsuarioRepository usuarioRepository;
 
-   
     @GetMapping("/{id}")
     public ResponseEntity<CarritoEntity> get(@PathVariable("id") Long id) {
         return ResponseEntity.ok(carritoService.get(id));
     }
+
     @GetMapping("/total")
     public ResponseEntity<Long> getTotalUsuarios() {
         Long totalUsuarios = carritoService.getTotalCarritos();
         return ResponseEntity.ok(totalUsuarios);
     }
-    
+
     @GetMapping("/usuario/{userId}")
-    public ResponseEntity<Page<CarritoEntity>> getCarritoByUsuario(@PathVariable("userId") Long usuarioId, @PageableDefault(size = 10, sort = {"id"}, direction = Sort.Direction.ASC) Pageable oPageable) {
+    public ResponseEntity<Page<CarritoEntity>> getCarritoByUsuario(@PathVariable("userId") Long usuarioId,
+            @PageableDefault(size = 20, sort = { "id" }, direction = Sort.Direction.ASC) Pageable oPageable) {
         return ResponseEntity.ok(carritoService.getCarritoByUsuario(usuarioId, oPageable));
     }
-    
 
     @GetMapping("/usuario/{userId}/producto/{productoId}")
-    public ResponseEntity<CarritoEntity> getCarritoByUsuarioAndProducto(@PathVariable("userId") Long usuarioId, @PathVariable("productoId") Long productoId) {
+    public ResponseEntity<CarritoEntity> getCarritoByUsuarioAndProducto(@PathVariable("userId") Long usuarioId,
+            @PathVariable("productoId") Long productoId) {
         return ResponseEntity.ok(carritoService.getCarritoByUsuarioAndProducto(usuarioId, productoId));
     }
 
@@ -67,7 +67,7 @@ public class CarritoAPI {
 
     @GetMapping("/costetotal/{userId}")
     public ResponseEntity<Double> getCosteTotalCarrito(@PathVariable("userId") Long usuarioId) {
-        Pageable pageable = PageRequest.of(0, 10); // Aquí especificas la página y el tamaño de página que necesites
+        Pageable pageable = PageRequest.of(0, 20); // Aquí especificas la página y el tamaño de página que necesites
         Double costeTotal = carritoService.calculateTotalCartCost(pageable, usuarioId);
         return ResponseEntity.ok(costeTotal);
     }
@@ -81,14 +81,13 @@ public class CarritoAPI {
         return new ResponseEntity<>(count, HttpStatus.OK);
     }
 
-     @GetMapping("")
+    @GetMapping("")
     public ResponseEntity<Page<CarritoEntity>> getPage(Pageable oPageable,
-    
-    @RequestParam(name = "usuario",defaultValue = "0" , required=false) Long id_usuario ,
-    @RequestParam(name = "producto", defaultValue = "0", required=false ) Long id_producto) {
+
+            @RequestParam(name = "usuario", defaultValue = "0", required = false) Long id_usuario,
+            @RequestParam(name = "producto", defaultValue = "0", required = false) Long id_producto) {
         return ResponseEntity.ok(carritoService.getPage(oPageable, id_usuario, id_producto));
     }
-
 
     @PostMapping("")
     public ResponseEntity<Long> create(@RequestBody CarritoEntity orritoEntity) {
@@ -99,7 +98,6 @@ public class CarritoAPI {
     public ResponseEntity<Long> populate(@PathVariable("amount") Integer amount) {
         return ResponseEntity.ok(carritoService.populate(amount));
     }
-    
 
     @PutMapping("")
     public ResponseEntity<CarritoEntity> update(@RequestBody CarritoEntity CarritoEntity) {
@@ -117,14 +115,9 @@ public class CarritoAPI {
         return ResponseEntity.ok(usuarioId);
     }
 
-
-
-
     @DeleteMapping("/empty")
     public ResponseEntity<Long> empty() {
         return ResponseEntity.ok(carritoService.empty());
     }
-
-   
 
 }

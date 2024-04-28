@@ -30,6 +30,10 @@ public class UsuarioService {
     SesionService sesionService;
 
     public Long signUp(UsuarioEntity nuevoUsuario) {
+        if (nuevoUsuario == null) {
+            throw new IllegalArgumentException("El objeto nuevoUsuario no puede ser nulo");
+        }
+    
         if (usuarioRepository.findByUsername(nuevoUsuario.getusername()).isPresent()) {
             throw new RuntimeException("El nombre de usuario ya está en uso");
         }
@@ -38,7 +42,12 @@ public class UsuarioService {
             throw new RuntimeException("El correo electrónico ya está registrado");
         }
     
-        nuevoUsuario.setrol(true);
+        nuevoUsuario.setrol(true); // Supongo que esta línea está correctamente
+    
+        // No establecer el campo apellido2 si está vacío
+        if (nuevoUsuario.getapellido2() == null || nuevoUsuario.getapellido2().isEmpty()) {
+            nuevoUsuario.setapellido2(null);
+        }
     
         // Guarda el nuevo usuario en la base de datos
         return usuarioRepository.save(nuevoUsuario).getId();
