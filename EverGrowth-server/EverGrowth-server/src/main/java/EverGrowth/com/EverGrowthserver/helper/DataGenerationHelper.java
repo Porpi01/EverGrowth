@@ -103,8 +103,8 @@ public class DataGenerationHelper {
 
   //Fechas
   public static LocalDateTime getRadomDate() {
-    long minDay = LocalDate.of(2024, 1, 1).toEpochDay();
-    long maxDay = LocalDate.of(2026, 12, 31).toEpochDay();
+    long minDay = LocalDate.of(2024, 5, 1).toEpochDay();
+    long maxDay = LocalDate.of(2024, 6, 30).toEpochDay();
     long randomDay = ThreadLocalRandom.current().nextLong(minDay, maxDay);
     return LocalDate.ofEpochDay(randomDay).atTime(getRandomInt(0, 23), getRandomInt(0, 59), getRandomInt(0, 59));
 

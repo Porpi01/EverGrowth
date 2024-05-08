@@ -60,10 +60,12 @@ public class PedidoService {
         oPedidoEntity.setId(null);
         return pedidoRepository.save(oPedidoEntity).getId();
     }
+
     public Long getTotalPedidos() {
         sesionService.onlyAdmins();
         return pedidoRepository.count();
     }
+
     public PedidoEntity update(PedidoEntity oPedidoEntityToSet) {
         sesionService.onlyAdmins();
         return pedidoRepository.save(oPedidoEntityToSet);
@@ -91,14 +93,30 @@ public class PedidoService {
     public Long populate(Integer cantidad) {
         sesionService.onlyAdmins();
 
+        // Variable booleana para alternar entre dos y tres días
+        boolean alternar = false;
+
         for (int i = 0; i < cantidad; i++) {
             PedidoEntity pedido = new PedidoEntity();
             pedido.setUser(UsuarioService.getOneRandom());
             pedido.setEstado_pedido(false);
-            pedido.setFecha_entrega(DataGenerationHelper.getRadomDate());
-            pedido.setFecha_pedido(LocalDateTime.now());
+
+            // Obtener la fecha actual
+            LocalDateTime fechaActual = LocalDateTime.now();
+
+            // Calcular la cantidad de días para la entrega (dos o tres días alternando)
+            int diasEntrega = alternar ? 3 : 2;
+
+            // Calcular la fecha de entrega sumando los días correspondientes
+            LocalDateTime fechaEntrega = fechaActual.plusDays(diasEntrega);
+
+            pedido.setFecha_entrega(fechaEntrega);
+            pedido.setFecha_pedido(fechaActual);
 
             pedidoRepository.save(pedido);
+
+            // Alternar el valor booleano para el próximo pedido
+            alternar = !alternar;
         }
         return pedidoRepository.count();
     }
@@ -122,18 +140,31 @@ public class PedidoService {
     @Transactional
     public PedidoEntity realizarCompraProducto(ProductoEntity oProductoEntity, UsuarioEntity oUsuarioEntity,
             int cantidad) {
-
+    
         sesionService.onlyAdminsOrUsersWithIisOwnData(oUsuarioEntity.getId());
-
+    
         PedidoEntity oPedidoEntity = new PedidoEntity();
-
+    
         oPedidoEntity.setUser(oUsuarioEntity);
         oPedidoEntity.setFecha_pedido(LocalDateTime.now());
         oPedidoEntity.setEstado_pedido(false);
-        oPedidoEntity.setFecha_entrega(DataGenerationHelper.getRadomDate());
-
+    
+        // Obtener la fecha actual
+        LocalDateTime fechaActual = LocalDateTime.now();
+    
+        // Variable booleana para alternar entre dos y tres días
+        boolean alternar = (fechaActual.getDayOfMonth() % 2 == 0); // Alternar basado en el día del mes actual
+    
+        // Calcular la cantidad de días para la entrega (dos o tres días alternando)
+        int diasEntrega = alternar ? 3 : 2;
+        
+        // Calcular la fecha de entrega sumando los días correspondientes
+        LocalDateTime fechaEntrega = fechaActual.plusDays(diasEntrega);
+    
+        oPedidoEntity.setFecha_entrega(fechaEntrega);
+    
         pedidoRepository.save(oPedidoEntity);
-
+    
         DetallePedidoEntity oDetallePedidoEntity = new DetallePedidoEntity();
         oDetallePedidoEntity.setId(null);
         oDetallePedidoEntity.setPrecio_unitario(oProductoEntity.getprecio());
@@ -141,28 +172,40 @@ public class PedidoService {
         oDetallePedidoEntity.setPedidos(oPedidoEntity);
         oDetallePedidoEntity.setProductos(oProductoEntity);
         oDetallePedidoEntity.setIva(oProductoEntity.getIva());
-
+    
         detallePedidoRepository.save(oDetallePedidoEntity);
-
+    
         oProductoService.actualizarStock(oProductoEntity, cantidad);
-
+    
         return oPedidoEntity;
     }
 
     @Transactional
     public PedidoEntity realizarCompraUnicoCarrito(CarritoEntity oCarritoEntity, UsuarioEntity oUsuarioEntity) {
-
         sesionService.onlyAdminsOrUsersWithIisOwnData(oUsuarioEntity.getId());
-
+    
         PedidoEntity oPedidoEntity = new PedidoEntity();
-
+    
         oPedidoEntity.setUser(oUsuarioEntity);
         oPedidoEntity.setFecha_pedido(LocalDateTime.now());
         oPedidoEntity.setEstado_pedido(false);
-        oPedidoEntity.setFecha_entrega(DataGenerationHelper.getRadomDate());
-
+    
+        // Obtener la fecha actual
+        LocalDateTime fechaActual = LocalDateTime.now();
+    
+        // Variable booleana para alternar entre dos y tres días
+        boolean alternar = (fechaActual.getDayOfMonth() % 2 == 0); // Alternar basado en el día del mes actual
+    
+        // Calcular la cantidad de días para la entrega (dos o tres días alternando)
+        int diasEntrega = alternar ? 3 : 2;
+        
+        // Calcular la fecha de entrega sumando los días correspondientes
+        LocalDateTime fechaEntrega = fechaActual.plusDays(diasEntrega);
+    
+        oPedidoEntity.setFecha_entrega(fechaEntrega);
+    
         pedidoRepository.save(oPedidoEntity);
-
+    
         DetallePedidoEntity oDetallePedidoEntity = new DetallePedidoEntity();
         oDetallePedidoEntity.setId(null);
         oDetallePedidoEntity.setPrecio_unitario(oCarritoEntity.getProducto().getprecio());
@@ -170,36 +213,49 @@ public class PedidoService {
         oDetallePedidoEntity.setPedidos(oPedidoEntity);
         oDetallePedidoEntity.setIva(oCarritoEntity.getProducto().getIva());
         oDetallePedidoEntity.setProductos(oCarritoEntity.getProducto());
-
+    
         detallePedidoRepository.save(oDetallePedidoEntity);
         ProductoEntity producto = oCarritoEntity.getProducto();
         oProductoService.actualizarStock(producto, oCarritoEntity.getCantidad());
-
+    
         oCarritoService.delete(oCarritoEntity.getId());
-
+    
         return oPedidoEntity;
     }
-
+    
     @Transactional
     public PedidoEntity realizarCompraTodosCarritos(Page<CarritoEntity> carritos, UsuarioEntity oUsuarioEntity) {
         sesionService.onlyAdminsOrUsersWithIisOwnData(oUsuarioEntity.getId());
-
+    
         PedidoEntity oPedidoEntity = new PedidoEntity();
-
+    
         oPedidoEntity.setUser(oUsuarioEntity);
         oPedidoEntity.setFecha_pedido(LocalDateTime.now());
         oPedidoEntity.setEstado_pedido(false);
-        oPedidoEntity.setFecha_entrega(DataGenerationHelper.getRadomDate());
-
+    
+        // Obtener la fecha actual
+        LocalDateTime fechaActual = LocalDateTime.now();
+    
+        // Variable booleana para alternar entre dos y tres días
+        boolean alternar = (fechaActual.getDayOfMonth() % 2 == 0); // Alternar basado en el día del mes actual
+    
+        // Calcular la cantidad de días para la entrega (dos o tres días alternando)
+        int diasEntrega = alternar ? 3 : 2;
+        
+        // Calcular la fecha de entrega sumando los días correspondientes
+        LocalDateTime fechaEntrega = fechaActual.plusDays(diasEntrega);
+    
+        oPedidoEntity.setFecha_entrega(fechaEntrega);
+    
         // Generar el código de factura
         Long codigoFactura = generarCodigoFactura();
-
+    
         // Asignar el código de factura al pedido
         oPedidoEntity.setId_factura(codigoFactura);
-
+    
         // Guardar el pedido en la base de datos
         pedidoRepository.save(oPedidoEntity);
-
+    
         // Procesar cada carrito
         carritos.forEach(carrito -> {
             DetallePedidoEntity oDetallePedidoEntity = new DetallePedidoEntity();
@@ -210,15 +266,15 @@ public class PedidoService {
             oDetallePedidoEntity.setProductos(carrito.getProducto());
             oDetallePedidoEntity.setIva(carrito.getProducto().getIva());
             detallePedidoRepository.save(oDetallePedidoEntity);
-
+    
             // Actualizar el stock del producto
             ProductoEntity producto = carrito.getProducto();
             oProductoService.actualizarStock(producto, carrito.getCantidad());
         });
-
+    
         // Eliminar los carritos del usuario
         oCarritoService.deleteByUsuario(oUsuarioEntity.getId());
-
+    
         // Retornar el pedido que contiene el código de factura generado
         return oPedidoEntity;
     }
@@ -253,30 +309,29 @@ public class PedidoService {
         }
     }
 
-        // Encontrar a las compras de un usuario
-        public Page<PedidoEntity> getComprasUsuario(Long usuario_id, Pageable oPageable) {
-            sesionService.onlyAdminsOrUsersWithIisOwnData(usuario_id);
-            return pedidoRepository.findByUser(usuario_id, oPageable);
+    // Encontrar a las compras de un usuario
+    public Page<PedidoEntity> getComprasUsuario(Long usuario_id, Pageable oPageable) {
+        sesionService.onlyAdminsOrUsersWithIisOwnData(usuario_id);
+        return pedidoRepository.findByUser(usuario_id, oPageable);
+    }
+
+    public Map<String, Integer> obtenerCantidadPedidosPorMes() {
+        Map<String, Integer> cantidadPedidosPorMes = new LinkedHashMap<>();
+
+        // Crear un array con los nombres de los meses en el orden correcto
+        String[] mesesOrdenados = { "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+                "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre" };
+
+        // Iterar sobre cada mes para obtener la cantidad de pedidos
+        for (int mes = 1; mes <= 12; mes++) {
+            // Realizar la consulta para obtener los pedidos por mes
+            List<PedidoEntity> pedidos = pedidoRepository.findByMes(mes);
+            // Contar la cantidad de pedidos para este mes
+            int cantidadPedidos = pedidos.size();
+            // Agregar la cantidad de pedidos al mapa
+            cantidadPedidosPorMes.put(mesesOrdenados[mes - 1], cantidadPedidos);
         }
 
-   
-        public Map<String, Integer> obtenerCantidadPedidosPorMes() {
-            Map<String, Integer> cantidadPedidosPorMes = new LinkedHashMap<>();
-            
-            // Crear un array con los nombres de los meses en el orden correcto
-            String[] mesesOrdenados = {"Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
-                                       "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"};
-            
-            // Iterar sobre cada mes para obtener la cantidad de pedidos
-            for (int mes = 1; mes <= 12; mes++) {
-                // Realizar la consulta para obtener los pedidos por mes
-                List<PedidoEntity> pedidos = pedidoRepository.findByMes(mes);
-                // Contar la cantidad de pedidos para este mes
-                int cantidadPedidos = pedidos.size();
-                // Agregar la cantidad de pedidos al mapa
-                cantidadPedidosPorMes.put(mesesOrdenados[mes - 1], cantidadPedidos);
-            }
-            
-            return cantidadPedidosPorMes;
-        }
+        return cantidadPedidosPorMes;
     }
+}
