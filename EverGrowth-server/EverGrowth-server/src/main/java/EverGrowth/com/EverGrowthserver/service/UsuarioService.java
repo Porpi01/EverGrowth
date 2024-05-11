@@ -48,7 +48,10 @@ public class UsuarioService {
         if (nuevoUsuario.getapellido2() == null || nuevoUsuario.getapellido2().isEmpty()) {
             nuevoUsuario.setapellido2(null);
         }
-    
+        validateFirstLetterUppercase(nuevoUsuario.getnombre());
+        validateFirstLetterUppercase(nuevoUsuario.getapellido1());
+        validateFirstLetterUppercase(nuevoUsuario.getapellido2());
+        validateFirstLetterUppercase(nuevoUsuario.getdireccion());
         // Guarda el nuevo usuario en la base de datos
         return usuarioRepository.save(nuevoUsuario).getId();
     }
